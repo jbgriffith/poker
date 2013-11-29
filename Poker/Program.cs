@@ -136,10 +136,13 @@ namespace Poker
 	{
 		public int CompareTo(object obj)
 		{
-			Card card = (Card)obj;
-			if (this.integerValue < card.integerValue) return -1;
-			if (this.integerValue > card.integerValue) return 1;
-			return 0;
+			if (obj == null) return 1;
+
+			Card otherCard = obj as Card;
+			if (otherCard != null)
+				return this.integerValue.CompareTo(otherCard.integerValue);
+			else
+				throw new ArgumentException("Object is not a Card");
 		}
 
 		public int integerValue;
@@ -240,18 +243,19 @@ namespace Poker
 		/// Checks
 		/// </summary>
 		/// <param name="cards">List of Card Objects</param>
-		/// <param name="numSameIntegerValue">Number of cards that need to be the same to return True</param>
+		/// <param name="numCardsSame">Number of cards that need to be the same to return True</param>
 		/// <returns>True if cards has numSameIntegerValue cards that have the same value, otherwise it returns False</returns>
-		public static bool NOfAKind(List<Card> cards, int numSameIntegerValue)
-		{
-			List<int> Values = new List<int>(ValueOfCards(cards));
-			Values.Sort();
-			for (int i = 0; i < Values.Count - numSameIntegerValue + 1; i++)
-			{
-				return true;
-			}
-			return true;
-		}
+		//public static bool NumCardsSameCheck(List<Card> cards, int numCardsSame)
+		//{
+		//	List<int> Values = new List<int>(ValueOfCards(cards));
+		//	Values.Sort();
+		//	for (int i = 0; i < cards.Count - numCardsSame + 1; i++)
+		//	{
+		//		List<Card> firstSetOfNCards = cards.Sort();
+		//		return true;
+		//	}
+		//	return true;
+		//}
 	}
 
 	/// <summary>
