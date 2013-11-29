@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Poker
@@ -10,7 +12,7 @@ namespace Poker
 	{
 		static void Main(string[] args)
 		{
-			for (int w = 0; w < 10000; w++)
+			for (int w = 0; w < 100000; w++)
 			{
 
 
@@ -35,22 +37,22 @@ namespace Poker
 				//bool value = Misc.IsNumber(InitialResponses[1]);
 				//int NumPLayers = 0;
 				//Misc.TryParseIsInt32(InitialResponses[2], out NumPLayers);
-				List<string> PlayerNames = new List<string> { "Holen", "Garrili", "Anelm", "Chal", "Metin" };
-				List<Player> PlayersAtPokerTable = new List<Player>();
+				Collection<string> PlayerNames = new Collection<string> { "Holen", "Garrili", "Anelm", "Chal", "Metin" };
+				Collection<Player> PlayersAtPokerTable = new Collection<Player>();
 				int numPLayers = 0;
 				numPLayers = PlayerNames.Count();
 				// Mix it up a little
-				PlayerNames.Shuffle();
+				PlayerNames.ShuffleIt();
 				for (int j = 0; j < numPLayers; j++)
 				{
 					PlayersAtPokerTable.Add(new Player(PlayerNames[j], j));
 				}
 				//PlayersAtPokerTable.Add(new Player(InitialResponses[0], Convert.ToInt32(InitialResponses[1])));
-			
+
 				int numberOfDecks = (int)Math.Ceiling((5.0 * (numPLayers + 1)) / 52.0);
 				Deck Decks = new Deck(numberOfDecks);
 
-				for (int j = 0; j < 5; j++) 
+				for (int j = 0; j < 5; j++)
 				{
 					foreach (var player in PlayersAtPokerTable)
 					{
@@ -61,20 +63,48 @@ namespace Poker
 				{
 					//Console.WriteLine(player);
 					//Console.WriteLine(Scoring.NumCardsSameCheck(player.HandOfCards, 2));
+
 					var GroupedCardValue =
 						from card in player.HandOfCards
-						group card by card.integerValue;
-				
-					foreach (var value in GroupedCardValue) {
-						
-						if (value.Count() > 3)
-						{
-							Console.WriteLine("Game Number {0}", w);
-							Console.WriteLine("Key Value:{0}\nKey Value Count {1}", value.Key, value.Count());
-							Console.WriteLine("Damn!!!!");
-							Console.ReadLine();
-						}
+						group card by card.NumericValue into c
+						select new { NumericValue = c.Key, obj = c, NumberOfValues = c.Count() };
+
+					var shit = from each in GroupedCardValue
+							   where each.NumberOfValues > 3
+							   select each;
+					foreach (var set in shit)
+					{
+						Console.WriteLine("Game Number:{0}", w);
+						foreach (var obj in set.obj)
+							Console.WriteLine("\t{0}", obj);
 					}
+					player.Fold();
+
+					//var GroupedCardSuit =
+					//from card in player.HandOfCards
+					//group card by card.suit;
+
+					//	foreach (var numInfo in HandStats)
+					//	{
+					//		//if (numInfo == 1)
+					//		//{
+					//		//	Console.WriteLine(numInfo.number);
+					//		//	Console.WriteLine(numInfo.total);
+					//		//	Console.WriteLine(numInfo.maximum);
+					//		//}
+					//	}
+					//}
+					////foreach (var value in GroupedCardValue)
+					////{
+
+					////	if (value.Count() == 4)
+					////	{
+					////		Console.WriteLine("Game Number {0}", w);
+					////		Console.WriteLine("Key Value:{0}\nKey Value Count {1}", value.Key, value.Count());
+					////		Console.WriteLine("Pair");
+					////		//Console.ReadLine();
+					////	}
+					////}
 				}
 				//Console.WriteLine(Decks);
 			}
@@ -82,7 +112,7 @@ namespace Poker
 			Console.WriteLine("Press any key to close...");
 			Console.ReadLine();
 #endif
-			
+
 		}
 	}
 
@@ -160,7 +190,7 @@ namespace Poker
 
 			Card otherCard = obj as Card;
 			if (otherCard != null)
-				return this.integerValue.CompareTo(otherCard.integerValue);
+				return this.NumericValue.CompareTo(otherCard.NumericValue);
 			else
 				throw new ArgumentException("Object is not a Card");
 		}
@@ -215,19 +245,20 @@ namespace Poker
 			return (Compare(left, right) > 0);
 		}
 
-		public int integerValue;
-		public string suit;
-		public List<string> integerValueNames = new List<string>(new string[] { "Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King" });
+		public int NumericValue { get; set; }
+		public string Suit { get; set; }
+		public ReadOnlyCollection<string> numericValueNames =
+			new ReadOnlyCollection<string>(new string[] { "Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King" });
 
-		public Card(int intValue, string suitText)
+		public Card(int Value, string suitText)
 		{
-			suit = suitText;
-			integerValue = intValue % 13;
+			Suit = suitText;
+			NumericValue = Value % 13;
 		}
-		 
+
 		public override string ToString()
 		{
-			return string.Format("{0} of {1}", integerValueNames[integerValue], suit);
+			return string.Format("{0} of {1}", numericValueNames[NumericValue], Suit);
 		}
 	}
 
@@ -236,8 +267,8 @@ namespace Poker
 	/// </summary>
 	public class Deck
 	{
-		public List<string> suits = new List<string> { "Hearts", "Spades", "Diamonds", "Clubs" };
-		public List<Card> cards = new List<Card>();
+		private Collection<string> suits = new Collection<string> { "Hearts", "Spades", "Diamonds", "Clubs" };
+		private Collection<Card> cards = new Collection<Card>();
 		/// <summary>
 		/// Default Contrustor creates one Deck's worth of Cards
 		/// </summary>
@@ -248,6 +279,9 @@ namespace Poker
 		/// <param name="numberOfDecks"></param>
 		public Deck(int numberOfDecks)
 		{
+			if (numberOfDecks < 1)
+				numberOfDecks = 1;
+
 			for (int i = 0; i < 13 * numberOfDecks; i++)
 			{
 				foreach (var suit in suits)
@@ -255,7 +289,7 @@ namespace Poker
 					cards.Add(new Card(i, suit));
 				}
 			}
-			cards.Shuffle();
+			cards.ShuffleIt();
 		}
 
 		/// <summary>
@@ -299,12 +333,15 @@ namespace Poker
 		/// </summary>
 		/// <param name="cards"></param>
 		/// <returns></returns>
-		public static List<int> ValueOfCards(List<Card> cards)
+		public static Collection<int> ValueOfCards(Collection<Card> cards)
 		{
-			List<int> Values = new List<int>();
+			if (cards == null)
+				throw new ArgumentNullException("cards");
+
+			Collection<int> Values = new Collection<int>();
 			foreach (var card in cards)
 			{
-				Values.Add(card.integerValue % 13);
+				Values.Add(card.NumericValue % 13);
 			}
 			return Values;
 		}
@@ -317,7 +354,7 @@ namespace Poker
 		/// <returns>True if cards has numSameIntegerValue cards that have the same value, otherwise it returns False</returns>
 		//public static bool NumCardsSameCheck(List<Card> cards, int numCardsSame)
 		//{
-			
+
 		//	List<int> Values = new List<int>(ValueOfCards(cards));
 		//	Values.Sort();
 		//	for (int i = 0; i < cards.Count - numCardsSame + 1; i++)
@@ -341,6 +378,8 @@ namespace Poker
 		/// <returns></returns>
 		public static bool IsNumber(this String value)
 		{
+			if (value == null)
+				throw new ArgumentNullException("value");
 			return value.ToCharArray().Where(x => !Char.IsDigit(x)).Count() == 0;
 		}
 
@@ -356,26 +395,56 @@ namespace Poker
 		}
 	}
 
-	public static class ListExtensions
+	public static class ThreadSafeRandom
+	{
+		[ThreadStatic]
+		private static Random Local;
+
+		public static Random ThisThreadsRandom
+		{
+			get { return Local ?? (Local = new Random(unchecked(Environment.TickCount * 31 + Thread.CurrentThread.ManagedThreadId))); }
+		}
+	}
+
+	static class MyExtensions
+	{
+		public static void ShuffleIt<T>(this IList<T> list)
+		{
+			int n = list.Count;
+			while (n > 1)
+			{
+				n--;
+				int k = ThreadSafeRandom.ThisThreadsRandom.Next(n + 1);
+				T value = list[k];
+				list[k] = list[n];
+				list[n] = value;
+			}
+		}
+	}
+
+	public static class CollectionExtensions
 	{
 		/// <summary>
 		/// This Generic Method shuffles (reorginizes) the order of elements in a List of any Type.
 		/// </summary>
 		/// <typeparam name="T">Type</typeparam>
 		/// <param name="theList">A list of any Type</param>
-		public static void Shuffle<T>(this IList<T> theList)
+		public static void Shuffle<T>(this Collection<T> theList)
 		{
+			if (theList == null)
+				throw new ArgumentNullException("theList");
+
 			Random rng = new Random();
 			int n = theList.Count;
 			int NumLoops = 0;
-			while (n-- > 1)
+			while (n-- > 0)
 			{
 				int k = rng.Next(n + 1);
 				T value = theList[k];
 				theList[k] = theList[n];
 				theList[n] = value;
-				if (k % 2 == rng.Next(0, 1))
-					n++;
+				//if (k % 2 == 1)
+				//	n++;
 				NumLoops++;
 			}
 #if ! DEBUG
@@ -389,11 +458,14 @@ namespace Poker
 		/// <typeparam name="T">Type</typeparam>
 		/// <param name="theList">A List of any Type</param>
 		/// <returns></returns>
-		public static T Pop<T>(this List<T> theList)
+		public static T Pop<T>(this Collection<T> theList)
 		{
+			if (theList == null)
+				throw new ArgumentNullException("theList");
+
 			var local = theList[0];
 			theList.RemoveAt(0);
 			return local;
 		}
-	} 
+	}
 }
