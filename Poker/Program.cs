@@ -10,58 +10,79 @@ namespace Poker
 	{
 		static void Main(string[] args)
 		{
-			List<string> InitialQuestions = new List<string> { "What is your name? ", "How old are you? ", "How many people would you like to play with? ", "How many rounds would you like to play? " };
-			List<string> InitialResponses = new List<string> { "", "", "", "" };
-
-			int i = 0;
-			while ( i < InitialQuestions.Count() )
+			for (int w = 0; w < 10000; w++)
 			{
-				Console.WriteLine(InitialQuestions[i]);
-				InitialResponses[i] = Console.ReadLine();
 
-				if (i != 0 && !InitialResponses[i].IsNumber())
+
+				//List<string> InitialQuestions = new List<string> { "What is your name? ", "How old are you? ", "How many people would you like to play with? ", "How many rounds would you like to play? " };
+				//List<string> InitialResponses = new List<string> { "", "", "", "" };
+
+				//int i = 0;
+				//while ( i < InitialQuestions.Count() )
+				//{
+				//	Console.WriteLine(InitialQuestions[i]);
+				//	InitialResponses[i] = Console.ReadLine();
+
+				//	if (i != 0 && !InitialResponses[i].IsNumber())
+				//	{
+				//		i--;
+				//	}
+				//	i++;
+				//}
+
+				//List<string> PlayerNames = new List<string> { "Holen", "Garrili", "Anelm", "Chal", "Metin", "Ahasu", "Omvori", "Mosbwar", "Oldrod", "Ymosi", "Umll", "Omagekelat", "Awpoli", "Tanys", "Rilen", "Nytolo", "Oldk", "Steyfaugh", "Ucide", "Verivor", "Omgarlye", "Noes", "Skelokin", "Rakust", "Ackez", "Esspqua", "Sulerd", "Honabel", "Undyer", "Undy", "Hinold", "Worageash", "Turay", "Aoni", "Achl", "Pybij", "Daor", "Keller", "Awther", "Tasnys", "Untyq", "Perch", "Issum", "Erwther", "Delabur", "Kymiss", "Toria", "Qua'rad", "Shykalche", "Engtur", "Hatlver", "Belton", "Yenda", "Ildendar", "Oldc", "Eror", "Oldolor", "Endiv", "Dueldard", "Whethin", "Is'aughu", "Eskeli", "Esttiaril", "Reyso", "Drounper-den", "Ildhin", "Dadyn", "Nalryn", "Dania", "Sytir", "Cer'cha", "Blyech", "Nijere", "Etura", "Bantur", "Drajmor", "Okaly", "Rakchanal", "Orutin", "Umag", "Rynshye", "Rynale", "Nos", "Molril", "Yanonu", "Ermor", "Tiaroth", "Daronal", "Tydis", "Owaru", "Tateh", "Rynathris", "Untgaright", "Ingoneld", "Inghat", "Emund", "Swoesset", "Quoryn", "Teough", "Ustjque", "Oasa", "Kysay", "Ryness", "Danusk", "Pheassul", "Skeltai", "Tiorelm", "Ementh", "Hyr", "Thereim'n", "Therbia", "Angale", "Fasik", "Tostas", "Echchaban" };
+				//Dealer theDealer = new Dealer("Joe the Dealer", 45);
+				//bool value = Misc.IsNumber(InitialResponses[1]);
+				//int NumPLayers = 0;
+				//Misc.TryParseIsInt32(InitialResponses[2], out NumPLayers);
+				List<string> PlayerNames = new List<string> { "Holen", "Garrili", "Anelm", "Chal", "Metin" };
+				List<Player> PlayersAtPokerTable = new List<Player>();
+				int numPLayers = 0;
+				numPLayers = PlayerNames.Count();
+				// Mix it up a little
+				PlayerNames.Shuffle();
+				for (int j = 0; j < numPLayers; j++)
 				{
-					i--;
+					PlayersAtPokerTable.Add(new Player(PlayerNames[j], j));
 				}
-				i++;
-			}
-
-			//List<string> PlayerNames = new List<string> { "Holen", "Garrili", "Anelm", "Chal", "Metin", "Ahasu", "Omvori", "Mosbwar", "Oldrod", "Ymosi", "Umll", "Omagekelat", "Awpoli", "Tanys", "Rilen", "Nytolo", "Oldk", "Steyfaugh", "Ucide", "Verivor", "Omgarlye", "Noes", "Skelokin", "Rakust", "Ackez", "Esspqua", "Sulerd", "Honabel", "Undyer", "Undy", "Hinold", "Worageash", "Turay", "Aoni", "Achl", "Pybij", "Daor", "Keller", "Awther", "Tasnys", "Untyq", "Perch", "Issum", "Erwther", "Delabur", "Kymiss", "Toria", "Qua'rad", "Shykalche", "Engtur", "Hatlver", "Belton", "Yenda", "Ildendar", "Oldc", "Eror", "Oldolor", "Endiv", "Dueldard", "Whethin", "Is'aughu", "Eskeli", "Esttiaril", "Reyso", "Drounper-den", "Ildhin", "Dadyn", "Nalryn", "Dania", "Sytir", "Cer'cha", "Blyech", "Nijere", "Etura", "Bantur", "Drajmor", "Okaly", "Rakchanal", "Orutin", "Umag", "Rynshye", "Rynale", "Nos", "Molril", "Yanonu", "Ermor", "Tiaroth", "Daronal", "Tydis", "Owaru", "Tateh", "Rynathris", "Untgaright", "Ingoneld", "Inghat", "Emund", "Swoesset", "Quoryn", "Teough", "Ustjque", "Oasa", "Kysay", "Ryness", "Danusk", "Pheassul", "Skeltai", "Tiorelm", "Ementh", "Hyr", "Thereim'n", "Therbia", "Angale", "Fasik", "Tostas", "Echchaban" };
-			//Dealer theDealer = new Dealer("Joe the Dealer", 45);
-			//bool value = Misc.IsNumber(InitialResponses[1]);
-			//int NumPLayers = 0;
-			//Misc.TryParseIsInt32(InitialResponses[2], out NumPLayers);
-			List<string> PlayerNames = new List<string> { "Holen", "Garrili", "Anelm", "Chal", "Metin" };
-			List<Player> PlayersAtPokerTable = new List<Player>();
-			int numPLayers = 0;
-			numPLayers = PlayerNames.Count();
-			// Mix it up a little
-			PlayerNames.Shuffle();
-			for (int j = 0; j < numPLayers; j++)
-			{
-				PlayersAtPokerTable.Add(new Player(PlayerNames[j], j));
-			}
-			PlayersAtPokerTable.Add(new Player(InitialResponses[0], Convert.ToInt32(InitialResponses[1])));
+				//PlayersAtPokerTable.Add(new Player(InitialResponses[0], Convert.ToInt32(InitialResponses[1])));
 			
-			int numberOfDecks = (int)Math.Ceiling((5.0 * (numPLayers + 1)) / 52.0);
-			Deck Decks = new Deck(numberOfDecks);
+				int numberOfDecks = (int)Math.Ceiling((5.0 * (numPLayers + 1)) / 52.0);
+				Deck Decks = new Deck(numberOfDecks);
 
-			for (int j = 0; j < 5; j++) 
-			{
+				for (int j = 0; j < 5; j++) 
+				{
+					foreach (var player in PlayersAtPokerTable)
+					{
+						player.AddToHand(Decks.Deal());
+					}
+				}
 				foreach (var player in PlayersAtPokerTable)
 				{
-					player.AddToHand(Decks.Deal());
+					//Console.WriteLine(player);
+					//Console.WriteLine(Scoring.NumCardsSameCheck(player.HandOfCards, 2));
+					var GroupedCardValue =
+						from card in player.HandOfCards
+						group card by card.integerValue;
+				
+					foreach (var value in GroupedCardValue) {
+						
+						if (value.Count() > 3)
+						{
+							Console.WriteLine("Game Number {0}", w);
+							Console.WriteLine("Key Value:{0}\nKey Value Count {1}", value.Key, value.Count());
+							Console.WriteLine("Damn!!!!");
+							Console.ReadLine();
+						}
+					}
 				}
+				//Console.WriteLine(Decks);
 			}
-			foreach (var player in PlayersAtPokerTable)
-			{
-				Console.WriteLine(player);
-			}
-			Console.WriteLine(Decks);
-#if DEBUG
+#if !DEBUG
 			Console.WriteLine("Press any key to close...");
 			Console.ReadLine();
 #endif
+			
 		}
 	}
 
@@ -125,9 +146,8 @@ namespace Poker
 				result = string.Format("{0, -30} \n{1}", Name + ":", HandInfo);
 			}
 			else
-			{
 				result = string.Format("{0, -30} {1} years old", Name + ":", Age);
-			}
+
 			return result;
 		}
 	}
@@ -143,6 +163,22 @@ namespace Poker
 				return this.integerValue.CompareTo(otherCard.integerValue);
 			else
 				throw new ArgumentException("Object is not a Card");
+		}
+
+		public override bool Equals(object obj)
+		{
+			Card other = obj as Card; //avoid double casting 
+			if (object.ReferenceEquals(other, null))
+			{
+				return false;
+			}
+			return this.CompareTo(other) == 0;
+		}
+
+		public override int GetHashCode()
+		{
+			char[] c = this.ToString().ToCharArray();
+			return (int)c[0];
 		}
 
 		public int integerValue;
@@ -222,7 +258,7 @@ namespace Poker
 	/// <summary>
 	/// Class for Scoring poker hands.
 	/// </summary>
-	public static class PokerScoring
+	public static class Scoring
 	{
 		/// <summary>
 		/// 
@@ -247,6 +283,7 @@ namespace Poker
 		/// <returns>True if cards has numSameIntegerValue cards that have the same value, otherwise it returns False</returns>
 		//public static bool NumCardsSameCheck(List<Card> cards, int numCardsSame)
 		//{
+			
 		//	List<int> Values = new List<int>(ValueOfCards(cards));
 		//	Values.Sort();
 		//	for (int i = 0; i < cards.Count - numCardsSame + 1; i++)
@@ -303,13 +340,11 @@ namespace Poker
 				T value = theList[k];
 				theList[k] = theList[n];
 				theList[n] = value;
-				if (k % 2 == 0)
-				{
+				if (k % 2 == rng.Next(0, 1))
 					n++;
-				}
 				NumLoops++;
 			}
-#if DEBUG
+#if ! DEBUG
 			Console.WriteLine("\n\nShuffled {0} times...\n\n", NumLoops);
 #endif
 		}
@@ -325,11 +360,6 @@ namespace Poker
 			var local = theList[0];
 			theList.RemoveAt(0);
 			return local;
-		}
-
-		public static void Push<T>(this List<T> theList, T item)
-		{
-			theList.Add(item);
 		}
 	} 
 }
