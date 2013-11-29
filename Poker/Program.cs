@@ -165,6 +165,19 @@ namespace Poker
 				throw new ArgumentException("Object is not a Card");
 		}
 
+		public static int Compare(Card left, Card right)
+		{
+			if (object.ReferenceEquals(left, right))
+			{
+				return 0;
+			}
+			if (object.ReferenceEquals(left, null))
+			{
+				return -1;
+			}
+			return left.CompareTo(right);
+		}
+
 		public override bool Equals(object obj)
 		{
 			Card other = obj as Card; //avoid double casting 
@@ -179,6 +192,27 @@ namespace Poker
 		{
 			char[] c = this.ToString().ToCharArray();
 			return (int)c[0];
+		}
+
+		public static bool operator ==(Card left, Card right)
+		{
+			if (object.ReferenceEquals(left, null))
+			{
+				return object.ReferenceEquals(right, null);
+			}
+			return left.Equals(right);
+		}
+		public static bool operator !=(Card left, Card right)
+		{
+			return !(left == right);
+		}
+		public static bool operator <(Card left, Card right)
+		{
+			return (Compare(left, right) < 0);
+		}
+		public static bool operator >(Card left, Card right)
+		{
+			return (Compare(left, right) > 0);
 		}
 
 		public int integerValue;
