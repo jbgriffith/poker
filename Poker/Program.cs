@@ -12,7 +12,7 @@ namespace Poker
 	{
 		static void Main(string[] args)
 		{
-			for (int w = 0; w < 100000; w++)
+			for (int w = 0; w < 10000; w++)
 			{
 
 
@@ -49,9 +49,10 @@ namespace Poker
 				}
 				//PlayersAtPokerTable.Add(new Player(InitialResponses[0], Convert.ToInt32(InitialResponses[1])));
 
-				int numberOfDecks = (int)Math.Ceiling((5.0 * (numPLayers + 1)) / 52.0);
+				int numberOfDecks = (int)Math.Ceiling((5.0 * (numPLayers + 1)) / 52);
 				Deck Decks = new Deck(numberOfDecks);
-
+				
+				// Deal out the Cards to the players
 				for (int j = 0; j < 5; j++)
 				{
 					foreach (var player in PlayersAtPokerTable)
@@ -59,22 +60,26 @@ namespace Poker
 						player.AddToHand(Decks.Deal());
 					}
 				}
+
+				// Show cards
 				foreach (var player in PlayersAtPokerTable)
 				{
 					//Console.WriteLine(player);
 					//Console.WriteLine(Scoring.NumCardsSameCheck(player.HandOfCards, 2));
+
 
 					var GroupedCardValue =
 						from card in player.HandOfCards
 						group card by card.NumericValue into c
 						select new { NumericValue = c.Key, obj = c, NumberOfValues = c.Count() };
 
-					var shit = from each in GroupedCardValue
-							   where each.NumberOfValues > 3
+					var setsOfCards = from each in GroupedCardValue
+							   where each.NumberOfValues >= 2
 							   select each;
-					foreach (var set in shit)
+					foreach (var set in setsOfCards)
 					{
 						Console.WriteLine("Game Number:{0}", w);
+
 						foreach (var obj in set.obj)
 							Console.WriteLine("\t{0}", obj);
 					}
@@ -245,8 +250,8 @@ namespace Poker
 			return (Compare(left, right) > 0);
 		}
 
-		public int NumericValue { get; set; }
-		public string Suit { get; set; }
+		public int NumericValue { get; private set; }
+		public string Suit { get; private set; }
 		public ReadOnlyCollection<string> numericValueNames =
 			new ReadOnlyCollection<string>(new string[] { "Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King" });
 
