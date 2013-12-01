@@ -12,7 +12,7 @@ namespace Poker
 	{
 		static void Main(string[] args)
 		{
-			for (int w = 0; w < 10000; w++)
+			for (int w = 0; w < 100000; w++)
 			{
 
 
@@ -42,22 +42,23 @@ namespace Poker
 				int numPLayers = 0;
 				numPLayers = PlayerNames.Count();
 				// Mix it up a little
-				PlayerNames.ShuffleIt();
+				//PlayerNames.ShuffleIt();
 				for (int j = 0; j < numPLayers; j++)
 				{
 					PlayersAtPokerTable.Add(new Player(PlayerNames[j], j));
 				}
 				//PlayersAtPokerTable.Add(new Player(InitialResponses[0], Convert.ToInt32(InitialResponses[1])));
 
-				int numberOfDecks = (int)Math.Ceiling((5.0 * (numPLayers + 1)) / 52);
-				Deck Decks = new Deck(numberOfDecks);
-				
+				//int numberOfDecks = (int)Math.Ceiling((5.0 * (numPLayers + 1)) / 52);
+				Deck decks = new Deck();
+
 				// Deal out the Cards to the players
 				for (int j = 0; j < 5; j++)
 				{
 					foreach (var player in PlayersAtPokerTable)
 					{
-						player.AddToHand(Decks.Deal());
+						//player.AddToHand(Decks.Deal());
+						player.AddCard(decks.DealCard());
 					}
 				}
 
@@ -65,59 +66,73 @@ namespace Poker
 				foreach (var player in PlayersAtPokerTable)
 				{
 					//Console.WriteLine(player);
-					//Console.WriteLine(Scoring.NumCardsSameCheck(player.HandOfCards, 2));
+					//Console.WriteLine(Scoring.NumCardsSameCheck(player.cards, 2));
+
+					// Pair, ThreeOfAKind, 4OfAKind
+					var SetsOfCards = 
+						from card in player.cards
+						group card by card.Number into c
+						where c.Count() >= 2
+						select new { number = c.Key, obj = c, NumberOfValues = c.Count() };
+
+					var Flush =
+						from card in player.cards
+						group card by card.Suit into f
+						where f.Count() == 5
+						select new { suit = f.Key, obj = f, NumOfValues = f.Count() };
 
 
-					var GroupedCardValue =
-						from card in player.HandOfCards
-						group card by card.NumericValue into c
-						select new { NumericValue = c.Key, obj = c, NumberOfValues = c.Count() };
+					var StraightSet = Enum.GetValues(typeof(CardValue)).Cast<CardValue>().ToList();
 
-					var setsOfCards = from each in GroupedCardValue
-							   where each.NumberOfValues >= 2
-							   select each;
-					foreach (var set in setsOfCards)
+					var Straight =
+						from card in player.cards
+						orderby card.Number ascending
+						select card.Number;
+
+					var differences = Straight.Zip(Straight.Skip(1), (a, b) => b - a);
+					var validStraight = differences.All(x => x == 1);
+
+					if (validStraight)
+					{
+						Console.WriteLine("Straight {0}", player);
+					}
+					foreach (var set in SetsOfCards)
 					{
 						Console.WriteLine("Game Number:{0}", w);
-
-						foreach (var obj in set.obj)
-							Console.WriteLine("\t{0}", obj);
+						Console.WriteLine(player);
 					}
 					player.Fold();
 
-					//var GroupedCardSuit =
-					//from card in player.HandOfCards
-					//group card by card.suit;
+					//	//	foreach (var numInfo in HandStats)
+					//	//	{
+					//	//		//if (numInfo == 1)
+					//	//		//{
+					//	//		//	Console.WriteLine(numInfo.number);
+					//	//		//	Console.WriteLine(numInfo.total);
+					//	//		//	Console.WriteLine(numInfo.maximum);
+					//	//		//}
+					//	//	}
+					//	//}
+					//	////foreach (var value in GroupedCardValue)
+					//	////{
 
-					//	foreach (var numInfo in HandStats)
-					//	{
-					//		//if (numInfo == 1)
-					//		//{
-					//		//	Console.WriteLine(numInfo.number);
-					//		//	Console.WriteLine(numInfo.total);
-					//		//	Console.WriteLine(numInfo.maximum);
-					//		//}
-					//	}
+					//	////	if (value.Count() == 4)
+					//	////	{
+					//	////		Console.WriteLine("Game Number {0}", w);
+					//	////		Console.WriteLine("Key Value:{0}\nKey Value Count {1}", value.Key, value.Count());
+					//	////		Console.WriteLine("Pair");
+					//	////		//Console.ReadLine();
+					//	////	}
+					//	////}
 					//}
-					////foreach (var value in GroupedCardValue)
-					////{
-
-					////	if (value.Count() == 4)
-					////	{
-					////		Console.WriteLine("Game Number {0}", w);
-					////		Console.WriteLine("Key Value:{0}\nKey Value Count {1}", value.Key, value.Count());
-					////		Console.WriteLine("Pair");
-					////		//Console.ReadLine();
-					////	}
-					////}
+					//Console.WriteLine(Decks);
 				}
-				//Console.WriteLine(Decks);
-			}
 #if !DEBUG
 			Console.WriteLine("Press any key to close...");
 			Console.ReadLine();
 #endif
 
+			}
 		}
 	}
 
@@ -138,11 +153,10 @@ namespace Poker
 	/// <summary>
 	/// Abstract Class for any person that will be at a Poker Table.
 	/// </summary>
-	abstract class PersonAtPokerTable
+	abstract class PersonAtPokerTable : Hand
 	{
-		public string Name { get; set; }
-		public int Age { get; set; }
-		public List<Card> HandOfCards = new List<Card>();
+		public string Name { get; private set; }
+		public int Age { get; private set; }
 
 		public PersonAtPokerTable() : this("Unnamed person", 0) { }
 		public PersonAtPokerTable(string NameText, int AgeValue)
@@ -150,34 +164,26 @@ namespace Poker
 			Name = NameText;
 			Age = AgeValue;
 		}
-		/// <summary>
-		/// Method to allow a Person to receive a card which will add to their HandOfCards.
-		/// </summary>
-		/// <param name="card">a Card Object</param>
-		public void AddToHand(Card card)
-		{
-			HandOfCards.Add(card);
-		}
+
 		/// <summary>
 		/// Method to allow a Person to fold their hand.
 		/// </summary>
 		public void Fold()
 		{
-			HandOfCards.Clear();
+			cards.Clear();
 		}
 
 		public override string ToString()
 		{
 			string result = "";
 
-			if (HandOfCards.Count() > 0)
+			if (cards.Count > 0)
 			{
-				HandOfCards.Sort();
+				//cards.Sort();
+				var sortedCards = cards.OrderBy(x => x.Number).ToList();
 				StringBuilder HandInfo = new StringBuilder();
-				foreach (Card card in HandOfCards)
-				{
+				foreach (Card card in sortedCards)
 					HandInfo.AppendLine("\t" + card.ToString());
-				}
 				result = string.Format("{0, -30} \n{1}", Name + ":", HandInfo);
 			}
 			else
@@ -187,19 +193,58 @@ namespace Poker
 		}
 	}
 
+	public enum CardSuit
+	{
+		Spades,
+		Hearts,
+		Clubs,
+		Diamonds,
+	}
+	public enum CardValue
+	{
+		Ace = 0,
+		Two = 1,
+		Three = 2,
+		Four = 3,
+		Five = 4,
+		Six = 5,
+		Seven = 6,
+		Eight = 7,
+		Nine = 8,
+		Ten = 9,
+		Jack = 10,
+		Queen = 11,
+		King = 12,
+	}
 	public class Card : IComparable
 	{
+		public CardSuit Suit { get; set; }
+		//private Suits Suit;
+		public CardValue Number { get; set; }
+		//private Number number;
+
+		public Card(CardSuit suit, CardValue number)
+		{
+			Suit = suit;
+			Number = number;
+		}
+		
+		public override string ToString()
+		{
+			return string.Format("{0} of {1}", Number, Suit);
+		}
+		
 		public int CompareTo(object obj)
 		{
 			if (obj == null) return 1;
 
 			Card otherCard = obj as Card;
 			if (otherCard != null)
-				return this.NumericValue.CompareTo(otherCard.NumericValue);
+				return this.Number.CompareTo(otherCard.Number);
 			else
 				throw new ArgumentException("Object is not a Card");
 		}
-
+		
 		public static int Compare(Card left, Card right)
 		{
 			if (object.ReferenceEquals(left, right))
@@ -212,7 +257,7 @@ namespace Poker
 			}
 			return left.CompareTo(right);
 		}
-
+		
 		public override bool Equals(object obj)
 		{
 			Card other = obj as Card; //avoid double casting 
@@ -222,13 +267,13 @@ namespace Poker
 			}
 			return this.CompareTo(other) == 0;
 		}
-
+		
 		public override int GetHashCode()
 		{
 			char[] c = this.ToString().ToCharArray();
 			return (int)c[0];
 		}
-
+		
 		public static bool operator ==(Card left, Card right)
 		{
 			if (object.ReferenceEquals(left, null))
@@ -237,73 +282,61 @@ namespace Poker
 			}
 			return left.Equals(right);
 		}
+		
 		public static bool operator !=(Card left, Card right)
 		{
 			return !(left == right);
 		}
+		
 		public static bool operator <(Card left, Card right)
 		{
 			return (Compare(left, right) < 0);
 		}
+		
 		public static bool operator >(Card left, Card right)
 		{
 			return (Compare(left, right) > 0);
 		}
+	}
 
-		public int NumericValue { get; private set; }
-		public string Suit { get; private set; }
-		public ReadOnlyCollection<string> numericValueNames =
-			new ReadOnlyCollection<string>(new string[] { "Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King" });
+	public abstract class Cards
+	{
+		public Collection<Card> cards = new Collection<Card>();
 
-		public Card(int Value, string suitText)
+		public void AddCard(Card card)
 		{
-			Suit = suitText;
-			NumericValue = Value % 13;
+			cards.Add(card);
 		}
 
-		public override string ToString()
+		public void RemoveCard(Card card)
 		{
-			return string.Format("{0} of {1}", numericValueNames[NumericValue], Suit);
+			if (cards.Contains(card) == true)
+				cards.Remove(card);
+			else
+				throw new InvalidOperationException("The card is not in the deck");
+		}
+		public Card ReturnCard()
+		{
+			return cards.Pop();
 		}
 	}
 
-	/// <summary>
-	/// Class to represent A Deck of Cards (Cards Class)
-	/// </summary>
-	public class Deck
+	public class Hand : Cards
 	{
-		private Collection<string> suits = new Collection<string> { "Hearts", "Spades", "Diamonds", "Clubs" };
-		private Collection<Card> cards = new Collection<Card>();
-		/// <summary>
-		/// Default Contrustor creates one Deck's worth of Cards
-		/// </summary>
-		public Deck() : this(1) { }
-		/// <summary>
-		/// Overriding the 
-		/// </summary>
-		/// <param name="numberOfDecks"></param>
-		public Deck(int numberOfDecks)
-		{
-			if (numberOfDecks < 1)
-				numberOfDecks = 1;
+	}
 
-			for (int i = 0; i < 13 * numberOfDecks; i++)
-			{
-				foreach (var suit in suits)
-				{
-					cards.Add(new Card(i, suit));
-				}
-			}
+	public class Deck : Cards
+	{
+		public Deck()
+		{
+			foreach (CardSuit currentSuit in Enum.GetValues(typeof(CardSuit)))
+				foreach (CardValue currentNumber in Enum.GetValues(typeof(CardValue)))
+					AddCard(new Card(currentSuit, currentNumber));
 			cards.ShuffleIt();
 		}
-
-		/// <summary>
-		/// This Method returns (Deals) one Card object. 
-		/// </summary>
-		/// <returns>Single Card Object</returns>
-		public Card Deal()
+		public Card DealCard()
 		{
-			return cards.Pop();
+			return base.ReturnCard();
 		}
 
 		/// <summary>
@@ -314,89 +347,12 @@ namespace Poker
 		{
 			string result = "";
 			if (cards.Count > 0)
-			{
 				foreach (var card in cards)
-				{
 					result += string.Format("{0}\n", card);
-				}
-			}
 			else
-			{
 				result = "No cards in the Deck.\n";
-			}
+
 			return result;
-		}
-	}
-
-	/// <summary>
-	/// Class for Scoring poker hands.
-	/// </summary>
-	public static class Scoring
-	{
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="cards"></param>
-		/// <returns></returns>
-		public static Collection<int> ValueOfCards(Collection<Card> cards)
-		{
-			if (cards == null)
-				throw new ArgumentNullException("cards");
-
-			Collection<int> Values = new Collection<int>();
-			foreach (var card in cards)
-			{
-				Values.Add(card.NumericValue % 13);
-			}
-			return Values;
-		}
-
-		/// <summary>
-		/// Checks
-		/// </summary>
-		/// <param name="cards">List of Card Objects</param>
-		/// <param name="numCardsSame">Number of cards that need to be the same to return True</param>
-		/// <returns>True if cards has numSameIntegerValue cards that have the same value, otherwise it returns False</returns>
-		//public static bool NumCardsSameCheck(List<Card> cards, int numCardsSame)
-		//{
-
-		//	List<int> Values = new List<int>(ValueOfCards(cards));
-		//	Values.Sort();
-		//	for (int i = 0; i < cards.Count - numCardsSame + 1; i++)
-		//	{
-		//		List<Card> firstSetOfNCards = cards.Sort();
-		//		return true;
-		//	}
-		//	return true;
-		//}
-	}
-
-	/// <summary>
-	/// Miscelanious Methods including some Generic Methods
-	/// </summary>
-	public static class StringExtensions
-	{
-		/// <summary>
-		/// Method to test if value can be converted into a 32-bit Integer.
-		/// </summary>
-		/// <param name="value"></param>
-		/// <returns></returns>
-		public static bool IsNumber(this String value)
-		{
-			if (value == null)
-				throw new ArgumentNullException("value");
-			return value.ToCharArray().Where(x => !Char.IsDigit(x)).Count() == 0;
-		}
-
-		/// <summary>
-		/// Method to test if value can be converted into a 32-bit Integer.
-		/// </summary>
-		/// <param name="value"></param>
-		/// <param name="result"></param>
-		/// <returns>True if it can be conveted to an 32-bit Integer, otherwise False</returns>
-		public static bool TryParseIsInt32(string value, out int result)
-		{
-			return Int32.TryParse(value, out result);
 		}
 	}
 
@@ -416,61 +372,31 @@ namespace Poker
 		public static void ShuffleIt<T>(this IList<T> list)
 		{
 			int n = list.Count;
-			while (n > 1)
+			while (n-- > 1)
 			{
-				n--;
 				int k = ThreadSafeRandom.ThisThreadsRandom.Next(n + 1);
 				T value = list[k];
 				list[k] = list[n];
 				list[n] = value;
 			}
 		}
-	}
-
-	public static class CollectionExtensions
-	{
-		/// <summary>
-		/// This Generic Method shuffles (reorginizes) the order of elements in a List of any Type.
-		/// </summary>
-		/// <typeparam name="T">Type</typeparam>
-		/// <param name="theList">A list of any Type</param>
-		public static void Shuffle<T>(this Collection<T> theList)
-		{
-			if (theList == null)
-				throw new ArgumentNullException("theList");
-
-			Random rng = new Random();
-			int n = theList.Count;
-			int NumLoops = 0;
-			while (n-- > 0)
-			{
-				int k = rng.Next(n + 1);
-				T value = theList[k];
-				theList[k] = theList[n];
-				theList[n] = value;
-				//if (k % 2 == 1)
-				//	n++;
-				NumLoops++;
-			}
-#if ! DEBUG
-			Console.WriteLine("\n\nShuffled {0} times...\n\n", NumLoops);
-#endif
-		}
 
 		/// <summary>
 		/// Removes the last element from a List of any Type
 		/// </summary>
 		/// <typeparam name="T">Type</typeparam>
-		/// <param name="theList">A List of any Type</param>
+		/// <param name="list">A List of any Type</param>
 		/// <returns></returns>
-		public static T Pop<T>(this Collection<T> theList)
+		public static T Pop<T>(this Collection<T> list)
 		{
-			if (theList == null)
-				throw new ArgumentNullException("theList");
+			if (list == null)
+				throw new ArgumentNullException("list");
 
-			var local = theList[0];
-			theList.RemoveAt(0);
+			var local = list[0];
+			list.RemoveAt(0);
 			return local;
 		}
+
+
 	}
 }
