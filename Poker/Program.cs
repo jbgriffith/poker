@@ -12,7 +12,7 @@ namespace Poker
 	{
 		static void Main(string[] args)
 		{
-			for (int w = 0; w < 100000; w++)
+			for (int w = 0; w < 1000; w++)
 			{
 
 
@@ -65,43 +65,58 @@ namespace Poker
 				// Show cards
 				foreach (var player in PlayersAtPokerTable)
 				{
-					//Console.WriteLine(player);
-					//Console.WriteLine(Scoring.NumCardsSameCheck(player.cards, 2));
-
 					// Pair, ThreeOfAKind, 4OfAKind
-					var SetsOfCards = 
+					// Works!
+					var SetsOfCards =
 						from card in player.cards
 						group card by card.Number into c
 						where c.Count() >= 2
 						select new { number = c.Key, obj = c, NumberOfValues = c.Count() };
 
-					var Flush =
-						from card in player.cards
-						group card by card.Suit into f
-						where f.Count() == 5
-						select new { suit = f.Key, obj = f, NumOfValues = f.Count() };
+					//foreach (var set in SetsOfCards)
+					//{
+					//	Console.WriteLine("Game Number:{0}", w);
+					//	Console.WriteLine(player);
+					//}
 
 
-					var StraightSet = Enum.GetValues(typeof(CardValue)).Cast<CardValue>().ToList();
-
+					// Straight
+					// Works!
 					var Straight =
 						from card in player.cards
 						orderby card.Number ascending
 						select card.Number;
 
-					var differences = Straight.Zip(Straight.Skip(1), (a, b) => b - a);
-					var validStraight = differences.All(x => x == 1);
+					var ValidStraight = Straight.Zip(Straight.Skip(1), (a, b) => b - a).All(x => x == 1);
 
-					if (validStraight)
+					if (ValidStraight)
 					{
 						Console.WriteLine("Straight {0}", player);
 					}
-					foreach (var set in SetsOfCards)
-					{
-						Console.WriteLine("Game Number:{0}", w);
-						Console.WriteLine(player);
-					}
+
+
+					// Flush
+					// Doesn't Work Yet
+					var Flush =
+						from card in player.cards
+						group card by card.Suit into f
+						where f.Select(fl => fl.Suit).Distinct().Count() == 1
+						select new { suit = f.Key, obj = f, NumOfValues = f.Count() };
+
+					//foreach (var set in Flush)
+					//{
+					//	Console.WriteLine("Game Number:{0}", w);
+					//	Console.WriteLine(player);
+					//}
+
+					// Each Player Empties their hand
 					player.Fold();
+
+					// Straight Flush
+
+					//if (ValidStraight && Flush) 
+
+
 
 					//	//	foreach (var numInfo in HandStats)
 					//	//	{
@@ -192,7 +207,9 @@ namespace Poker
 			return result;
 		}
 	}
-
+	/// <summary>
+	/// Enums for the Suit influenced from http://www.gamedev.net/topic/483122-c-poker-game-problem/
+	/// </summary>
 	public enum CardSuit
 	{
 		Spades,
@@ -200,6 +217,9 @@ namespace Poker
 		Clubs,
 		Diamonds,
 	}
+	/// <summary>
+	/// Enum for Card Value influenced from linek above
+	/// </summary>
 	public enum CardValue
 	{
 		Ace = 0,
@@ -219,21 +239,19 @@ namespace Poker
 	public class Card : IComparable
 	{
 		public CardSuit Suit { get; set; }
-		//private Suits Suit;
 		public CardValue Number { get; set; }
-		//private Number number;
 
 		public Card(CardSuit suit, CardValue number)
 		{
 			Suit = suit;
 			Number = number;
 		}
-		
+
 		public override string ToString()
 		{
 			return string.Format("{0} of {1}", Number, Suit);
 		}
-		
+
 		public int CompareTo(object obj)
 		{
 			if (obj == null) return 1;
@@ -244,7 +262,7 @@ namespace Poker
 			else
 				throw new ArgumentException("Object is not a Card");
 		}
-		
+
 		public static int Compare(Card left, Card right)
 		{
 			if (object.ReferenceEquals(left, right))
@@ -257,7 +275,7 @@ namespace Poker
 			}
 			return left.CompareTo(right);
 		}
-		
+
 		public override bool Equals(object obj)
 		{
 			Card other = obj as Card; //avoid double casting 
@@ -267,13 +285,13 @@ namespace Poker
 			}
 			return this.CompareTo(other) == 0;
 		}
-		
+
 		public override int GetHashCode()
 		{
 			char[] c = this.ToString().ToCharArray();
 			return (int)c[0];
 		}
-		
+
 		public static bool operator ==(Card left, Card right)
 		{
 			if (object.ReferenceEquals(left, null))
@@ -282,17 +300,17 @@ namespace Poker
 			}
 			return left.Equals(right);
 		}
-		
+
 		public static bool operator !=(Card left, Card right)
 		{
 			return !(left == right);
 		}
-		
+
 		public static bool operator <(Card left, Card right)
 		{
 			return (Compare(left, right) < 0);
 		}
-		
+
 		public static bool operator >(Card left, Card right)
 		{
 			return (Compare(left, right) > 0);
