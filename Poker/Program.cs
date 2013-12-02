@@ -11,7 +11,7 @@ namespace Poker
 	{
 		static void Main(string[] args)
 		{
-			for (int w = 0; w < 10000; w++)
+			for (int w = 0; w < 100000; w++)
 			{
 				Collection<string> PlayerNames = new Collection<string> { "Holen", "Garrili", "Anelm", "Chal", "Metin" };
 				Collection<Player> PlayersAtPokerTable = new Collection<Player>();
@@ -55,54 +55,59 @@ namespace Poker
 				foreach (var player in PlayersAtPokerTable)
 				{
 					// Not the best way to do this...
-					if (PokerScoring.RoyalFlush(player))
+					if (ParsePokerHand.RoyalFlush(player))
 					{
 						break;
 					}
-					else if (PokerScoring.StraightFlush(player))
+					else if (ParsePokerHand.StraightFlush(player))
 					{
 						break;
 					}
-					else if (PokerScoring.FullHouse(player))
+					else if (ParsePokerHand.FullHouse(player))
 					{
 						break;
 					}
-					else if (PokerScoring.FourOfAKind(player))
+					else if (ParsePokerHand.FourOfAKind(player))
 					{
 						break;
 					}
-					else if (PokerScoring.Flush(player))
+					else if (ParsePokerHand.Flush(player))
 					{
 						break;
 					}
-					else if (PokerScoring.Straight(player))
+					else if (ParsePokerHand.Straight(player))
 					{
 						break;
 					}
-					else if (PokerScoring.ThreeOfAKind(player))
+					else if (ParsePokerHand.ThreeOfAKind(player))
 					{
 						break;
 					}
-					else if (PokerScoring.TwoPair(player))
+					else if (ParsePokerHand.TwoPair(player))
 					{
 						break;
 					}
-					else if (PokerScoring.OnePair(player))
+					else if (ParsePokerHand.OnePair(player))
 					{
 						break;
 					}
+					// Need to add to ParsePokerHand
 					//else if (PokerScoring.HighCard(player))
 					//{
 					//	break;
 					//}
 				}
 #if DEBUG
-				Console.WriteLine("Game #{0}", w);
+				if (w % 100 == 0)
+					Console.WriteLine("Game #{0}", w);
+				//foreach (var player in PlayersAtPokerTable)
+				//	Console.WriteLine(player);
 			//Console.WriteLine("Press any key to close...");
 			//Console.ReadLine();
 #endif
 
 			}
+			
 		}
 	}
 
@@ -118,7 +123,7 @@ namespace Poker
 	public class Player : PersonAtPokerTable
 	{
 		public Player() : this("Unnamed Player", 0) { }
-		public Player(string NameText, int AgeValue) : base(NameText, AgeValue) { }
+		public Player(string name, int age) : base(name, age) { }
 	}
 	/// <summary>
 	/// Abstract Class for any person that will be at a Poker Table.
@@ -128,11 +133,11 @@ namespace Poker
 		public string Name { get; set; }
 		public int Age { get; set; }
 
-		public PersonAtPokerTable() : this("Unnamed person", 0) { }
-		public PersonAtPokerTable(string NameText, int AgeValue)
+		//public PersonAtPokerTable() : this("Unnamed person", 0) { }
+		public PersonAtPokerTable(string name, int age)
 		{
-			Name = NameText;
-			Age = AgeValue;
+			Name = name;
+			Age = age;
 		}
 
 		/// <summary>
@@ -244,7 +249,7 @@ namespace Poker
 		///// <summary>
 		///// This Method overrides the Default .ToString Method which allows for printing of the Deck Object with a user friendly message. If no cards are in the Deck, it will also include a message for that.
 		///// </summary>
-		///// <returns>A user friendly representastion of the Deck object.</returns>
+		///// <returns>A user friendly representasion of the Deck object.</returns>
 		//public override string ToString()
 		//{
 		//	string result = "";
@@ -258,9 +263,8 @@ namespace Poker
 		//}
 	}
 
-	public class PokerScoring
+	public static class ParsePokerHand
 	{
-
 		public static bool RoyalFlush(Player player)
 		{
 			// Need solution for TJQKA!!!!!!!!!
@@ -269,7 +273,6 @@ namespace Poker
 
 		public static bool FullHouse(Player player)
 		{
-			// Full House
 			// Need to simplify!!!!
 			var ThreeOfAKindForFullHouse =
 				from card in player.cards
@@ -291,15 +294,13 @@ namespace Poker
 
 		public static bool StraightFlush(Player player)
 		{
-			// Straight Flush
 			// Works! except for TJQKA..... :-/
 			return (Straight(player) && Flush(player));
 		}
 
 		public static bool Flush(Player player)
 		{
-			// Works!
-			// Probably more complex that it needs to be
+			// Works! Probably more complex that it needs to be
 			var Flush =
 				from card in player.cards
 				group card by card.Suit into f
@@ -317,9 +318,8 @@ namespace Poker
 				orderby card.Number ascending
 				select card.Number;
 
-			// Makes sure that all ofthe cards are sequential
+			// Returns True if all cards are sequential, else False
 			// Influenced by http://stackoverflow.com/a/6150439/3042939
-
 			return Straight.Zip(Straight.Skip(1), (a, b) => b - a).All(x => x == 1);
 		}
 
@@ -343,15 +343,15 @@ namespace Poker
 			return SetCheck(player, 2);
 		}
 
-		public static bool SetCheck(Player player, int NumCardsInSet, int NumOfSetsCheck = 1)
+		public static bool SetCheck(Player player, int numberCardsInSet, int numberOfSetsCheck = 1)
 		{
 			var SetsOfCards =
 				from card in player.cards
 				group card by card.Number into c
-				where c.Count() == NumCardsInSet
+				where c.Count() == numberCardsInSet
 				select c.Key;
 
-			return SetsOfCards.Count() == NumOfSetsCheck;
+			return SetsOfCards.Count() == numberOfSetsCheck;
 		}
 	}
 
