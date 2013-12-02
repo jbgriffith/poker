@@ -16,11 +16,11 @@ namespace Poker
 			{
 				Collection<string> PlayerNames = new Collection<string> { "Holen", "Garrili", "Anelm", "Chal", "Metin" };
 				Collection<Player> PlayersAtPokerTable = new Collection<Player>();
-				int numPLayers = PlayerNames.Count();
+				int numPLayers = PlayerNames.Count;
 
 				// Mix it up a little
 				PlayerNames.ShuffleIt();
-				
+
 				for (int j = 0; j < numPLayers; j++)
 				{
 					PlayersAtPokerTable.Add(new Player(PlayerNames[j], j));
@@ -28,7 +28,8 @@ namespace Poker
 
 				//int numberOfDecks = (int)Math.Ceiling((5.0 * (numPLayers + 1)) / 52);
 				Deck decks = new Deck();
-
+				// Shuffle
+				decks.cards.ShuffleIt();
 				// Deal out the Cards to the players
 				for (int j = 0; j < 5; j++)
 				{
@@ -54,7 +55,7 @@ namespace Poker
 
 				foreach (var player in PlayersAtPokerTable)
 				{
-					if (PokerScoring.RoyalFlush(player)) 
+					if (PokerScoring.RoyalFlush(player))
 					{
 						break;
 					}
@@ -189,7 +190,7 @@ namespace Poker
 		Queen = 11,
 		King = 12,
 	}
-	public class Card : IComparable
+	public class Card// : IComparable
 	{
 		public CardSuit Suit { get; set; }
 		public CardValue Number { get; set; }
@@ -205,69 +206,69 @@ namespace Poker
 			return string.Format("{0} of {1}", Number, Suit);
 		}
 
-		public int CompareTo(object obj)
-		{
-			if (obj == null) return 1;
+		//public int CompareTo(object obj)
+		//{
+		//	if (obj == null) return 1;
 
-			Card otherCard = obj as Card;
-			if (otherCard != null)
-				return this.Number.CompareTo(otherCard.Number);
-			else
-				throw new ArgumentException("Object is not a Card");
-		}
+		//	Card otherCard = obj as Card;
+		//	if (otherCard != null)
+		//		return this.Number.CompareTo(otherCard.Number);
+		//	else
+		//		throw new ArgumentException("Object is not a Card");
+		//}
 
-		public static int Compare(Card left, Card right)
-		{
-			if (object.ReferenceEquals(left, right))
-			{
-				return 0;
-			}
-			if (object.ReferenceEquals(left, null))
-			{
-				return -1;
-			}
-			return left.CompareTo(right);
-		}
+		//public static int Compare(Card left, Card right)
+		//{
+		//	if (object.ReferenceEquals(left, right))
+		//	{
+		//		return 0;
+		//	}
+		//	if (object.ReferenceEquals(left, null))
+		//	{
+		//		return -1;
+		//	}
+		//	return left.CompareTo(right);
+		//}
 
-		public override bool Equals(object obj)
-		{
-			Card other = obj as Card; //avoid double casting 
-			if (object.ReferenceEquals(other, null))
-			{
-				return false;
-			}
-			return this.CompareTo(other) == 0;
-		}
+		//public override bool Equals(object obj)
+		//{
+		//	Card other = obj as Card; //avoid double casting 
+		//	if (object.ReferenceEquals(other, null))
+		//	{
+		//		return false;
+		//	}
+		//	return this.CompareTo(other) == 0;
+		//}
 
-		public override int GetHashCode()
-		{
-			char[] c = this.ToString().ToCharArray();
-			return (int)c[0];
-		}
+		////public override int GetHashCode()
+		////{
+		////	char[] c = this.ToString().ToCharArray();
+		////	return (int)c[0];
+		////}
 
-		public static bool operator ==(Card left, Card right)
-		{
-			if (object.ReferenceEquals(left, null))
-			{
-				return object.ReferenceEquals(right, null);
-			}
-			return left.Equals(right);
-		}
+		//public static bool operator ==(Card left, Card right)
+		//{
+		//	if (object.ReferenceEquals(left, null))
+		//	{
+		//		return object.ReferenceEquals(right, null);
+		//	}
+		//	return left.Equals(right);
+		//}
 
-		public static bool operator !=(Card left, Card right)
-		{
-			return !(left == right);
-		}
+		//public static bool operator !=(Card left, Card right)
+		//{
+		//	return !(left == right);
+		//}
 
-		public static bool operator <(Card left, Card right)
-		{
-			return (Compare(left, right) < 0);
-		}
+		//public static bool operator <(Card left, Card right)
+		//{
+		//	return (Compare(left, right) < 0);
+		//}
 
-		public static bool operator >(Card left, Card right)
-		{
-			return (Compare(left, right) > 0);
-		}
+		//public static bool operator >(Card left, Card right)
+		//{
+		//	return (Compare(left, right) > 0);
+		//}
 	}
 
 	public abstract class Cards
@@ -303,28 +304,27 @@ namespace Poker
 			foreach (CardSuit currentSuit in Enum.GetValues(typeof(CardSuit)))
 				foreach (CardValue currentNumber in Enum.GetValues(typeof(CardValue)))
 					AddCard(new Card(currentSuit, currentNumber));
-			cards.ShuffleIt();
 		}
 		public Card DealCard()
 		{
 			return base.ReturnCard();
 		}
 
-		/// <summary>
-		/// This Method overrides the Default .ToString Method which allows for printing of the Deck Object with a user friendly message. If no cards are in the Deck, it will also include a message for that.
-		/// </summary>
-		/// <returns>A user friendly representastion of the Deck object.</returns>
-		public override string ToString()
-		{
-			string result = "";
-			if (cards.Count > 0)
-				foreach (var card in cards)
-					result += string.Format("{0}\n", card);
-			else
-				result = "No cards in the Deck.\n";
+		///// <summary>
+		///// This Method overrides the Default .ToString Method which allows for printing of the Deck Object with a user friendly message. If no cards are in the Deck, it will also include a message for that.
+		///// </summary>
+		///// <returns>A user friendly representastion of the Deck object.</returns>
+		//public override string ToString()
+		//{
+		//	string result = "";
+		//	if (cards.Count > 0)
+		//		foreach (var card in cards)
+		//			result += string.Format("{0}\n", card);
+		//	else
+		//		result = "No cards in the Deck.\n";
 
-			return result;
-		}
+		//	return result;
+		//}
 	}
 
 	public class PokerScoring
@@ -347,13 +347,13 @@ namespace Poker
 			var ValidFullHouse =
 						ThreeOfAKindForFullHouse.Except(PairForFullHouse);
 
-			return (ThreeOfAKindForFullHouse.Count() > 0 && PairForFullHouse.Count() > 0 && ValidFullHouse.Count() > 0);
+			return (ValidFullHouse.Count() > 0);
 		}
 
 		public static bool RoyalFlush(Player player)
 		{
 			// Need solution for TJQKA!!!!!!!!!
-			return false;
+			return false; // :-(
 		}
 
 		public static bool StraightFlush(Player player)
@@ -370,7 +370,7 @@ namespace Poker
 				from card in player.cards
 				group card by card.Suit into f
 				where f.Select(fl => fl.Suit).Count() == 5
-				select new { suit = f.Key, obj = f, NumOfValues = f.Count() };
+				select new { suit = f.Key };
 
 			return Flush.Count() > 0;
 		}
@@ -406,18 +406,18 @@ namespace Poker
 
 		public static bool OnePair(Player player)
 		{
-			return SetCheck(player, 4);
+			return SetCheck(player, 2);
 		}
 
-		public static bool SetCheck(Player player, int NumSets, int NumSetCheck = 1 )
+		public static bool SetCheck(Player player, int NumCardsInSet, int NumOfSetsCheck = 1)
 		{
 			var SetsOfCards =
 				from card in player.cards
 				group card by card.Number into c
-				where c.Count() == NumSets
-				select new { NumberOfValues = c.Count() };
+				where c.Count() == NumCardsInSet
+				select c;
 
-			return SetsOfCards.Count() >= NumSetCheck;
+			return SetsOfCards.Count() == NumOfSetsCheck;
 		}
 	}
 
