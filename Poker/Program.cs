@@ -289,7 +289,7 @@ namespace Poker
 			var ValidFullHouse =
 						ThreeOfAKindForFullHouse.Except(PairForFullHouse);
 
-			return (ValidFullHouse.Count() > 0);
+			return (ThreeOfAKindForFullHouse.Count() > 0 && PairForFullHouse.Count() > 0 && ValidFullHouse.Count() > 0);
 		}
 
 		public static bool StraightFlush(Player player)
