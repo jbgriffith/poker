@@ -21,23 +21,23 @@ namespace Poker
 				// Mix it up a little
 				PlayerNames.ShuffleIt();
 
+				// Add each player to the table
 				for (int j = 0; j < numPLayers; j++)
 				{
 					PlayersAtPokerTable.Add(new Player(PlayerNames[j], j));
 				}
 
+				// Create New Deck
 				//int numberOfDecks = (int)Math.Ceiling((5.0 * (numPLayers + 1)) / 52);
 				Deck decks = new Deck();
+
 				// Shuffle
 				decks.cards.ShuffleIt();
+
 				// Deal out the Cards to the players
 				for (int j = 0; j < 5; j++)
-				{
 					foreach (var player in PlayersAtPokerTable)
-					{
 						player.AddCard(decks.DealCard());
-					}
-				}
 
 
 				// Scoring
@@ -96,9 +96,10 @@ namespace Poker
 					//	break;
 					//}
 				}
-#if !DEBUG
-			Console.WriteLine("Press any key to close...");
-			Console.ReadLine();
+#if DEBUG
+				Console.WriteLine("Game #{0}", w);
+			//Console.WriteLine("Press any key to close...");
+			//Console.ReadLine();
 #endif
 
 			}
@@ -192,8 +193,8 @@ namespace Poker
 	}
 	public class Card// : IComparable
 	{
-		public CardSuit Suit { get; set; }
-		public CardValue Number { get; set; }
+		public CardSuit Suit { get; private set; }
+		public CardValue Number { get; private set; }
 
 		public Card(CardSuit suit, CardValue number)
 		{
@@ -280,13 +281,13 @@ namespace Poker
 			cards.Add(card);
 		}
 
-		public void RemoveCard(Card card)
-		{
-			if (cards.Contains(card) == true)
-				cards.Remove(card);
-			else
-				throw new InvalidOperationException("The card is not in the deck");
-		}
+		//public void RemoveCard(Card card)
+		//{
+		//	if (cards.Contains(card) == true)
+		//		cards.Remove(card);
+		//	else
+		//		throw new InvalidOperationException("The card is not in the deck");
+		//}
 		public Card ReturnCard()
 		{
 			return cards.Pop();
@@ -331,7 +332,8 @@ namespace Poker
 	{
 		public static bool FullHouse(Player player)
 		{
-			//Full House
+			// Full House
+			// Need to simplify!!!!
 			var ThreeOfAKindForFullHouse =
 				from card in player.cards
 				group card by card.Number into c
@@ -359,13 +361,14 @@ namespace Poker
 		public static bool StraightFlush(Player player)
 		{
 			// Straight Flush
-			// Works! except for TJQKA
+			// Works! except for TJQKA..... :-/
 			return (Straight(player) && Flush(player));
 		}
 
 		public static bool Flush(Player player)
 		{
 			// Works!
+			// Probably more complex that it needs to be
 			var Flush =
 				from card in player.cards
 				group card by card.Suit into f
