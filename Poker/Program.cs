@@ -12,42 +12,19 @@ namespace Poker
 	{
 		static void Main(string[] args)
 		{
-			for (int w = 0; w < 1000; w++)
+			for (int w = 0; w < 10000; w++)
 			{
-
-
-				//List<string> InitialQuestions = new List<string> { "What is your name? ", "How old are you? ", "How many people would you like to play with? ", "How many rounds would you like to play? " };
-				//List<string> InitialResponses = new List<string> { "", "", "", "" };
-
-				//int i = 0;
-				//while ( i < InitialQuestions.Count() )
-				//{
-				//	Console.WriteLine(InitialQuestions[i]);
-				//	InitialResponses[i] = Console.ReadLine();
-
-				//	if (i != 0 && !InitialResponses[i].IsNumber())
-				//	{
-				//		i--;
-				//	}
-				//	i++;
-				//}
-
-				//List<string> PlayerNames = new List<string> { "Holen", "Garrili", "Anelm", "Chal", "Metin", "Ahasu", "Omvori", "Mosbwar", "Oldrod", "Ymosi", "Umll", "Omagekelat", "Awpoli", "Tanys", "Rilen", "Nytolo", "Oldk", "Steyfaugh", "Ucide", "Verivor", "Omgarlye", "Noes", "Skelokin", "Rakust", "Ackez", "Esspqua", "Sulerd", "Honabel", "Undyer", "Undy", "Hinold", "Worageash", "Turay", "Aoni", "Achl", "Pybij", "Daor", "Keller", "Awther", "Tasnys", "Untyq", "Perch", "Issum", "Erwther", "Delabur", "Kymiss", "Toria", "Qua'rad", "Shykalche", "Engtur", "Hatlver", "Belton", "Yenda", "Ildendar", "Oldc", "Eror", "Oldolor", "Endiv", "Dueldard", "Whethin", "Is'aughu", "Eskeli", "Esttiaril", "Reyso", "Drounper-den", "Ildhin", "Dadyn", "Nalryn", "Dania", "Sytir", "Cer'cha", "Blyech", "Nijere", "Etura", "Bantur", "Drajmor", "Okaly", "Rakchanal", "Orutin", "Umag", "Rynshye", "Rynale", "Nos", "Molril", "Yanonu", "Ermor", "Tiaroth", "Daronal", "Tydis", "Owaru", "Tateh", "Rynathris", "Untgaright", "Ingoneld", "Inghat", "Emund", "Swoesset", "Quoryn", "Teough", "Ustjque", "Oasa", "Kysay", "Ryness", "Danusk", "Pheassul", "Skeltai", "Tiorelm", "Ementh", "Hyr", "Thereim'n", "Therbia", "Angale", "Fasik", "Tostas", "Echchaban" };
-				//Dealer theDealer = new Dealer("Joe the Dealer", 45);
-				//bool value = Misc.IsNumber(InitialResponses[1]);
-				//int NumPLayers = 0;
-				//Misc.TryParseIsInt32(InitialResponses[2], out NumPLayers);
 				Collection<string> PlayerNames = new Collection<string> { "Holen", "Garrili", "Anelm", "Chal", "Metin" };
 				Collection<Player> PlayersAtPokerTable = new Collection<Player>();
-				int numPLayers = 0;
-				numPLayers = PlayerNames.Count();
+				int numPLayers = PlayerNames.Count();
+
 				// Mix it up a little
-				//PlayerNames.ShuffleIt();
+				PlayerNames.ShuffleIt();
+				
 				for (int j = 0; j < numPLayers; j++)
 				{
 					PlayersAtPokerTable.Add(new Player(PlayerNames[j], j));
 				}
-				//PlayersAtPokerTable.Add(new Player(InitialResponses[0], Convert.ToInt32(InitialResponses[1])));
 
 				//int numberOfDecks = (int)Math.Ceiling((5.0 * (numPLayers + 1)) / 52);
 				Deck decks = new Deck();
@@ -57,90 +34,66 @@ namespace Poker
 				{
 					foreach (var player in PlayersAtPokerTable)
 					{
-						//player.AddToHand(Decks.Deal());
 						player.AddCard(decks.DealCard());
 					}
 				}
 
-				// Show cards
+
+				// Scoring
+
+				//Royal Flush		=	9S	split pot
+				//Straight flush	=	8HS	highest value of cards, if same then split pot
+				//Four of a kind	=	7	highest value of cards
+				//Full House		=	6	highest value of the three of a kind
+				//Flush				=	5HS	highest value of cards, if same then split pot
+				//Straight			=	4HS	highest value of cards, if same then split pot
+				//Three of a Kind	=	3	highest value of cards
+				//2 Pair			=	2HS	highest value of cards, if same then split pot
+				//One Pair			=	1HS	highest value of cards, if same then split pot
+				//High Card			=	0HS	highest value of cards, if same then split pot
+
 				foreach (var player in PlayersAtPokerTable)
 				{
-					// Pair, ThreeOfAKind, 4OfAKind
-					// Works!
-					var SetsOfCards =
-						from card in player.cards
-						group card by card.Number into c
-						where c.Count() >= 2
-						select new { number = c.Key, obj = c, NumberOfValues = c.Count() };
-
-					//foreach (var set in SetsOfCards)
-					//{
-					//	Console.WriteLine("Game Number:{0}", w);
-					//	Console.WriteLine(player);
-					//}
-
-
-					// Straight
-					// Works!
-					var Straight =
-						from card in player.cards
-						orderby card.Number ascending
-						select card.Number;
-
-					var ValidStraight = Straight.Zip(Straight.Skip(1), (a, b) => b - a).All(x => x == 1);
-
-					if (ValidStraight)
+					if (PokerScoring.RoyalFlush(player)) 
 					{
-						Console.WriteLine("Straight {0}", player);
+						break;
 					}
-
-
-					// Flush
-					// Doesn't Work Yet
-					var Flush =
-						from card in player.cards
-						group card by card.Suit into f
-						where f.Select(fl => fl.Suit).Distinct().Count() == 1
-						select new { suit = f.Key, obj = f, NumOfValues = f.Count() };
-
-					//foreach (var set in Flush)
+					if (PokerScoring.StraightFlush(player))
+					{
+						break;
+					}
+					else if (PokerScoring.FullHouse(player))
+					{
+						break;
+					}
+					else if (PokerScoring.FourOfAKind(player))
+					{
+						break;
+					}
+					else if (PokerScoring.Flush(player))
+					{
+						break;
+					}
+					else if (PokerScoring.Straight(player))
+					{
+						break;
+					}
+					else if (PokerScoring.ThreeOfAKind(player))
+					{
+						break;
+					}
+					else if (PokerScoring.TwoPair(player))
+					{
+						break;
+					}
+					else if (PokerScoring.OnePair(player))
+					{
+						break;
+					}
+					//else if (PokerScoring.HighCard(player))
 					//{
-					//	Console.WriteLine("Game Number:{0}", w);
-					//	Console.WriteLine(player);
+					//	break;
 					//}
-
-					// Each Player Empties their hand
-					player.Fold();
-
-					// Straight Flush
-
-					//if (ValidStraight && Flush) 
-
-
-
-					//	//	foreach (var numInfo in HandStats)
-					//	//	{
-					//	//		//if (numInfo == 1)
-					//	//		//{
-					//	//		//	Console.WriteLine(numInfo.number);
-					//	//		//	Console.WriteLine(numInfo.total);
-					//	//		//	Console.WriteLine(numInfo.maximum);
-					//	//		//}
-					//	//	}
-					//	//}
-					//	////foreach (var value in GroupedCardValue)
-					//	////{
-
-					//	////	if (value.Count() == 4)
-					//	////	{
-					//	////		Console.WriteLine("Game Number {0}", w);
-					//	////		Console.WriteLine("Key Value:{0}\nKey Value Count {1}", value.Key, value.Count());
-					//	////		Console.WriteLine("Pair");
-					//	////		//Console.ReadLine();
-					//	////	}
-					//	////}
-					//}
-					//Console.WriteLine(Decks);
 				}
 #if !DEBUG
 			Console.WriteLine("Press any key to close...");
@@ -160,7 +113,7 @@ namespace Poker
 	/// <summary>
 	/// Class to represent a Poker Player at a Poker Table.
 	/// </summary>
-	class Player : PersonAtPokerTable
+	public class Player : PersonAtPokerTable
 	{
 		public Player() : this("Unnamed Player", 0) { }
 		public Player(string NameText, int AgeValue) : base(NameText, AgeValue) { }
@@ -168,10 +121,10 @@ namespace Poker
 	/// <summary>
 	/// Abstract Class for any person that will be at a Poker Table.
 	/// </summary>
-	abstract class PersonAtPokerTable : Hand
+	public abstract class PersonAtPokerTable : Hand
 	{
-		public string Name { get; private set; }
-		public int Age { get; private set; }
+		public string Name { get; set; }
+		public int Age { get; set; }
 
 		public PersonAtPokerTable() : this("Unnamed person", 0) { }
 		public PersonAtPokerTable(string NameText, int AgeValue)
@@ -371,6 +324,100 @@ namespace Poker
 				result = "No cards in the Deck.\n";
 
 			return result;
+		}
+	}
+
+	public class PokerScoring
+	{
+		public static bool FullHouse(Player player)
+		{
+			//Full House
+			var ThreeOfAKindForFullHouse =
+				from card in player.cards
+				group card by card.Number into c
+				where c.Count() == 3
+				select c.Key;
+
+			var PairForFullHouse =
+					from card in player.cards
+					group card by card.Number into c
+					where c.Count() == 2
+					select c.Key;
+
+			var ValidFullHouse =
+						ThreeOfAKindForFullHouse.Except(PairForFullHouse);
+
+			return (ThreeOfAKindForFullHouse.Count() > 0 && PairForFullHouse.Count() > 0 && ValidFullHouse.Count() > 0);
+		}
+
+		public static bool RoyalFlush(Player player)
+		{
+			// Need solution for TJQKA!!!!!!!!!
+			return false;
+		}
+
+		public static bool StraightFlush(Player player)
+		{
+			// Straight Flush
+			// Works! except for TJQKA
+			return (Straight(player) && Flush(player));
+		}
+
+		public static bool Flush(Player player)
+		{
+			// Works!
+			var Flush =
+				from card in player.cards
+				group card by card.Suit into f
+				where f.Select(fl => fl.Suit).Count() == 5
+				select new { suit = f.Key, obj = f, NumOfValues = f.Count() };
+
+			return Flush.Count() > 0;
+		}
+
+		public static bool Straight(Player player)
+		{
+			// Works! except for TJQKA
+			var Straight =
+				from card in player.cards
+				orderby card.Number ascending
+				select card.Number;
+
+			// Makes sure that all ofthe cards are sequential
+			// Influenced by http://stackoverflow.com/a/6150439/3042939
+
+			return Straight.Zip(Straight.Skip(1), (a, b) => b - a).All(x => x == 1);
+		}
+
+		public static bool FourOfAKind(Player player)
+		{
+			return SetCheck(player, 4);
+		}
+
+		public static bool TwoPair(Player player)
+		{
+			return SetCheck(player, 2, 2);
+		}
+
+		public static bool ThreeOfAKind(Player player)
+		{
+			return SetCheck(player, 3);
+		}
+
+		public static bool OnePair(Player player)
+		{
+			return SetCheck(player, 4);
+		}
+
+		public static bool SetCheck(Player player, int NumSets, int NumSetCheck = 1 )
+		{
+			var SetsOfCards =
+				from card in player.cards
+				group card by card.Number into c
+				where c.Count() == NumSets
+				select new { NumberOfValues = c.Count() };
+
+			return SetsOfCards.Count() >= NumSetCheck;
 		}
 	}
 
