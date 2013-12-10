@@ -18,7 +18,7 @@ namespace Poker
 				int numPLayers = PlayerNames.Count;
 
 				// Mix it up a little
-				PlayerNames.ShuffleIt();
+				PlayerNames.Shuffle();
 
 				// Add each player to the table
 				for (int j = 0; j < numPLayers; j++)
@@ -30,14 +30,10 @@ namespace Poker
 				//int numberOfDecks = (int)Math.Ceiling((5.0 * (numPLayers + 1)) / 52);
 				Deck decks = new Deck();
 
-				// Shuffle
-				decks.cards.ShuffleIt();
-
 				// Deal out the Cards to the players
 				for (int j = 0; j < 5; j++)
 					foreach (var player in PlayersAtPokerTable)
 						player.AddCard(decks.DealCard());
-
 
 				// Scoring
 
@@ -96,12 +92,12 @@ namespace Poker
 					//{
 					//	break;
 					//}
+
+					player.Fold();
 				}
 #if DEBUG
 				if (w % 100 == 0)
 					Console.WriteLine("Game #{0}", w);
-				//foreach (var player in PlayersAtPokerTable)
-				//	Console.WriteLine(player);
 			//Console.WriteLine("Press any key to close...");
 			//Console.ReadLine();
 #endif
@@ -133,7 +129,6 @@ namespace Poker
 		public string Name { get; set; }
 		public int Age { get; set; }
 
-		//public PersonAtPokerTable() : this("Unnamed person", 0) { }
 		public PersonAtPokerTable(string name, int age)
 		{
 			Name = name;
@@ -154,7 +149,6 @@ namespace Poker
 
 			if (cards.Count > 0)
 			{
-				//cards.Sort();
 				var sortedCards = cards.OrderBy(x => x.Number).ToList();
 				StringBuilder HandInfo = new StringBuilder();
 				foreach (Card card in sortedCards)
@@ -178,7 +172,7 @@ namespace Poker
 		Diamonds,
 	}
 	/// <summary>
-	/// Enum for Card Value influenced from linek above
+	/// Enum for Card Value influenced from link above
 	/// </summary>
 	public enum CardValue
 	{
@@ -214,13 +208,15 @@ namespace Poker
 
 	}
 
-	public abstract class Cards
+	public class Cards
 	{
 		public Collection<Card> cards = new Collection<Card>();
 
+		
 		public void AddCard(Card card)
 		{
 			cards.Add(card);
+
 		}
 
 		public Card ReturnCard()
@@ -240,27 +236,29 @@ namespace Poker
 			foreach (CardSuit currentSuit in Enum.GetValues(typeof(CardSuit)))
 				foreach (CardValue currentNumber in Enum.GetValues(typeof(CardValue)))
 					AddCard(new Card(currentSuit, currentNumber));
+
+			cards.Shuffle();
 		}
 		public Card DealCard()
 		{
 			return base.ReturnCard();
 		}
 
-		///// <summary>
-		///// This Method overrides the Default .ToString Method which allows for printing of the Deck Object with a user friendly message. If no cards are in the Deck, it will also include a message for that.
-		///// </summary>
-		///// <returns>A user friendly representasion of the Deck object.</returns>
-		//public override string ToString()
-		//{
-		//	string result = "";
-		//	if (cards.Count > 0)
-		//		foreach (var card in cards)
-		//			result += string.Format("{0}\n", card);
-		//	else
-		//		result = "No cards in the Deck.\n";
+		/// <summary>
+		/// This Method overrides the Default .ToString Method which allows for printing of the Deck Object with a user friendly message. If no cards are in the Deck, it will also include a message for that.
+		/// </summary>
+		/// <returns>A user friendly representation of the Deck object.</returns>
+		public override string ToString()
+		{
+			string result = "";
+			if (cards.Count > 0)
+				foreach (var card in cards)
+					result += string.Format("{0}\n", card);
+			else
+				result = "No cards in the Deck.\n";
 
-		//	return result;
-		//}
+			return result;
+		}
 	}
 
 	public static class ParsePokerHand
@@ -353,6 +351,7 @@ namespace Poker
 
 			return SetsOfCards.Count() == numberOfSetsCheck;
 		}
+
 	}
 
 	public static class ThreadSafeRandom
@@ -368,7 +367,7 @@ namespace Poker
 
 	static class MyExtensions
 	{
-		public static void ShuffleIt<T>(this IList<T> list)
+		public static void Shuffle<T>(this IList<T> list)
 		{
 			int n = list.Count;
 			while (n-- > 1)
@@ -395,7 +394,6 @@ namespace Poker
 			list.RemoveAt(0);
 			return local;
 		}
-
-
 	}
+
 }
