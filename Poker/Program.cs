@@ -162,7 +162,7 @@ namespace Poker
 		}
 	}
 	/// <summary>
-	/// Enums for the Suit influenced from http://www.gamedev.net/topic/483122-c-poker-game-problem/
+	/// Enumeration for the Suit influenced from http://www.gamedev.net/topic/483122-c-poker-game-problem/
 	/// </summary>
 	public enum CardSuit
 	{
@@ -172,7 +172,7 @@ namespace Poker
 		Diamonds,
 	}
 	/// <summary>
-	/// Enum for Card Value influenced from link above
+	/// Enumeration for Card Value influenced from link above
 	/// </summary>
 	public enum CardValue
 	{
