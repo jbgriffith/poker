@@ -57,6 +57,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Card.cs" />
+    <Compile Include="Cards.cs" />
+    <Compile Include="Dealer.cs" />
+    <Compile Include="Deck.cs" />
+    <Compile Include="Hand.cs" />
+    <Compile Include="PersonAtPokerTable.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

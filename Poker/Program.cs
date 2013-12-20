@@ -96,7 +96,7 @@ namespace Poker
 					player.Fold();
 				}
 #if DEBUG
-				if (w % 100 == 0)
+				if (w % 1000 == 0)
 					Console.WriteLine("Game #{0}", w);
 			//Console.WriteLine("Press any key to close...");
 			//Console.ReadLine();
@@ -107,60 +107,7 @@ namespace Poker
 		}
 	}
 
-	class Dealer : PersonAtPokerTable
-	{
-		public Dealer() : this("Unnamed Dealer", 0) { }
-		public Dealer(string NameText, int AgeValue) : base(NameText, AgeValue) { }
 
-	}
-	/// <summary>
-	/// Class to represent a Poker Player at a Poker Table.
-	/// </summary>
-	public class Player : PersonAtPokerTable
-	{
-		public Player() : this("Unnamed Player", 0) { }
-		public Player(string name, int age) : base(name, age) { }
-	}
-	/// <summary>
-	/// Abstract Class for any person that will be at a Poker Table.
-	/// </summary>
-	public abstract class PersonAtPokerTable : Hand
-	{
-		public string Name { get; set; }
-		public int Age { get; set; }
-
-		public PersonAtPokerTable(string name, int age)
-		{
-			Name = name;
-			Age = age;
-		}
-
-		/// <summary>
-		/// Method to allow a Person to fold their hand.
-		/// </summary>
-		public void Fold()
-		{
-			cards.Clear();
-		}
-
-		public override string ToString()
-		{
-			string result = "";
-
-			if (cards.Count > 0)
-			{
-				var sortedCards = cards.OrderBy(x => x.Number).ToList();
-				StringBuilder HandInfo = new StringBuilder();
-				foreach (Card card in sortedCards)
-					HandInfo.AppendLine("\t" + card.ToString());
-				result = string.Format("{0, -30} \n{1}", Name + ":", HandInfo);
-			}
-			else
-				result = string.Format("{0, -30} {1} years old", Name + ":", Age);
-
-			return result;
-		}
-	}
 	/// <summary>
 	/// Enumeration for the Suit influenced from http://www.gamedev.net/topic/483122-c-poker-game-problem/
 	/// </summary>
@@ -190,76 +137,8 @@ namespace Poker
 		Queen = 11,
 		King = 12,
 	}
-	public class Card// : IComparable
-	{
-		public CardSuit Suit { get; private set; }
-		public CardValue Number { get; private set; }
 
-		public Card(CardSuit suit, CardValue number)
-		{
-			Suit = suit;
-			Number = number;
-		}
 
-		public override string ToString()
-		{
-			return string.Format("{0} of {1}", Number, Suit);
-		}
-
-	}
-
-	public class Cards
-	{
-		public Collection<Card> cards = new Collection<Card>();
-
-		
-		public void AddCard(Card card)
-		{
-			cards.Add(card);
-
-		}
-
-		public Card ReturnCard()
-		{
-			return cards.Pop();
-		}
-	}
-
-	public class Hand : Cards
-	{
-	}
-
-	public class Deck : Cards
-	{
-		public Deck()
-		{
-			foreach (CardSuit currentSuit in Enum.GetValues(typeof(CardSuit)))
-				foreach (CardValue currentNumber in Enum.GetValues(typeof(CardValue)))
-					AddCard(new Card(currentSuit, currentNumber));
-
-			cards.Shuffle();
-		}
-		public Card DealCard()
-		{
-			return base.ReturnCard();
-		}
-
-		/// <summary>
-		/// This Method overrides the Default .ToString Method which allows for printing of the Deck Object with a user friendly message. If no cards are in the Deck, it will also include a message for that.
-		/// </summary>
-		/// <returns>A user friendly representation of the Deck object.</returns>
-		public override string ToString()
-		{
-			string result = "";
-			if (cards.Count > 0)
-				foreach (var card in cards)
-					result += string.Format("{0}\n", card);
-			else
-				result = "No cards in the Deck.\n";
-
-			return result;
-		}
-	}
 
 	public static class ParsePokerHand
 	{
