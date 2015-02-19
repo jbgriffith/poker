@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Poker
 {
@@ -11,7 +9,14 @@ namespace Poker
 	/// </summary>
 	public class Player : PersonAtPokerTable
 	{
+		[Key]
+		public new int Id { get; set; }
+
+		public Collection<Player> players = new Collection<Player>();
+
 		public Player() : this("Unnamed Player", 0) { }
 		public Player(string name, int age) : base(name, age) { }
+
+		public int Score { get; set; }
 	}
 }

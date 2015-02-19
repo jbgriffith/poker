@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Poker", "Poker\Poker.csproj", "{D3E5811C-CA34-4448-B45B-087982E1DE62}"
 EndProject
@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{524F00
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokerUnitTest", "UnitTestProject1\PokerUnitTest.csproj", "{79421FEE-BAB0-4A31-8BEB-422A5384CF89}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,8 +29,15 @@ Global
 		{D3E5811C-CA34-4448-B45B-087982E1DE62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3E5811C-CA34-4448-B45B-087982E1DE62}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3E5811C-CA34-4448-B45B-087982E1DE62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79421FEE-BAB0-4A31-8BEB-422A5384CF89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79421FEE-BAB0-4A31-8BEB-422A5384CF89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79421FEE-BAB0-4A31-8BEB-422A5384CF89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79421FEE-BAB0-4A31-8BEB-422A5384CF89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

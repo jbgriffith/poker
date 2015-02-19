@@ -14,11 +14,23 @@
     </Node>
     <Node Id="@20" Category="CodeSchema_Class" Bounds="1139.19847049557,182.70744416035,148,25" CodeSchemaProperty_IsAbstract="True" CodeSchemaProperty_IsFinal="True" CodeSchemaProperty_IsPublic="True" DelayedChildNodesState="Fetched" DelayedCrossGroupLinksState="Fetched" FetchedChildrenCount="2" Group="Collapsed" Label="StringExtensions" UseManualLocation="True" />
     <Node Id="@22" Category="CodeSchema_Method" Bounds="694.76410529665,527.894737887645,108.206666666667,25.96" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsStatic="True" DelayedCrossGroupLinksState="Fetched" Label="ValueOfCards" />
-    <Node Id="@24" Category="CodeSchema_Method" Bounds="493.252010312824,511.022290754008,62.5799999999999,25.96" CodeSchemaProperty_IsPrivate="True" CodeSchemaProperty_IsStatic="True" DelayedCrossGroupLinksState="Fetched" Label="Main" UseManualLocation="True" />
+    <Node Id="@24" Category="CodeSchema_Method" Bounds="493.252010312824,511.022290754008,62.5799999999999,25.96" CodeSchemaProperty_IsPrivate="True" CodeSchemaProperty_IsStatic="True" CommonLabel="Main" DelayedCrossGroupLinksState="Fetched" FunctionTypeFlags="Method" Label="Main" Language="{B5E9BD34-6D3E-4B5D-925E-8A43B79820B4}" SourceLocation="(Assembly=file:///c:/Users/jgriffith/Documents/Poker/Poker/Program.cs StartLineNumber=68 StartCharacterOffset=0 EndLineNumber=68 EndCharacterOffset=0)" UseManualLocation="True">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
     <Node Id="@25" Category="CodeSchema_Method" Bounds="36.2875488972642,466.164390485811,99.6733333333333,25.96" CodeSchemaProperty_IsPublic="True" DelayedCrossGroupLinksState="Fetched" Label="AddToHand" />
-    <Node Id="@26" Category="CodeSchema_Method" Bounds="579.749965791423,355.226029904247,62.1966666666667,25.96" CodeSchemaProperty_IsConstructor="True" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsSpecialName="True" DelayedCrossGroupLinksState="Fetched" Label="Deck" />
-    <Node Id="@27" Category="CodeSchema_Method" Bounds="698.255792470604,833.626205270455,97.7233333333334,25.96" CodeSchemaProperty_IsFinal="True" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsVirtual="True" DelayedCrossGroupLinksState="Fetched" Label="CompareTo" />
-    <Node Id="@28" Category="CodeSchema_Method" Bounds="765.166740956932,777.666183297799,70.0333333333333,25.96" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsVirtual="True" DelayedCrossGroupLinksState="Fetched" Label="Equals" />
+    <Node Id="@26" Category="CodeSchema_Method" Bounds="579.749965791423,355.226029904247,62.1966666666667,25.96" CodeSchemaProperty_IsConstructor="True" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsSpecialName="True" CommonLabel="Deck" DelayedCrossGroupLinksState="Fetched" FunctionTypeFlags="Constructor" Label="Deck" Language="{B5E9BD34-6D3E-4B5D-925E-8A43B79820B4}" SourceLocation="(Assembly=file:///c:/Users/jgriffith/Documents/Poker/Poker/Program.cs StartLineNumber=260 StartCharacterOffset=0 EndLineNumber=260 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@27" Category="CodeSchema_Method" Bounds="698.255792470604,833.626205270455,97.7233333333334,25.96" CodeSchemaProperty_IsFinal="True" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsVirtual="True" CommonLabel="CompareTo" DelayedCrossGroupLinksState="Fetched" FunctionTypeFlags="Method" Label="CompareTo" Language="{B5E9BD34-6D3E-4B5D-925E-8A43B79820B4}" SourceLocation="(Assembly=file:///c:/Users/jgriffith/Documents/Poker/Poker/Program.cs StartLineNumber=224 StartCharacterOffset=0 EndLineNumber=224 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@28" Category="CodeSchema_Method" Bounds="765.166740956932,777.666183297799,70.0333333333333,25.96" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsVirtual="True" CommonLabel="Equals" DelayedCrossGroupLinksState="Fetched" FunctionTypeFlags="Method" IsOverloaded="True" Label="Equals" Language="{B5E9BD34-6D3E-4B5D-925E-8A43B79820B4}" SourceLocation="(Assembly=file:///c:/Users/jgriffith/Documents/Poker/Poker/Program.cs StartLineNumber=250 StartCharacterOffset=0 EndLineNumber=250 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
     <Node Id="@30" Category="CodeSchema_Method" Bounds="1154.1627273418,164.243391614464,87.8933333333334,25.96" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsStatic="True" DelayedCrossGroupLinksState="Fetched" Label="IsNumber" UseManualLocation="True" />
     <Node Id="@32" Category="CodeSchema_Method" Bounds="759.641542796125,910.118087594674,84.4066666666666,25.96" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsStatic="True" DelayedCrossGroupLinksState="Fetched" Label="Compare" />
     <Node Id="@33" Category="CodeSchema_Method" Bounds="715.288567128807,643.853683297799,96.7833333333333,25.96" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsStatic="True" DelayedCrossGroupLinksState="Fetched" Label="op_Equality" />
@@ -26,8 +38,14 @@
     <Node Id="@35" Category="CodeSchema_Method" Bounds="692.970147939354,721.706161325142,106.973333333333,25.96" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsStatic="True" DelayedCrossGroupLinksState="Fetched" Label="op_Inequality" />
     <Node Id="@36" Category="CodeSchema_Method" Bounds="749.430795318911,1022.03791791694,103.15,25.96" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsStatic="True" DelayedCrossGroupLinksState="Fetched" Label="op_LessThan" />
     <Node Id="@37" Category="CodeSchema_Method" Bounds="273.204143262631,832.744858073744,70.1533333333334,25.96" CodeSchemaProperty_IsConstructor="True" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsSpecialName="True" DelayedCrossGroupLinksState="Fetched" Label="Dealer" />
-    <Node Id="@38" Category="CodeSchema_Method" Bounds="203.222888939378,550.825111311007,142.683333333333,25.96" CodeSchemaProperty_IsConstructor="True" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsSpecialName="True" DelayedCrossGroupLinksState="Fetched" Label="PersonAtPokerTable" />
-    <Node Id="@39" Category="CodeSchema_Method" Bounds="402.750466377361,342.804885320006,67.99,25.96" CodeSchemaProperty_IsConstructor="True" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsSpecialName="True" DelayedCrossGroupLinksState="Fetched" Label="Player" />
+    <Node Id="@38" Category="CodeSchema_Method" Bounds="203.222888939378,550.825111311007,142.683333333333,25.96" CodeSchemaProperty_IsConstructor="True" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsSpecialName="True" CommonLabel="PersonAtPokerTable" DelayedCrossGroupLinksState="Fetched" FunctionTypeFlags="Constructor" Label="PersonAtPokerTable" Language="{B5E9BD34-6D3E-4B5D-925E-8A43B79820B4}" SourceLocation="(Assembly=file:///c:/Users/jgriffith/Documents/Poker/Poker/Program.cs StartLineNumber=144 StartCharacterOffset=0 EndLineNumber=144 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
+    <Node Id="@39" Category="CodeSchema_Method" Bounds="402.750466377361,342.804885320006,67.99,25.96" CodeSchemaProperty_IsConstructor="True" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsSpecialName="True" CommonLabel="Player" DelayedCrossGroupLinksState="Fetched" FunctionTypeFlags="Constructor" Label="Player" Language="{B5E9BD34-6D3E-4B5D-925E-8A43B79820B4}" SourceLocation="(Assembly=file:///c:/Users/jgriffith/Documents/Poker/Poker/Program.cs StartLineNumber=135 StartCharacterOffset=0 EndLineNumber=135 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
     <Node Id="@4" Category="CodeSchema_Assembly" CodeSchemaProperty_IsExternal="True" CodeSchemaProperty_StrongName="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" FilePath="$(FxReferenceAssemblies)\.NETFramework\v4.5\mscorlib.dll" Group="Collapsed" Label="mscorlib.dll">
       <Category Ref="FileSystem.Category.FileOfType.dll" />
     </Node>
@@ -36,14 +54,20 @@
     <Node Id="@42" Category="CodeSchema_Method" Bounds="494.375940219752,183.255443771434,72.65,25.96" CodeSchemaProperty_IsGeneric="True" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsStatic="True" DelayedCrossGroupLinksState="Fetched" Label="Shuffle" />
     <Node Id="@43" Category="CodeSchema_Method" Bounds="494.375872674179,127.295444686961,56.8033333333333,25.96" CodeSchemaProperty_IsGeneric="True" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsStatic="True" DelayedCrossGroupLinksState="Fetched" Label="Pop" />
     <Node Id="@45" Category="CodeSchema_Method" Bounds="173.050662732846,832.744858073744,70.1533333333333,25.96" CodeSchemaProperty_IsConstructor="True" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsSpecialName="True" DelayedCrossGroupLinksState="Fetched" Label="Dealer" />
-    <Node Id="@46" Category="CodeSchema_Method" Bounds="540.74056637736,299.266038449168,62.1966666666667,25.96" CodeSchemaProperty_IsConstructor="True" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsSpecialName="True" DelayedCrossGroupLinksState="Fetched" Label="Deck" />
+    <Node Id="@46" Category="CodeSchema_Method" Bounds="540.74056637736,299.266038449168,62.1966666666667,25.96" CodeSchemaProperty_IsConstructor="True" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsSpecialName="True" CommonLabel="Deck" DelayedCrossGroupLinksState="Fetched" FunctionTypeFlags="Constructor" Label="Deck" Language="{B5E9BD34-6D3E-4B5D-925E-8A43B79820B4}" SourceLocation="(Assembly=file:///c:/Users/jgriffith/Documents/Poker/Poker/Program.cs StartLineNumber=256 StartCharacterOffset=0 EndLineNumber=256 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
     <Node Id="@47" Category="CodeSchema_Method" Bounds="260.298519127367,458.763938825655,142.683333333333,25.96" CodeSchemaProperty_IsConstructor="True" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsSpecialName="True" DelayedCrossGroupLinksState="Fetched" Label="PersonAtPokerTable" />
     <Node Id="@48" Category="CodeSchema_Method" Bounds="304.760354072673,342.804885320006,67.99,25.96" CodeSchemaProperty_IsConstructor="True" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsSpecialName="True" DelayedCrossGroupLinksState="Fetched" Label="Player" />
     <Node Id="@49" Category="CodeSchema_Method" Bounds="493.252010312824,566.982290754008,81.6066666666666,25.96" CodeSchemaProperty_IsConstructor="True" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsSpecialName="True" DelayedCrossGroupLinksState="Fetched" Label="Program" UseManualLocation="True" />
     <Node Id="@50" Category="CodeSchema_Property" Bounds="214.606660424346,717.745037139786,79.5323947873817,25" CodeSchemaProperty_IsPublic="True" DelayedChildNodesState="NotFetched" DelayedCrossGroupLinksState="Fetched" Group="Collapsed" Label="Age" />
     <Node Id="@51" Category="CodeSchema_Field" Bounds="671.946872936605,355.174577267528,64.9833333333333,25.96" CodeSchemaProperty_IsPublic="True" DelayedCrossGroupLinksState="Fetched" Label="cards" />
     <Node Id="@52" Category="CodeSchema_Method" Bounds="711.196247936605,299.21458581245,59.7033333333334,25.96" CodeSchemaProperty_IsPublic="True" DelayedCrossGroupLinksState="Fetched" Label="Deal" />
-    <Node Id="@53" Category="CodeSchema_Method" Bounds="46.9883004689195,606.785072248507,58.8633333333333,25.96" CodeSchemaProperty_IsPublic="True" DelayedCrossGroupLinksState="Fetched" Label="Fold" />
+    <Node Id="@53" Category="CodeSchema_Method" Bounds="46.9883004689195,606.785072248507,58.8633333333333,25.96" CodeSchemaProperty_IsPublic="True" CommonLabel="Fold" DelayedCrossGroupLinksState="Fetched" FunctionTypeFlags="Method" Label="Fold" Language="{B5E9BD34-6D3E-4B5D-925E-8A43B79820B4}" SourceLocation="(Assembly=file:///c:/Users/jgriffith/Documents/Poker/Poker/Program.cs StartLineNumber=159 StartCharacterOffset=0 EndLineNumber=159 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
     <Node Id="@54" Category="CodeSchema_Method" Bounds="948.67230654938,643.853683297799,108.89,25.96" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsVirtual="True" DelayedCrossGroupLinksState="Fetched" Label="GetHashCode" />
     <Node Id="@55" Category="CodeSchema_Field" Bounds="65.0661096628485,550.825111311007,108.156666666667,25.96" CodeSchemaProperty_IsPublic="True" DelayedCrossGroupLinksState="Fetched" Label="HandOfCards" />
     <Node Id="@56" Category="CodeSchema_Field" Bounds="564.165659820865,835.454025094674,104.09,25.96" CodeSchemaProperty_IsPublic="True" DelayedCrossGroupLinksState="Fetched" Label="integerValue" />
@@ -54,7 +78,10 @@
       <Category Ref="FileSystem.Category.FileOfType.dll" />
     </Node>
     <Node Id="@60" Category="CodeSchema_Field" Bounds="542.562355521241,411.186021359325,60.95,25.96" CodeSchemaProperty_IsPublic="True" DelayedCrossGroupLinksState="Fetched" Label="suits" />
-    <Node Id="@61" Category="CodeSchema_Method" Bounds="500.279734120995,779.494064157174,80.6933333333334,25.96" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsVirtual="True" DelayedCrossGroupLinksState="Fetched" Label="ToString" />
+    <Node Id="@61" Category="CodeSchema_Method" Bounds="500.279734120995,779.494064157174,80.6933333333334,25.96" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsVirtual="True" CommonLabel="ToString" DelayedCrossGroupLinksState="Fetched" FunctionTypeFlags="Method" IsOverloaded="True" Label="ToString" Language="{B5E9BD34-6D3E-4B5D-925E-8A43B79820B4}" SourceLocation="(Assembly=file:///c:/Users/jgriffith/Documents/Poker/Poker/Program.cs StartLineNumber=260 StartCharacterOffset=0 EndLineNumber=260 EndCharacterOffset=0)">
+      <Category Ref="CallStackEntry" />
+      <Category Ref="CodeSchema_SourceLocation" />
+    </Node>
     <Node Id="@62" Category="CodeSchema_Method" Bounds="704.514632946371,411.935899289012,80.6933333333333,25.96" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsVirtual="True" DelayedCrossGroupLinksState="Fetched" Label="ToString" />
     <Node Id="@63" Category="CodeSchema_Method" Bounds="174.623047935961,606.785072248507,80.6933333333334,25.96" CodeSchemaProperty_IsPublic="True" CodeSchemaProperty_IsVirtual="True" DelayedCrossGroupLinksState="Fetched" Label="ToString" />
     <Node Id="@8" Category="CodeSchema_Namespace" Bounds="-3.71240937127357,47.2921431466038,1310.91083483646,1040.70769091797" DelayedChildNodesState="Fetched" DelayedCrossGroupLinksState="Fetched" FetchedChildrenCount="9" Group="Expanded" Label="Poker" />
@@ -125,8 +152,12 @@
     <Link Source="@24" Target="@10" Category="References" Weight="8" />
     <Link Source="@24" Target="@17" Category="References" Weight="5" />
     <Link Source="@24" Target="@25" Category="CodeSchema_Calls" Weight="1" />
-    <Link Source="@24" Target="@26" Category="CodeSchema_Calls" Weight="1" />
-    <Link Source="@24" Target="@39" Category="CodeSchema_Calls" Weight="1" />
+    <Link Source="@24" Target="@26" Category="CodeSchema_Calls" Weight="1">
+      <Category Ref="CallStackDirectCall" />
+    </Link>
+    <Link Source="@24" Target="@39" Category="CodeSchema_Calls" Weight="1">
+      <Category Ref="CallStackDirectCall" />
+    </Link>
     <Link Source="@24" Target="@4" Category="References" IsTargetVirtualized="True" Weight="43">
       <Category Ref="CodeSchema_AttributeUse" />
       <Category Ref="CodeSchema_Calls" />
@@ -160,7 +191,9 @@
       <Category Ref="CodeSchema_ReturnTypeLink" />
     </Link>
     <Link Source="@27" Target="@56" Category="CodeSchema_FieldRead" Bounds="677.25473242006,847.291335597662,21.0009772321819,0.293239368089417" Weight="2" />
-    <Link Source="@28" Target="@27" Category="CodeSchema_Calls" Bounds="765.618950246782,803.629073810573,22.2556602931918,23.4694109569136" Weight="1" />
+    <Link Source="@28" Target="@27" Category="CodeSchema_Calls" Bounds="765.618950246782,803.629073810573,22.2556602931918,23.4694109569136" Weight="1">
+      <Category Ref="CallStackDirectCall" />
+    </Link>
     <Link Source="@28" Target="@4" Category="References" IsTargetVirtualized="True" Weight="3">
       <Category Ref="CodeSchema_Calls" />
       <Category Ref="CodeSchema_ReturnTypeLink" />
@@ -171,22 +204,22 @@
       <Category Ref="CodeSchema_ReturnTypeLink" />
     </Link>
     <Link Source="@30" Target="@6" Category="CodeSchema_Calls" IsTargetVirtualized="True" Weight="2" />
-    <Link Source="@32" Target="@10" Category="References" Bounds="739.296569824219,936.079406738281,53.4061889648438,140.921569824219" Weight="2" />
+    <Link Source="@32" Target="@10" Category="References" Bounds="739.296691894531,936.078125,53.406005859375,140.9228515625" Weight="2" />
     <Link Source="@32" Target="@27" Category="CodeSchema_Calls" Bounds="761.640963048045,866.908591528894,30.9169235920526,43.2123723951627" Weight="1" />
     <Link Source="@32" Target="@4" Category="CodeSchema_Calls" IsTargetVirtualized="True" Weight="3">
       <Category Ref="CodeSchema_ReturnTypeLink" />
     </Link>
-    <Link Source="@33" Target="@10" Category="References" Bounds="763.680236816406,594.856567382813,6.25189208984375,48.998291015625" Weight="2" />
+    <Link Source="@33" Target="@10" Category="References" Bounds="763.680236816406,594.856567382813,6.25189208984375,48.9971313476563" Weight="2" />
     <Link Source="@33" Target="@4" Category="CodeSchema_Calls" IsTargetVirtualized="True" Weight="4">
       <Category Ref="CodeSchema_ReturnTypeLink" />
     </Link>
-    <Link Source="@34" Target="@10" Category="References" Bounds="858.500732421875,992.03955078125,6.25189208984375,84.96142578125" Weight="2" />
+    <Link Source="@34" Target="@10" Category="References" Bounds="858.500732421875,992.0380859375,6.25189208984375,84.962890625" Weight="2" />
     <Link Source="@34" Target="@32" Category="CodeSchema_Calls" Bounds="821.389236979999,942.405470759752,23.9699729727554,23.6754931643063" Weight="1" />
     <Link Source="@34" Target="@4" Category="CodeSchema_ReturnTypeLink" IsTargetVirtualized="True" Weight="1" />
-    <Link Source="@35" Target="@10" Category="References" Bounds="704.581970214844,594.856567382813,31.8401489257813,126.850769042969" Weight="2" />
+    <Link Source="@35" Target="@10" Category="References" Bounds="704.581970214844,594.856567382813,31.8402099609375,126.849609375" Weight="2" />
     <Link Source="@35" Target="@33" Category="CodeSchema_Calls" Bounds="749.328361331832,678.604096657837,9.5361613641644,43.1049771527341" Weight="1" />
     <Link Source="@35" Target="@4" Category="CodeSchema_ReturnTypeLink" IsTargetVirtualized="True" Weight="1" />
-    <Link Source="@36" Target="@10" Category="References" Bounds="801.005798339844,1047.99963378906,6.25189208984375,29.0013427734375" Weight="2" />
+    <Link Source="@36" Target="@10" Category="References" Bounds="801.005798339844,1047.99792480469,6.25189208984375,29.0030517578125" Weight="2" />
     <Link Source="@36" Target="@32" Category="CodeSchema_Calls" Bounds="796.468627929688,944.949768066406,3.4635009765625,77.0911865234375" Weight="1" />
     <Link Source="@36" Target="@4" Category="CodeSchema_ReturnTypeLink" IsTargetVirtualized="True" Weight="1" />
     <Link Source="@37" Target="@38" Category="CodeSchema_Calls" Weight="1" />
@@ -198,7 +231,9 @@
     <Link Source="@38" Target="@50" Category="CodeSchema_Calls" Bounds="220.099594116211,576.785034179688,52.9688568115234,133.320373535156" IsTargetVirtualized="True" Weight="1" />
     <Link Source="@38" Target="@55" Category="CodeSchema_FieldWrite" Bounds="182.222753714962,563.805037139785,21.0000999999999,0" Weight="1" />
     <Link Source="@38" Target="@58" Category="CodeSchema_Calls" Bounds="274.650958597066,576.785037139785,0.512504029980505,76.9601995539224" IsTargetVirtualized="True" Weight="1" />
-    <Link Source="@39" Target="@38" Category="CodeSchema_Calls" Bounds="290.217892866436,368.763615391872,136.40789552227,174.963753516926" Weight="1" />
+    <Link Source="@39" Target="@38" Category="CodeSchema_Calls" Bounds="290.217892866436,368.763615391872,136.40789552227,174.963753516926" Weight="1">
+      <Category Ref="CallStackDirectCall" />
+    </Link>
     <Link Source="@39" Target="@4" Category="References" IsTargetVirtualized="True" Weight="2" />
     <Link Source="@40" Target="@4" Category="References" IsTargetVirtualized="True" Weight="5">
       <Category Ref="CodeSchema_Calls" />
@@ -283,6 +318,8 @@
     <Link Source="_standardGraphExternalsGroup" Target="@6" Category="Contains" />
   </Links>
   <Categories>
+    <Category Id="CallStackDirectCall" Label="Call Stack direct call" CanBeDataDriven="True" CanLinkedNodesBeDataDriven="True" IncomingActionLabel="Call Stack direct call" OutgoingActionLabel="Call Stack direct call" />
+    <Category Id="CallStackEntry" Label="Call Stack Entry" CanBeDataDriven="True" IsProviderRoot="False" NavigationActionLabel="Call Stack Entry" />
     <Category Id="CodeSchema_Assembly" Label="Assembly" BasedOn="File" CanBeDataDriven="True" DefaultAction="Microsoft.Contains" Icon="CodeSchema_Assembly" NavigationActionLabel="Assemblies" />
     <Category Id="CodeSchema_AttributeUse" Label="Uses Attribute" CanBeDataDriven="True" CanLinkedNodesBeDataDriven="True" IncomingActionLabel="Used by" OutgoingActionLabel="Uses Attribute" />
     <Category Id="CodeSchema_Calls" Label="Calls" CanBeDataDriven="True" CanLinkedNodesBeDataDriven="True" IncomingActionLabel="Called By" OutgoingActionLabel="Calls" />
@@ -296,6 +333,7 @@
     <Category Id="CodeSchema_Namespace" Label="Namespace" CanBeDataDriven="True" DefaultAction="Node:Both:CodeSchema_Type" Icon="CodeSchema_Namespace" NavigationActionLabel="Namespaces" />
     <Category Id="CodeSchema_Property" Label="Property" BasedOn="CodeSchema_Member" CanBeDataDriven="True" DefaultAction="Microsoft.Contains" Icon="CodeSchema_Property" NavigationActionLabel="Properties" />
     <Category Id="CodeSchema_ReturnTypeLink" Label="Return" CanBeDataDriven="True" CanLinkedNodesBeDataDriven="True" IncomingActionLabel="Return types" OutgoingActionLabel="Return types" />
+    <Category Id="CodeSchema_SourceLocation" Label="Source Location" Icon="File" />
     <Category Id="CodeSchema_Type" Label="Type" CanBeDataDriven="True" DefaultAction="Node:Both:CodeSchema_Member" Icon="CodeSchema_Class" NavigationActionLabel="Types" />
     <Category Id="Contains" Label="Contains" Description="Whether the source of the link contains the target object" CanBeDataDriven="False" CanLinkedNodesBeDataDriven="True" IncomingActionLabel="Contained By" IsContainment="True" OutgoingActionLabel="Contains" />
     <Category Id="Externals" Label="Externals" CanBeDataDriven="True" IsProviderRoot="False" NavigationActionLabel="Externals" />
@@ -323,6 +361,7 @@
     <Property Id="CodeSchemaProperty_IsStatic" Label="Is Static" Description="Flag to indicate the member is a static member" DataType="System.Boolean" />
     <Property Id="CodeSchemaProperty_IsVirtual" Label="Is Virtual" Description="Flag to indicate the method can be overridden" DataType="System.Boolean" />
     <Property Id="CodeSchemaProperty_StrongName" Label="StrongName" Description="StrongName" DataType="System.String" />
+    <Property Id="CommonLabel" DataType="System.String" />
     <Property Id="DataVirtualized" Label="Data Virtualized" Description="If true, the graph can contain nodes and links that represent data for virtualized nodes/links (i.e. not actually created in the graph)." DataType="System.Boolean" />
     <Property Id="DefaultAction" Label="DefaultAction" Description="DefaultAction" DataType="System.String" />
     <Property Id="DelayedChildNodesState" Label="Delayed Child Nodes State" Description="Unspecified if the delayed child nodes state is not specified. NotFetched if the group contains child nodes that are not fetched into the graph yet. Fetched if the group has all its delayed child nodes already fetched." DataType="Microsoft.VisualStudio.GraphModel.DelayedDataState" />
@@ -331,19 +370,23 @@
     <Property Id="FetchedChildrenCount" DataType="System.Int32" />
     <Property Id="FetchingParent" DataType="Microsoft.VisualStudio.GraphModel.GraphNodeId" />
     <Property Id="FilePath" Label="File Path" Description="File Path" DataType="System.String" />
+    <Property Id="FunctionTypeFlags" Label="FunctionTypeFlags" Description="FunctionTypeFlags" DataType="System.String" />
     <Property Id="Group" Label="Group" Description="Display the node as a group" DataType="Microsoft.VisualStudio.GraphModel.GraphGroupStyle" />
     <Property Id="GroupLabel" DataType="System.String" />
     <Property Id="Icon" DataType="System.String" />
     <Property Id="IncomingActionLabel" Label="IncomingActionLabel" Description="IncomingActionLabel" DataType="System.String" />
     <Property Id="IsContainment" DataType="System.Boolean" />
     <Property Id="IsEnabled" DataType="System.Boolean" />
+    <Property Id="IsOverloaded" Label="IsOverloaded" Description="IsOverloaded" DataType="System.Boolean" />
     <Property Id="IsProviderRoot" Label="IsProviderRoot" Description="IsProviderRoot" DataType="System.Boolean" />
     <Property Id="IsSourceVirtualized" Label="Link Source Virtualized" Description="If true, the link source end contains data for virtualized nodes/links (i.e. not actually created in the graph)." DataType="System.Boolean" />
     <Property Id="IsTargetVirtualized" Label="Link Target Virtualized" Description="If true, the link target end contains data for virtualized nodes/links (i.e. not actually created in the graph)." DataType="System.Boolean" />
     <Property Id="Label" Label="Label" Description="Displayable label of an Annotatable object" DataType="System.String" />
+    <Property Id="Language" Label="Language" Description="Language" DataType="System.String" />
     <Property Id="Layout" DataType="System.String" />
     <Property Id="NavigationActionLabel" Label="NavigationActionLabel" Description="NavigationActionLabel" DataType="System.String" />
     <Property Id="OutgoingActionLabel" Label="OutgoingActionLabel" Description="OutgoingActionLabel" DataType="System.String" />
+    <Property Id="SourceLocation" Label="Start Line Number" DataType="Microsoft.VisualStudio.GraphModel.CodeSchema.SourceLocation" />
     <Property Id="TargetType" DataType="System.Type" />
     <Property Id="UseManualLocation" DataType="System.Boolean" />
     <Property Id="Value" DataType="System.String" />
@@ -431,6 +474,37 @@
     <Alias n="63" Id="(@1 @7 @15 Member=ToString)" />
   </IdentifierAliases>
   <Styles>
+    <Style TargetType="Link" GroupLabel="Current Call Stack Link" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="HasCategory('CurrentCallStackCall')" />
+      <Setter Property="Stroke" Value="#FFD93701" />
+      <Setter Property="Weight" Value="1" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Call Stack Indirect Link" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="HasCategory('CallStackIndirectCall')" />
+      <Setter Property="Stroke" Value="#FFB8B8B8" />
+      <Setter Property="StrokeDashArray" Value="4 1" />
+    </Style>
+    <Style TargetType="Link" GroupLabel="Call Stack Direct Link" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="HasCategory('CallStackDirectCall')" />
+      <Setter Property="Stroke" Value="#FFB8B8B8" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="External And Current" ValueLabel="True" Visibility="Hidden">
+      <Condition Expression="HasCategory('ExternalCallStackEntry') And HasCategory('CurrentCallStackEntry')" />
+      <Setter Property="Background" Value="#FFFFF8F0" />
+      <Setter Property="Stroke" Value="#FFCE5100" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="Current Call Stack Node" ValueLabel="True">
+      <Condition Expression="HasCategory('CurrentCallStackEntry') And !HasCategory('QueryResult')" />
+      <Setter Property="Background" Value="#FFFFE3C6" />
+      <Setter Property="Stroke" Value="#FFD93701" />
+    </Style>
+    <Style TargetType="Node" GroupLabel="External Call Stack Entry" ValueLabel="True">
+      <Condition Expression="HasCategory('ExternalCallStackEntry')" />
+      <Setter Property="Background" Value="#FFF7F7F7" />
+      <Setter Property="StrokeDashArray" Value="1 3" />
+      <Setter Property="Foreground" Value="#FFA5A5A5" />
+      <Setter Property="Stroke" Value="#FFA5A5A5" />
+    </Style>
     <Style TargetType="Node" GroupLabel="Category 1" ValueLabel="Has category">
       <Condition Expression="HasCategory('Category1')" />
       <Setter Property="Background" Value="#FFE51400" />

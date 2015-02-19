@@ -1,21 +1,25 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 
-namespace Poker
-{
-	public class Cards
-	{
-		public Collection<Card> cards = new Collection<Card>();
+namespace Poker {
+	public class Cards {
 
+		private readonly List<Card> cards_ = new List<Card>();
+		public List<Card> CardCollection {
+			get { return this.cards_; }
+		}
 
-		public void AddCard(Card card)
-		{
-			cards.Add(card);
+		//public Collection<Card> cards = new Collection<Card>();
 
+		public void AddCard(Card card) {
+			CardCollection.Add(card);
+			//CardCollection.Sort();
 		}
 
 		public Card ReturnCard()
 		{
-			return cards.Pop();
+			var local = CardCollection[0];
+			CardCollection.RemoveAt(0);
+			return local;
 		}
 	}
 }

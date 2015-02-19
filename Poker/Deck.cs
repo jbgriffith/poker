@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Poker
 {
@@ -10,11 +6,11 @@ namespace Poker
 	{
 		public Deck()
 		{
-			foreach (CardSuit currentSuit in Enum.GetValues(typeof(CardSuit)))
-				foreach (CardValue currentNumber in Enum.GetValues(typeof(CardValue)))
+			foreach (Card.CardSuit currentSuit in Enum.GetValues(typeof(Card.CardSuit)))
+				foreach (Card.CardValue currentNumber in Enum.GetValues(typeof(Card.CardValue)))
 					AddCard(new Card(currentSuit, currentNumber));
 
-			cards.Shuffle();
+			CardCollection.QuickShuffle();
 		}
 		public Card DealCard()
 		{
@@ -28,11 +24,11 @@ namespace Poker
 		public override string ToString()
 		{
 			string result = "";
-			if (cards.Count > 0)
-				foreach (var card in cards)
-					result += string.Format("{0}\n", card);
+			if (CardCollection.Count > 0)
+				foreach (var card in CardCollection)
+					result += string.Format("{0}{1}", card, Environment.NewLine);
 			else
-				result = "No cards in the Deck.\n";
+				result = string.Format("No cards in the Deck.{0}", Environment.NewLine);
 
 			return result;
 		}
