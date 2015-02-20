@@ -22,11 +22,11 @@ namespace Poker {
 		/// Method to allow a Person to fold their hand.
 		/// </summary>
 		public void Fold() {
-			CardCollection.Clear();
+			cards.Clear();
 		}
 
 		public override string ToString() {
-			var sortedCards = CardCollection.OrderBy(x => x.Number);
+			var sortedCards = cards.OrderBy(x => x.Number);
 			return string.Format("{0, -30}{1} years old{2}{#}", Name + ":", Age, Environment.NewLine, sortedCards.ToString());
 		}
 

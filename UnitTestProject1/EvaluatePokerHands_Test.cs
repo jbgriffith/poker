@@ -119,12 +119,12 @@ namespace PokerUnitTest {
 		[TestMethod]
 		public void OnePair() {
 			Player player = GenerateHand_OnePairAces();
-			Assert.IsTrue(EvaluatePokerHand.OnePair(player.CardCollection));
+			Assert.IsTrue(EvaluatePokerHand.OnePair(player.cards));
 		}
 		[TestMethod]
 		public void Score_OnePair() {
 			Player player = GenerateHand_OnePairAces();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.CardCollection), (int)EvaluatePokerHand.PokerHand.OnePair);
+			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), (int)EvaluatePokerHand.PokerHand.OnePair);
 		}
 
 
@@ -132,12 +132,12 @@ namespace PokerUnitTest {
 		[TestMethod]
 		public void TwoPair() {
 			var player = Hand_TwoPairAcesHighEightLow();
-			Assert.IsTrue(EvaluatePokerHand.TwoPair(player.CardCollection));
+			Assert.IsTrue(EvaluatePokerHand.TwoPair(player.cards));
 		}
 		[TestMethod]
 		public void Score_TwoPair() {
 			var player = Hand_TwoPairAcesHighEightLow();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.CardCollection), (int)EvaluatePokerHand.PokerHand.TwoPair);
+			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), (int)EvaluatePokerHand.PokerHand.TwoPair);
 		}
 
 
@@ -145,12 +145,12 @@ namespace PokerUnitTest {
 		[TestMethod]
 		public void ThreeOfAKind() {
 			var player = GenerateHand_ThreeOfAKindAces();
-			Assert.IsTrue(EvaluatePokerHand.ThreeOfAKind(player.CardCollection));
+			Assert.IsTrue(EvaluatePokerHand.ThreeOfAKind(player.cards));
 		}
 		[TestMethod]
 		public void Score_ThreeOfAKind() {
 			var player = GenerateHand_ThreeOfAKindAces();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.CardCollection), (int)EvaluatePokerHand.PokerHand.ThreeOfAKind);
+			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), (int)EvaluatePokerHand.PokerHand.ThreeOfAKind);
 		}
 
 
@@ -158,23 +158,23 @@ namespace PokerUnitTest {
 		[TestMethod]
 		public void StraightLowAce() {
 			Player player = GenerateHand_StraightLowAce();
-			Assert.IsTrue(EvaluatePokerHand.Straight(player.CardCollection));
+			Assert.IsTrue(EvaluatePokerHand.Straight(player.cards));
 		}
 		[TestMethod]
 		public void Score_StraightLowAce() {
 			Player player = GenerateHand_StraightLowAce();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.CardCollection), (int)EvaluatePokerHand.PokerHand.Straight);
+			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), (int)EvaluatePokerHand.PokerHand.Straight);
 		}
 
 		[TestMethod]
 		public void Straight_AceHigh() {
 			Player player = GenerateHand_StraightHighAce();
-			Assert.IsTrue(EvaluatePokerHand.Straight(player.CardCollection));
+			Assert.IsTrue(EvaluatePokerHand.Straight(player.cards));
 		}
 		[TestMethod]
 		public void Score_Straight_AceHigh() {
 			Player player = GenerateHand_StraightHighAce();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.CardCollection), (int)EvaluatePokerHand.PokerHand.Straight);
+			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), (int)EvaluatePokerHand.PokerHand.Straight);
 		}
 
 
@@ -185,35 +185,35 @@ namespace PokerUnitTest {
 		[TestMethod]
 		public void StraightFlush() {
 			Player player = Hand_StraightFlushHighKing();
-			Assert.IsTrue(EvaluatePokerHand.StraightFlush(player.CardCollection));
+			Assert.IsTrue(EvaluatePokerHand.StraightFlush(player.cards));
 		}
 		[TestMethod]
 		public void Score_StraightFlush() {
 			Player player = Hand_StraightFlushHighKing();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.CardCollection), (int)EvaluatePokerHand.PokerHand.StraightFlush);
+			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), (int)EvaluatePokerHand.PokerHand.StraightFlush);
 		}
 
 		// Full House
 		[TestMethod]
 		public void FullHouseEightsFullOfAces() {
 			Player player = GenerateHand_FullHouse_EightsFullOfAces();
-			Assert.IsTrue(EvaluatePokerHand.FullHouse(player.CardCollection));
+			Assert.IsTrue(EvaluatePokerHand.FullHouse(player.cards));
 		}
 		[TestMethod]
 		public void Score_FullHouseEightsFullOfAces() {
 			Player player = GenerateHand_FullHouse_EightsFullOfAces();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.CardCollection), (int)EvaluatePokerHand.PokerHand.FullHouse);
+			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), (int)EvaluatePokerHand.PokerHand.FullHouse);
 		}
 
 		[TestMethod]
 		public void Fail_FullHouse() {
 			Player player = GenerateHand_FourOfAKindAces();
-			Assert.IsFalse(EvaluatePokerHand.FullHouse(player.CardCollection));
+			Assert.IsFalse(EvaluatePokerHand.FullHouse(player.cards));
 		}
 		[TestMethod]
 		public void Score_Fail_FullHouse() {
 			Player player = GenerateHand_FourOfAKindAces();
-			Assert.AreNotEqual(EvaluatePokerHand.Score(player.CardCollection), (int)EvaluatePokerHand.PokerHand.FullHouse);
+			Assert.AreNotEqual(EvaluatePokerHand.Score(player.cards), (int)EvaluatePokerHand.PokerHand.FullHouse);
 		}
 
 		[TestMethod]
@@ -224,7 +224,7 @@ namespace PokerUnitTest {
 			player.AddCard(new Card(Card.CardSuit.Hearts, Card.CardValue.Five));
 			player.AddCard(new Card(Card.CardSuit.Hearts, Card.CardValue.Two));
 			player.AddCard(new Card(Card.CardSuit.Spades, Card.CardValue.Ace));
-			Assert.IsFalse(EvaluatePokerHand.FullHouse(player.CardCollection));
+			Assert.IsFalse(EvaluatePokerHand.FullHouse(player.cards));
 		}
 
 
@@ -232,12 +232,12 @@ namespace PokerUnitTest {
 		[TestMethod]
 		public void FourOfAKind() {
 			var player = GenerateHand_FourOfAKindAces();
-			Assert.IsTrue(EvaluatePokerHand.FourOfAKind(player.CardCollection));
+			Assert.IsTrue(EvaluatePokerHand.FourOfAKind(player.cards));
 		}
 		[TestMethod]
 		public void Score_FourOfAKind() {
 			var player = GenerateHand_FourOfAKindAces();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.CardCollection), (int)EvaluatePokerHand.PokerHand.FourOfAKind);
+			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), (int)EvaluatePokerHand.PokerHand.FourOfAKind);
 		}
 
 
@@ -245,19 +245,19 @@ namespace PokerUnitTest {
 		[TestMethod]
 		public void RoyalFlushAceHigh() {
 			Player player = Hand_RoyalFlushAceKingClubs();
-			Assert.IsTrue(EvaluatePokerHand.RoyalFlush(player.CardCollection));
+			Assert.IsTrue(EvaluatePokerHand.RoyalFlush(player.cards));
 		}
 		[TestMethod]
 		public void Score_RoyalFlushAceHigh() {
 			Player player = Hand_RoyalFlushAceKingClubs();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.CardCollection), (int)EvaluatePokerHand.PokerHand.RoyalFlush);
+			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), (int)EvaluatePokerHand.PokerHand.RoyalFlush);
 		}
 
 		// Misc
 		[TestMethod]
 		public void NumberOfSets() {
 			Player player = GenerateHand_FourOfAKindAces();
-			Assert.AreEqual(EvaluatePokerHand.NumberOfSets(player.CardCollection, 2), 1);
+			Assert.AreEqual(EvaluatePokerHand.NumberOfSets(player.cards, 2), 1);
 		}
 
 	}

@@ -7,6 +7,19 @@ using System.Threading.Tasks;
 namespace Poker {
 	public static class EvaluatePokerHand {
 
+		// Scoring -- Need to add HighCard and need to return HighCard for each hand.
+
+		//Royal Flush		=	9S	split pot
+		//Straight flush	=	8HS	highest value of cards, if same then split pot
+		//Four of a kind	=	7	highest value of cards
+		//Full House		=	6	highest value of the three of a kind
+		//Flush				=	5HS	highest value of cards, if same then split pot
+		//Straight			=	4HS	highest value of cards, if same then split pot
+		//Three of a Kind	=	3	highest value of cards
+		//2 Pair			=	2HS	highest value of cards, if same then split pot
+		//One Pair			=	1HS	highest value of cards, if same then split pot
+		//High Card			=	0HS	highest value of cards, if same then split pot
+
 		public enum PokerHand {
 			None = 0,
 			HighCard = 1,
@@ -37,22 +50,17 @@ namespace Poker {
 				case 1: {
 						if (EvaluatePokerHand.OnePair(cards))
 							return (int)EvaluatePokerHand.PokerHand.OnePair;
-
-						else if (EvaluatePokerHand.ThreeOfAKind(cards))
+						if (EvaluatePokerHand.ThreeOfAKind(cards))
 							return (int)EvaluatePokerHand.PokerHand.ThreeOfAKind;
-
-						else if (EvaluatePokerHand.FourOfAKind(cards))
+						if (EvaluatePokerHand.FourOfAKind(cards))
 							return (int)EvaluatePokerHand.PokerHand.FourOfAKind;
-
 						return 0;
 					}
 				case 2: {
 						if (EvaluatePokerHand.TwoPair(cards))
 							return (int)EvaluatePokerHand.PokerHand.TwoPair;
-
-						else if (EvaluatePokerHand.FullHouse(cards))
+						if (EvaluatePokerHand.FullHouse(cards))
 							return (int)EvaluatePokerHand.PokerHand.FullHouse;
-
 						return 0;
 					}
 				default: {
@@ -159,7 +167,6 @@ namespace Poker {
 
 			return CardValue;
 		}
+
 	}
-
-
 }

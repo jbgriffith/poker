@@ -28,7 +28,6 @@ namespace UserData {
 				}
 
 			}
-			Console.WriteLine("Created {0} users", Players.Count);
 			return Players;
 		}
 

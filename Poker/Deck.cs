@@ -10,11 +10,11 @@ namespace Poker
 				foreach (Card.CardValue currentNumber in Enum.GetValues(typeof(Card.CardValue)))
 					AddCard(new Card(currentSuit, currentNumber));
 
-			CardCollection.QuickShuffle();
+			cards.QuickShuffle();
 		}
-		public Card DealCard()
+		public new Card DealCard()
 		{
-			return base.ReturnCard();
+			return base.DealCard();
 		}
 
 		/// <summary>
@@ -24,8 +24,8 @@ namespace Poker
 		public override string ToString()
 		{
 			string result = "";
-			if (CardCollection.Count > 0)
-				foreach (var card in CardCollection)
+			if (cards.Count > 0)
+				foreach (var card in cards)
 					result += string.Format("{0}{1}", card, Environment.NewLine);
 			else
 				result = string.Format("No cards in the Deck.{0}", Environment.NewLine);

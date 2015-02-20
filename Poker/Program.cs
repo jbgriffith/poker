@@ -12,23 +12,26 @@ namespace Poker {
 	class Program {
 		static void Main(string[] args) {
 			List<Player> AllPlayers = new List<Player>();
-
+			var Overallsw = Stopwatch.StartNew();
 			var sw = Stopwatch.StartNew();
-			for (int users = 0; users < 4; users++) {
+
+			Console.WriteLine("Downloading & Creating users ...");
+			for (int users = 0; users < 1; users++) {
 				AllPlayers.AddRange(UserData.UserData.GetUserData("http://api.randomuser.me/?results=500&key=6QGL-Z2YJ-OL4O-MACS"));
 			}
+			Console.WriteLine("Created {0} users", AllPlayers.Count);
 
 			Console.WriteLine("Time Elapsed: {0}", sw.Elapsed);
-			sw.Restart();
-
-			for (int i = 0; i < 3; i++) {
+			Overallsw.Restart();
+			for (int i = 0; i < 30000; i++) {
+				sw.Restart();
 				using (var db = new PokerContext()) {
-					db.Configuration.AutoDetectChangesEnabled = false;
-					db.Configuration.ValidateOnSaveEnabled = false;
+					//db.Configuration.AutoDetectChangesEnabled = false;
+					//db.Configuration.ValidateOnSaveEnabled = false;
 
-					for (int games = 1; games < 401; games++) {
+					for (int games = 1; games < 101; games++) {
 
-						List<Player> Players = new List<Player>();
+						var Players = new List<Player>();
 
 						//Random r = new Random();
 						//int range = 4;
@@ -36,49 +39,36 @@ namespace Poker {
 
 						int rInt = 5;
 
-						// Mix it up a little
-						AllPlayers.QuickShuffle();
-
 						// Add each player to the table
-						var firstNPlayers = AllPlayers.Take(rInt).ToList();
-						firstNPlayers.ForEach(player => AllPlayers.Remove(player));
-						Players.AddRange(firstNPlayers);
-						db.Players.AddRange(firstNPlayers);
+						var firstNPlayers = AllPlayers.Shuffle().Take(rInt);
+						var NPlayers = new HashSet<Player>(firstNPlayers);
+						//" HashSet should" speed up the RemoveAll http://stackoverflow.com/a/853551/3042939
+						AllPlayers.RemoveAll(x => NPlayers.Contains(x));
+
+						//EntityFramework
+						//db.Players.AddRange(firstNPlayers);
 
 						// Create New Deck
 						//int numberOfDecks = (int)Math.Ceiling((5.0 * (numPLayers + 1)) / 52);
 						Deck decks = new Deck();
+						Players.ForEach(x => {
+							x.AddCards(decks.DealCards(5));
+							x.Score = EvaluatePokerHand.Score(x.cards);
+						});
+						//player.Fold();
 
-						// Deal out the Cards to the players & Score their hands, then fold.
-						foreach (var player in Players) {
-							for (int j = 0; j < 5; j++)
-								player.AddCard(decks.DealCard());
-							player.Score = EvaluatePokerHand.Score(player.CardCollection);
-							player.Fold();
-							//Players.Remove(player);
-							AllPlayers.Add(player);
-						}
-						// Scoring
+						AllPlayers.AddRange(Players);
 
-						//Royal Flush		=	9S	split pot
-						//Straight flush	=	8HS	highest value of cards, if same then split pot
-						//Four of a kind	=	7	highest value of cards
-						//Full House		=	6	highest value of the three of a kind
-						//Flush				=	5HS	highest value of cards, if same then split pot
-						//Straight			=	4HS	highest value of cards, if same then split pot
-						//Three of a Kind	=	3	highest value of cards
-						//2 Pair			=	2HS	highest value of cards, if same then split pot
-						//One Pair			=	1HS	highest value of cards, if same then split pot
-						//High Card			=	0HS	highest value of cards, if same then split pot
-
-						if (games % 100 == 0)
-							Console.WriteLine("Game #{0}", games);
-
+						if (games % 100 == 0) Console.WriteLine("Game #{0}", games);
 					}
+
 					Console.WriteLine("Time Elapsed: {0}", sw.Elapsed);
 					sw.Restart();
 					Console.WriteLine("Saving Changes");
+
+					//EntityFramework
 					db.SaveChanges();
+
 					Console.WriteLine("All games have been saved");
 					Console.WriteLine("Time Elapsed: {0}", sw.Elapsed);
 					sw.Stop();
@@ -88,6 +78,7 @@ namespace Poker {
 #endif
 				}
 			}
+			Console.WriteLine("Time Elapsed: {0}", Overallsw.Elapsed);
 		}
 	}
 
@@ -127,7 +118,7 @@ namespace Poker {
 			return local;
 		}
 
-		public static void Shuffle<T>(this IList<T> list) {
+		public static void Shuffles<T>(this IList<T> list) {
 			RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
 			int n = list.Count;
 			while (n > 1) {
@@ -141,6 +132,32 @@ namespace Poker {
 				list[n] = value;
 			}
 		}
+
 	}
 
+
+	public static class EnumerableExtensions {
+		public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source) {
+			return source.Shuffle(new Random());
+		}
+
+		public static IEnumerable<T> Shuffle<T>(
+			this IEnumerable<T> source, Random rng) {
+			if (source == null) throw new ArgumentNullException("source");
+			if (rng == null) throw new ArgumentNullException("rng");
+
+			return source.ShuffleIterator(rng);
+		}
+
+		private static IEnumerable<T> ShuffleIterator<T>(
+			this IEnumerable<T> source, Random rng) {
+			var buffer = source.ToList();
+			for (int i = 0; i < buffer.Count; i++) {
+				int j = rng.Next(i, buffer.Count);
+				yield return buffer[j];
+
+				buffer[j] = buffer[i];
+			}
+		}
+	}
 }

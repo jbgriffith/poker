@@ -93,6 +93,10 @@
     <Compile Include="Migrations\201502161900389_3rd_AddScore.Designer.cs">
       <DependentUpon>201502161900389_3rd_AddScore.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201502200059019_4th_FixStuff.cs" />
+    <Compile Include="Migrations\201502200059019_4th_FixStuff.Designer.cs">
+      <DependentUpon>201502200059019_4th_FixStuff.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="PersonAtPokerTable.cs" />
     <Compile Include="Player.cs" />
@@ -131,6 +135,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502161900389_3rd_AddScore.resx">
       <DependentUpon>201502161900389_3rd_AddScore.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502200059019_4th_FixStuff.resx">
+      <DependentUpon>201502200059019_4th_FixStuff.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
