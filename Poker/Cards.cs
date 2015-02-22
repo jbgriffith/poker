@@ -10,6 +10,7 @@ namespace Poker {
 		//}
 
 		public List<Card> cards = new List<Card>();
+		//public virtual List<Card> cards { get; private set; }
 
 		public void AddCard(Card card) {
 			cards.Add(card);

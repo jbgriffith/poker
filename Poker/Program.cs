@@ -47,10 +47,12 @@ namespace Poker {
 
 						//EntityFramework
 						//db.Players.AddRange(firstNPlayers);
+						Players.AddRange(firstNPlayers);
 
 						// Create New Deck
 						//int numberOfDecks = (int)Math.Ceiling((5.0 * (numPLayers + 1)) / 52);
 						Deck decks = new Deck();
+
 						Players.ForEach(x => {
 							x.AddCards(decks.DealCards(5));
 							x.Score = EvaluatePokerHand.Score(x.cards);

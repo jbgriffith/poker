@@ -12,8 +12,6 @@ namespace Poker
 		[Key]
 		public new int Id { get; set; }
 
-		public Collection<Player> players = new Collection<Player>();
-
 		public Player() : this("Unnamed Player", 0) { }
 		public Player(string name, int age) : base(name, age) { }
 

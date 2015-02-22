@@ -69,31 +69,32 @@ namespace Poker {
 			}
 		}
 
-		public static bool RoyalFlush(List<Card> cards) {
+		public static bool RoyalFlush(IEnumerable<Card> cards) {
 			return AceHighStraight(cards) && Flush(cards);
 		}
 
-		public static bool FullHouse(List<Card> cards) {
+		public static bool FullHouse(IEnumerable<Card> cards) {
 			var ThreeOfAKind = ReturnSets(cards, 3);
 			var ThreeOfAKindValue = ThreeOfAKind.FirstOrDefault();
-			var subsetCards = cards.Where(x => x.Number != ThreeOfAKindValue).ToList();
+			var subsetCards = cards.Where(x => x.Number != ThreeOfAKindValue);
+
 			return ThreeOfAKind.Count() == 1 && ReturnSets(subsetCards, 2).Count() == 1;
 		}
 
-		public static bool StraightFlush(List<Card> cards) {
+		public static bool StraightFlush(IEnumerable<Card> cards) {
 			return (Flush(cards) && Straight(cards));
 		}
 
-		public static bool Flush(List<Card> cards) {
+		public static bool Flush(IEnumerable<Card> cards) {
 			var Flush =
 				from card in cards
 				group card by card.Suit into f
-				select f.Count() == cards.Count;
+				select f.Count() == cards.Count();
 
 			return Flush.First();
 		}
 
-		public static bool Straight(List<Card> cards) {
+		public static bool Straight(IEnumerable<Card> cards) {
 			var Straight =
 				from card in cards.AsEnumerable()
 				orderby card.Number ascending
@@ -104,42 +105,40 @@ namespace Poker {
 			return Straight.Zip(Straight.Skip(1), (a, b) => b - a).All(x => x == 1) || AceHighStraight(cards);
 		}
 
-		public static bool AceHighStraight(List<Card> cards) {
+		public static bool AceHighStraight(IEnumerable<Card> cards) {
 			var AceHighStraight =
 				from card in cards.AsEnumerable()
 				where card.Number != 0
 				orderby card.Number ascending
 				select card.Number;
-			return AceHighStraight.Count() == cards.Count - 1 && AceHighStraight.Zip(AceHighStraight.Skip(1), (a, b) => b - a).All(x => x == 1);
+			return AceHighStraight.Count() == cards.Count() - 1 && AceHighStraight.Zip(AceHighStraight.Skip(1), (a, b) => b - a).All(x => x == 1);
 		}
 
-		public static bool FourOfAKind(List<Card> cards) {
+		public static bool FourOfAKind(IEnumerable<Card> cards) {
 			return ReturnSets(cards, 4).Count() == 1;
 		}
 
-		public static bool TwoPair(List<Card> cards) {
+		public static bool TwoPair(IEnumerable<Card> cards) {
 			return ReturnSets(cards, 2).Count() == 2;
 		}
 
-		public static bool ThreeOfAKind(List<Card> cards) {
+		public static bool ThreeOfAKind(IEnumerable<Card> cards) {
 			return ReturnSets(cards, 3).Count() == 1;
 		}
 
-		public static bool OnePair(List<Card> cards) {
+		public static bool OnePair(IEnumerable<Card> cards) {
 			return ReturnSets(cards, 2).Count() == 1;
 		}
 
-		public static bool MultipleSetCheck(List<Card> cards, int setSize, int set2) {
+		public static bool MultipleSetCheck(IEnumerable<Card> cards, int setSize, int set2) {
 			return ReturnSets(cards, setSize).Count() == set2;
 		}
 
-		public static int SetCheck(List<Card> cards) {
-			var SetsOfCards = GetCardValue(cards);
-
-			return SetsOfCards.Count();
+		public static int SetCheck(IEnumerable<Card> cards) {
+			return GetCardValue(cards).Count();
 		}
 
-		public static IEnumerable<Card.CardValue> ReturnSets(List<Card> cards, int numberCardsInSet) {
+		public static IEnumerable<Card.CardValue> ReturnSets(IEnumerable<Card> cards, int numberCardsInSet) {
 			var SetsOfCards =
 				from card in cards
 				group card by card.Number into c
@@ -149,7 +148,7 @@ namespace Poker {
 			return SetsOfCards;
 		}
 
-		public static int NumberOfSets(List<Card> cards, int numberCardsInSet = 2) {
+		public static int NumberOfSets(IEnumerable<Card> cards, int numberCardsInSet = 2) {
 			var SetsOfCards =
 				from card in cards
 				group card by card.Number into c
@@ -159,7 +158,7 @@ namespace Poker {
 			return SetsOfCards.Count();
 		}
 
-		public static IEnumerable<Card.CardValue> GetCardValue(List<Card> cards) {
+		public static IEnumerable<Card.CardValue> GetCardValue(IEnumerable<Card> cards) {
 			var CardValue =
 				from card in cards
 				group card by card.Number into c
