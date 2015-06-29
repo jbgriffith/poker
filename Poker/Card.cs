@@ -1,24 +1,27 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Poker {
-	public class Card// : IComparable<Card>
-	{
+	public class Card {
 		[Key]
 		public int Id { get; private set; }
 
 		public CardSuit Suit { get; private set; }
 		public CardValue Number { get; private set; }
+		public Player Player { get; set; }
 
 		public Card(CardSuit suit, CardValue number) {
 			Suit = suit;
 			Number = number;
 		}
 
-		public Card(int suit, CardValue number) : this((CardSuit)suit, number) {}
+		public Card(int suit, CardValue number) : this((CardSuit)suit, (CardValue)number) { }
 
 		public Card(CardSuit suit, int number) : this (suit, (CardValue)number) {}
 
-		public Card(int suit, int number) : this((CardSuit)suit, (CardValue)number) {}
+		public Card(int suit, int number) : this((CardSuit)suit, (CardValue)number) { }
 
 		/// <summary>
 		/// Enumeration for the Suit
@@ -49,7 +52,7 @@ namespace Poker {
 		}
 
 		public override string ToString() {
-			return string.Format("{0} of {1}", Number, Suit);
+			return string.Format("\t{0} of {1}", Number, Suit);
 		}
 
 		//public int CompareTo(Card other) {

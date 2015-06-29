@@ -22,46 +22,61 @@ namespace Poker {
 			Console.WriteLine("Created {0} users", AllPlayers.Count);
 
 			Console.WriteLine("Time Elapsed: {0}", sw.Elapsed);
-			Overallsw.Restart();
-			for (int i = 0; i < 30000; i++) {
-				sw.Restart();
-				using (var db = new PokerContext()) {
-					//db.Configuration.AutoDetectChangesEnabled = false;
-					//db.Configuration.ValidateOnSaveEnabled = false;
 
-					for (int games = 1; games < 101; games++) {
+			Overallsw.Restart();
+			for (int i = 0; i < 100; i++) {
+				sw.Restart();
+				using (var pdb = new PokerContext()) {
+					for (int games = 0; games < 10; games++) {
 
 						var Players = new List<Player>();
 
 						//Random r = new Random();
 						//int range = 4;
 						//int rInt = r.Next(2, range); //for ints
-
 						int rInt = 5;
 
 						// Add each player to the table
-						var firstNPlayers = AllPlayers.Shuffle().Take(rInt);
+						var firstNPlayers = AllPlayers.Shuffle().Take(rInt).ToList();
 						var NPlayers = new HashSet<Player>(firstNPlayers);
 						//" HashSet should" speed up the RemoveAll http://stackoverflow.com/a/853551/3042939
 						AllPlayers.RemoveAll(x => NPlayers.Contains(x));
 
-						//EntityFramework
-						//db.Players.AddRange(firstNPlayers);
-						Players.AddRange(firstNPlayers);
+						Players.AddRange(NPlayers);
 
 						// Create New Deck
 						//int numberOfDecks = (int)Math.Ceiling((5.0 * (numPLayers + 1)) / 52);
 						Deck decks = new Deck();
 
 						Players.ForEach(x => {
-							x.AddCards(decks.DealCards(5));
-							x.Score = EvaluatePokerHand.Score(x.cards);
+							x.Fold();
+							var cards2 = decks.DealCards(5).ToList();
+							x.cards.AddRange(cards2);
+							//Entity Framework
+							pdb.Hand.AddRange(cards2);
+							x.Score = (int)EvaluatePokerHand.Score(x.cards);
+							Console.WriteLine(x.ToString());
+							//if (x.Score > 0)
+								Console.WriteLine((Poker.EvaluatePokerHand.PokerHand)x.Score);
 						});
-						//player.Fold();
+
+						//Entity Framework
+						pdb.Players.AddRange(NPlayers);
+
+						var maxScore = Players.Max(x => x.Score);
+						var playersWithMaxScore = Players.Where(x => x.Score == maxScore).ToList();
+						var winner = playersWithMaxScore.First();
+						if (playersWithMaxScore.Count > 1) {
+							playersWithMaxScore.ForEach(x => {
+								x.ScoreDetails = EvaluatePokerHand.GetScoreDetail(x.Score, x.cards).ToList();
+								Console.WriteLine("{0} had {1}.", x.Name, String.Join(" ", x.ScoreDetails));
+							});
+							// find winning hand then reassign winner
+						}
 
 						AllPlayers.AddRange(Players);
 
-						if (games % 100 == 0) Console.WriteLine("Game #{0}", games);
+						if (games % 1 == 0) Console.WriteLine("Game #{0}", games);
 					}
 
 					Console.WriteLine("Time Elapsed: {0}", sw.Elapsed);
@@ -69,15 +84,16 @@ namespace Poker {
 					Console.WriteLine("Saving Changes");
 
 					//EntityFramework
-					db.SaveChanges();
+					pdb.SaveChanges();
 
 					Console.WriteLine("All games have been saved");
 					Console.WriteLine("Time Elapsed: {0}", sw.Elapsed);
 					sw.Stop();
-#if DEBUG
-				Console.WriteLine("Press any key to close...");
-				Console.ReadLine();
-#endif
+					System.Threading.Thread.Sleep(1000);
+					//#if DEBUG
+					//					Console.WriteLine("Press any key to close...");
+					//					Console.ReadLine();
+					//#endif
 				}
 			}
 			Console.WriteLine("Time Elapsed: {0}", Overallsw.Elapsed);
@@ -109,15 +125,22 @@ namespace Poker {
 		/// Removes the last element from a List of any Type
 		/// </summary>
 		/// <typeparam name="T">Type</typeparam>
-		/// <param name="list">A List of any Type</param>
-		/// <returns></returns>
-		public static T Pop<T>(this Collection<T> list) {
-			if (list == null || list.Count == 0)
+		/// <param name="coll">A List of any Type</param>
+		/// <returns>Type</returns>
+		public static T Pop<T>(this Collection<T> coll) {
+			if (coll == null || coll.Count == 0)
 				throw new ArgumentNullException("list");
 
-			var local = list[0];
-			list.RemoveAt(0);
+			var local = coll[0];
+			coll.RemoveAt(0);
 			return local;
+		}
+
+		public static void AddRange(this ICollection<Card> source, ICollection<Card> dest) {
+			foreach (var card in dest) {
+				source.Add(card);
+			}
+			//cards.AddRange(addedCards);
 		}
 
 		public static void Shuffles<T>(this IList<T> list) {
@@ -145,9 +168,8 @@ namespace Poker {
 
 		public static IEnumerable<T> Shuffle<T>(
 			this IEnumerable<T> source, Random rng) {
-			if (source == null) throw new ArgumentNullException("source");
-			if (rng == null) throw new ArgumentNullException("rng");
-
+			if (source == null) throw new ArgumentNullException("source is null");
+			if (rng == null) throw new ArgumentNullException("rng is null");
 			return source.ShuffleIterator(rng);
 		}
 

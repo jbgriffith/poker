@@ -11,24 +11,31 @@ namespace UserData {
 
 	public static class UserData {
 
-		public static List<Player> GetUserData(string Url) {
-			var Players = new List<Player>();
+		public static List<Player> GetUserData(string url) {
+			var players = new List<Player>();
 			DateTime now = DateTime.Today;
+			var jsonString = GetJsonfromUrl(url);
+			dynamic json = JValue.Parse(jsonString);
 
-			using (var webClient = new System.Net.WebClient()) {
-				var jsonString = webClient.DownloadString(Url);
-
-				dynamic json = JValue.Parse(jsonString);
-
-				foreach (dynamic p in json.results) {
-					var ageInYears = now.Year - ConvertFromUnixTS((double)p.user.dob).Year;
-					var fullName = String.Format("{0} {1}", p.user.name.first, p.user.name.last);
-
-					Players.Add(new Player(fullName, ageInYears));
-				}
-
+			foreach (dynamic p in json.results) {
+				var ageInYears = now.Year - ConvertFromUnixTS((double)p.user.dob).Year;
+				var fullName = String.Format("{0} {1}", p.user.name.first, p.user.name.last);
+				players.Add(new Player(fullName, ageInYears));
 			}
-			return Players;
+			return players;
+		}
+
+		public static string GetJsonfromUrl(string url) {
+			var result = "";
+			using (var webClient = new System.Net.WebClient()) {
+				try {
+					result = webClient.DownloadString(url);
+				}
+				catch (Exception ex) {
+					throw ex;
+				}
+			}
+			return result;
 		}
 
 		public static DateTime ConvertFromUnixTS(double timestamp) {

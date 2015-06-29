@@ -12,13 +12,10 @@ namespace Poker
 
 			cards.QuickShuffle();
 		}
-		public new Card DealCard()
-		{
-			return base.DealCard();
-		}
 
 		/// <summary>
-		/// This Method overrides the Default .ToString Method which allows for printing of the Deck Object with a user friendly message. If no cards are in the Deck, it will also include a message for that.
+		/// This Method overrides the Default .ToString() Method which allows for printing of the Deck Object with a user friendly message.
+        /// If no cards are in the Deck, it will also include a message for that.
 		/// </summary>
 		/// <returns>A user friendly representation of the Deck object.</returns>
 		public override string ToString()

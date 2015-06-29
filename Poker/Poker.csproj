@@ -58,9 +58,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="MoreLinq">
-      <HintPath>..\packages\morelinq.1.1.0\lib\net35\MoreLinq.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -77,28 +74,8 @@
   <ItemGroup>
     <Compile Include="Card.cs" />
     <Compile Include="Cards.cs" />
-    <Compile Include="Dealer.cs" />
     <Compile Include="Deck.cs" />
-    <Compile Include="EvaluatePokeHands.cs" />
-    <Compile Include="Hand.cs" />
-    <Compile Include="Migrations\201502102115440_init.cs" />
-    <Compile Include="Migrations\201502102115440_init.Designer.cs">
-      <DependentUpon>201502102115440_init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502150139499_2nd.cs" />
-    <Compile Include="Migrations\201502150139499_2nd.Designer.cs">
-      <DependentUpon>201502150139499_2nd.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502161900389_3rd_AddScore.cs" />
-    <Compile Include="Migrations\201502161900389_3rd_AddScore.Designer.cs">
-      <DependentUpon>201502161900389_3rd_AddScore.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201502200059019_4th_FixStuff.cs" />
-    <Compile Include="Migrations\201502200059019_4th_FixStuff.Designer.cs">
-      <DependentUpon>201502200059019_4th_FixStuff.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="PersonAtPokerTable.cs" />
+    <Compile Include="EvaluatePokerHands.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PokerDB.cs" />
     <Compile Include="Program.cs" />
@@ -125,20 +102,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201502102115440_init.resx">
-      <DependentUpon>201502102115440_init.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502150139499_2nd.resx">
-      <DependentUpon>201502150139499_2nd.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502161900389_3rd_AddScore.resx">
-      <DependentUpon>201502161900389_3rd_AddScore.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201502200059019_4th_FixStuff.resx">
-      <DependentUpon>201502200059019_4th_FixStuff.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
