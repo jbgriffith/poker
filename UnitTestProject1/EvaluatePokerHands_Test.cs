@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Poker;
 
 
 namespace PokerUnitTest {
+
 	[TestClass]
 	public class EvaluatePokerHands_Test {
 
@@ -18,7 +20,7 @@ namespace PokerUnitTest {
 		}
 
 		/// <summary>
-		/// Creates Unit Tester and Sets of Cards as decalred in the Dictionary cards.
+		/// Creates "Unit Tester" Player and Sets of Cards as decalred in the Dictionary cards.
 		/// </summary>
 		/// <param name="cards">Dictionaty of Card.CardValue and the number of those cards</param>
 		/// <returns>Unit tester Player with specified cards.</returns>
@@ -27,12 +29,12 @@ namespace PokerUnitTest {
 		}
 
 		/// <summary>
-		/// Creates unit tester Player with a sequence of cards, as specified by the parameters.
+		/// Creates "Unit Tester" Player with a sequence of cards, as specified by the parameters.
 		/// </summary>
 		/// <param name="cardValueStart">Sequence of cards starts with this card value.</param>
 		/// <param name="numOfCards">Length of sequence of cards generated.</param>
 		/// <param name="cardsuit">If not null, specifies which suit all cards will generated will have. Else it will generate each card in the sequence with the next suit.</param>
-		/// <param name="skip">If true sequence will skip cards each iteration.</param>
+		/// <param name="skip">If true sequence will skip a card for each iteration.</param>
 		/// <returns>Unit tester Player with a sequence of cards, as specified by the parameter.</returns>
 		public Player CreateStraightAscending(Card.CardValue cardValueStart, int numOfCards, int? cardsuit = null, bool skip = false) {
 			var numValues = Enum.GetNames(typeof(Card.CardValue)).Length;

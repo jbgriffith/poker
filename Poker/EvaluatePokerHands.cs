@@ -97,8 +97,7 @@ namespace Poker {
 		public static bool Check_FullHouse(IEnumerable<Card> cards) {
 			var ThreeOfAKind = GetSets(cards, 3);
 			var ThreeOfAKindValue = ThreeOfAKind.FirstOrDefault();
-			var subsetCards = cards.Where(x => x.Number != ThreeOfAKindValue);	//would .Except() be better?
-
+			var subsetCards = cards.Where(x => x.Number != ThreeOfAKindValue);
 			return ThreeOfAKind.Count() == 1 && GetSets(subsetCards, 2).Count() == 1;
 		}
 
@@ -109,31 +108,29 @@ namespace Poker {
 				from card in cards
 				group card by card.Suit into f
 				select f.Count() == cards.Count();
-
 			return Flush.First();
 		}
 
 		public static bool CheckStraight(IEnumerable<Card> cards) {
-			var Straight =
+			var straight =
 				from card in cards
 				orderby card.Number ascending
-				select card.Number;
-			Straight = Straight.ToList();
-			// Returns True if all cards are sequential, else False. Influenced by http://stackoverflow.com/a/6150439/3042939
-			return Straight.Zip(Straight.Skip(1), (a, b) => b - a).All(x => x == 1) && Straight.Count() == cards.Count() || CheckAceHighStraight(cards);
+				select card;
+			return Straight(straight) || Straight(straight, true);
 		}
 
-		public static bool CheckAceHighStraight(IEnumerable<Card> cards) {
-			var AceHighStraight =
+		public static bool CheckAceHighStraight(IEnumerable<Card> cards, bool checkAceHigh = false) {
+			var aceHighStraight =
 				from card in cards
 				where card.Number != 0
 				orderby card.Number ascending
-				select card.Number;
-			AceHighStraight = AceHighStraight.ToList();
-			// possible issue with card.Count() - 1 depending on the game.
-			return AceHighStraight.Count() == cards.Count() - 1 && AceHighStraight.Zip(AceHighStraight.Skip(1), (a, b) => b - a).All(x => x == 1);
+				select card;
+			return Straight(aceHighStraight, checkAceHigh, cards.Count() - 1); // possible issue with card.Count() - 1 depending on the game.
 		}
 
+		private static bool Straight(IEnumerable<Card> cards, bool checkAceHigh = true, int cardCount = 5) {
+			return checkAceHigh && CheckAceHighStraight(cards) || cards.Zip(cards.Skip(1), (a, b) => b.Number - a.Number).All(x => x == 1) && cards.Count() == cardCount;
+		}
 		public static bool CheckFourOfAKind(IEnumerable<Card> cards) { return GetSets(cards, 4).Count() == 1; }
 		public static bool CheckTwoPair(IEnumerable<Card> cards) { return GetSets(cards, 2).Count() == 2; }
 		public static bool CheckThreeOfAKind(IEnumerable<Card> cards) { return GetSets(cards, 3).Count() == 1; }
@@ -146,7 +143,6 @@ namespace Poker {
 				from card in cards
 				group card by card.Suit into f
 				select f.Key;
-
 			return Flush;
 		}
 
@@ -159,7 +155,6 @@ namespace Poker {
 				group card by card.Number into c
 				where c.Count() == numberCardsInSet
 				select c.Key;
-
 			return SetsOfCards;
 		}
 
@@ -169,7 +164,6 @@ namespace Poker {
 				group card by card.Number into c
 				where c.Count() > 1
 				select c.Key;
-
 			return SetsOfCards;
 		}
 
@@ -187,7 +181,6 @@ namespace Poker {
 				group card by card.Number into c
 				where c.Count() >= numberCardsInSet
 				select c.Key;
-
 			return SetsOfCards.Count();
 		}
 	}
