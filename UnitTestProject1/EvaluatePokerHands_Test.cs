@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Poker;
+
+using Poker.DbModels;
 
 
 namespace PokerUnitTest {
@@ -12,147 +13,157 @@ namespace PokerUnitTest {
 	public class EvaluatePokerHands_Test {
 
 		/// <summary>
-		/// Creates a player for testing, named unit tester with an age of 2000 years old.
-		/// </summary>
-		/// <returns>Player for unit testing.</returns>
-		public Player CreatePlayer() {
-			return new Player("unit tester", 2000);
-		}
-
-		/// <summary>
-		/// Creates "Unit Tester" Player and Sets of Cards as decalred in the Dictionary cards.
+		/// Creates Cards as declared in the Dictionary cards.
 		/// </summary>
 		/// <param name="cards">Dictionaty of Card.CardValue and the number of those cards</param>
-		/// <returns>Unit tester Player with specified cards.</returns>
-		public Player CreatePlayerAndCardSets(Dictionary<Card.CardValue, int> cards) {
-			return AddCards(CreatePlayer(), cards);
+		/// <returns>Cards that contains specified cards.</returns>
+		public Cards CreateCardSets(Dictionary<Card.CardValue, int> cards) {
+			return AddCards(null, cards);
 		}
 
 		/// <summary>
-		/// Creates "Unit Tester" Player with a sequence of cards, as specified by the parameters.
+		/// Creates Cards with each card being part of a sequence, as specified by the parameters.
+		/// If the cardValueStart is high it will start over and the lowest card value.
+		/// if skip is true it can create pseudo sequences where they skip one value, 
+		/// which is helpful when creating a hand with sets and you don't want to accidently create an actual sequqence.
 		/// </summary>
-		/// <param name="cardValueStart">Sequence of cards starts with this card value.</param>
+		/// <param name="cardValueStart">Sequence of cards starts with this card Numeric value.</param>
 		/// <param name="numOfCards">Length of sequence of cards generated.</param>
 		/// <param name="cardsuit">If not null, specifies which suit all cards will generated will have. Else it will generate each card in the sequence with the next suit.</param>
-		/// <param name="skip">If true sequence will skip a card for each iteration.</param>
-		/// <returns>Unit tester Player with a sequence of cards, as specified by the parameter.</returns>
-		public Player CreateStraightAscending(Card.CardValue cardValueStart, int numOfCards, int? cardsuit = null, bool skip = false) {
+		/// <param name="skip">If true sequence will skip a card for each iteration. Ex: 2, 4, 6</param>
+		/// <returns>Cards, as specified by the parameters.</returns>
+		public Cards CreateStraightAscending(Card.CardValue cardValueStart, int numOfCards, int? cardsuit = null, bool skip = false) {
 			var numValues = Enum.GetNames(typeof(Card.CardValue)).Length;
 			var numSuits = Enum.GetNames(typeof(Card.CardSuit)).Length;
-			Player player = CreatePlayer();
+
+			if (numOfCards > numSuits * numValues || cardsuit != null && numOfCards > numValues )
+				throw new ArgumentOutOfRangeException("numOfCards");
+
+			var cards = new Cards();
 			if (cardsuit == null)
 				for (int suit = 0; suit < numOfCards; suit++, cardValueStart++) {
-					player.AddCard(new Card(suit % numSuits, (int)cardValueStart % numValues));
+					var cardValue = (int)cardValueStart % numValues;
+					cards.AddCard(new Card((suit % numSuits), cardValue == 0 ? (int)cardValueStart : cardValue));
 					if (skip) cardValueStart++;
 				}
 			else
 				for (int i = 0; i < numOfCards; i++, cardValueStart++) {
-					player.AddCard(new Card((int)cardsuit % numSuits, (int)cardValueStart % numValues));
+					var cardValue = (int)cardValueStart % numValues;
+					cards.AddCard(new Card((int)(cardsuit % numSuits), cardValue == 0 ? (int)cardValueStart : cardValue));
 					if (skip) cardValueStart++;
 				}
-			return player;
+			return cards;
 		}
 
 		/// <summary>
 		/// Adds Cards as declared in the Dictionary cards to a specified player.
 		/// </summary>
-		/// <param name="player">Player</param>
-		/// <param name="cards">Dictionaty of Card.CardValue and the number of those cards</param>
+		/// <param name="cards">Player</param>
+		/// <param name="cardDict">Dictionaty of Card.CardValue and the number of those cards</param>
 		/// <returns>Same player with newly added cards.</returns>
-		public Player AddCards(Player player, Dictionary<Card.CardValue, int> cards) {
-			foreach (var card in cards)
-				player = AddCards(player, card.Key, card.Value);
-			return player;
+		public Cards AddCards(Cards cards, Dictionary<Card.CardValue, int> cardDict) {
+			cards = cards ?? new Cards();
+			
+			foreach (var card in cardDict)
+				cards = AddCards(cards, card.Key, card.Value);
+			return cards;
 		}
 
 		/// <summary>
-		/// Adds multiple Card of same Card.CardValue with multiple suits to Player specified.
+		/// Adds multiple Card of same Card.CardValue with multiple suits to Cards collection.
 		/// </summary>
-		/// <param name="player">Player which cards will be generated and added to.</param>
+		/// <param name="cards">Player which cards will be generated and added to.</param>
 		/// <param name="cardValue">Card.CardValue of card to be added</param>
 		/// <param name="numOfCards">Number of cards to add with the specified Card.CardValue, which will increment the Card.CardSuit.</param>
 		/// <exception cref="ArgumentOutOfRangeException">numOfCards must be within length of Card.CardSuit</exception>
-		/// <returns>Player with specified cards added.</returns>
-		public Player AddCards(Player player, Card.CardValue cardValue, int numOfCards = 1) {
+		/// <returns>Cards collection containing specified cards added.</returns>
+		public Cards AddCards(Cards cards, Card.CardValue cardValue, int numOfCards = 1) {
 			if (numOfCards > Enum.GetNames(typeof(Card.CardSuit)).Length)
-				throw new ArgumentOutOfRangeException("Argument Out of Range Exception to Add Cards.");
+				throw new ArgumentOutOfRangeException("numOfCards");
+			
+			cards = cards ?? new Cards();
+
 			for (int i = 0; i < numOfCards; i++)
-				player.AddCard(new Card(i, cardValue));
-			return player;
+				cards.AddCard(new Card(i, cardValue));
+			return cards;
 		}
 
 		#region Generate Poker Hands
 		#region Generate One Pair
-		public Player GenerateHand_OnePair_Aces_SixHigh() {
-			return CreatePlayerAndCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Ace, 2 }, 
+		public Cards GenerateHand_OnePair_Aces_SixHigh() {
+			return CreateCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Ace, 2 }, 
 				{ Card.CardValue.Two, 1 }, { Card.CardValue.Four, 1 }, { Card.CardValue.Six, 1 } }); // AA246
 		}
-		public Player GenerateHand_OnePair_Twos_EightHigh() {
-			return CreatePlayerAndCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Two, 2 }, 
+		public Cards GenerateHand_OnePair_Twos_EightHigh() {
+			return CreateCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Two, 2 }, 
 				{ Card.CardValue.Four, 1 }, { Card.CardValue.Six, 1 }, { Card.CardValue.Eight, 1 } }); // 22468
 		}
-		public Player GenerateHand_OnePair_Kings_TenHigh() {
-			return CreatePlayerAndCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.King, 2 }, 
+		public Cards GenerateHand_OnePair_Kings_TenHigh() {
+			return CreateCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.King, 2 }, 
 				{ Card.CardValue.Four, 1 }, { Card.CardValue.Six, 1 }, { Card.CardValue.Ten, 1 } }); // KK46T
 		}
-		public Player GenerateHand_OnePair_Threes_AceHigh() {
-			return CreatePlayerAndCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Three, 2 }, 
+		public Cards GenerateHand_OnePair_Threes_AceHigh() {
+			return CreateCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Three, 2 }, 
 				{ Card.CardValue.Two, 1 }, { Card.CardValue.Nine, 1 }, { Card.CardValue.Ace, 1 } }); // 3329A
 		}
 		#endregion
 		#region Generate Two Pairs
-		public Player GenerateHand_TwoPairOfAcesEights_TwoHigh() {
-			return CreatePlayerAndCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Ace, 2 }, { Card.CardValue.Eight, 2 }, { Card.CardValue.Two, 1 } }); // AA882
+		public Cards GenerateHand_TwoPairOfAcesEights_TwoHigh() {
+			return CreateCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Ace, 2 }, { Card.CardValue.Eight, 2 }, { Card.CardValue.Two, 1 } }); // AA882
 		}
-		public Player GenerateHand_TwoPairOfJacksNines_SixHigh() {
-			return CreatePlayerAndCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Jack, 2 }, { Card.CardValue.Nine, 2 }, { Card.CardValue.Six, 1 } }); // AA882
+		public Cards GenerateHand_TwoPairOfJacksNines_SixHigh() {
+			return CreateCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Jack, 2 }, { Card.CardValue.Nine, 2 }, { Card.CardValue.Six, 1 } }); // AA882
 		}
 		#endregion
 		#region Generate Three of a Kind
-		public Player GenerateHand_ThreeOfAKindAces_FourHigh() {
-			return CreatePlayerAndCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Ace, 3 }, { Card.CardValue.Two, 1 }, { Card.CardValue.Four, 1 } }); // AAA24
+		public Cards GenerateHand_ThreeOfAKindAces_FourHigh() {
+			return CreateCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Ace, 3 }, { Card.CardValue.Two, 1 }, { Card.CardValue.Four, 1 } }); // AAA24
 		}
-		public Player GenerateHand_ThreeOfAKindTwos_SixHigh() {
-			return CreatePlayerAndCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Two, 3 }, { Card.CardValue.Four, 1 }, { Card.CardValue.Six, 1 } }); // 22246
+		public Cards GenerateHand_ThreeOfAKindTwos_SixHigh() {
+			return CreateCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Two, 3 }, { Card.CardValue.Four, 1 }, { Card.CardValue.Six, 1 } }); // 22246
 		}
-		public Player GenerateHand_ThreeOfAKindKings_FourHigh() {
-			return CreatePlayerAndCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.King, 3 }, { Card.CardValue.Two, 1 }, { Card.CardValue.Four, 1 } }); // KKK24
+		public Cards GenerateHand_ThreeOfAKindKings_FourHigh() {
+			return CreateCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.King, 3 }, { Card.CardValue.Two, 1 }, { Card.CardValue.Four, 1 } }); // KKK24
 		}
 		#endregion
 		#region Generate Straight
-		public Player GenerateHand_Straight_AceLow() { return CreateStraightAscending(Card.CardValue.Ace, 5); } // A2345
-		public Player GenerateHand_Straight_AceHigh() { return CreateStraightAscending(Card.CardValue.Ten, 5); } // TJQKA
-		public Player GenerateHand_Straight_HighKing() { return CreateStraightAscending(Card.CardValue.Nine, 5); } // 9TJQK 
-		public Player GenerateHand_Straight_Fail_AceHigh() { return CreateStraightAscending(Card.CardValue.Queen, 5); } // QKA23 
+		public Cards GenerateHand_Straight_AceLow() { return CreateStraightAscending(Card.CardValue.Ace, 5); } // A2345
+		public Cards GenerateHand_Straight_AceHigh() { return CreateStraightAscending(Card.CardValue.Ten, 5); } // TJQKA
+		public Cards GenerateHand_Straight_HighKing() { return CreateStraightAscending(Card.CardValue.Nine, 5); } // 9TJQK 
+		public Cards GenerateHand_Straight_Fail_AceHigh() { return CreateStraightAscending(Card.CardValue.Queen, 5); } // QKA23 
+		public Cards GenerateHand_Straight_Fail_AceLowSkipTwo() {
+			return CreateCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Ace, 1 }, 
+				{ Card.CardValue.Three, 1 }, { Card.CardValue.Four, 1 }, { Card.CardValue.Five, 1 }, { Card.CardValue.Six, 1 } }); // A3456
+		}
 		#endregion
 		#region Generate Full House
-		public Player GenerateHand_FullHouse_EightsFullOfAces() {
-			return CreatePlayerAndCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Ace, 2 }, { Card.CardValue.Eight, 3 } });  // 888AA
+		public Cards GenerateHand_FullHouse_EightsFullOfAces() {
+			return CreateCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Ace, 2 }, { Card.CardValue.Eight, 3 } });  // 888AA
 		}
-		public Player GenerateHand_FullHouse_AcesFullOfEights() {
-			return CreatePlayerAndCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Ace, 3 }, { Card.CardValue.Eight, 2 } }); // AAA88
+		public Cards GenerateHand_FullHouse_AcesFullOfEights() {
+			return CreateCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Ace, 3 }, { Card.CardValue.Eight, 2 } }); // AAA88
 		}
 		#endregion
 		#region Generate Four of a Kind
-		public Player GenerateHand_FourOfAKindAces_EightHigh() {
-			return CreatePlayerAndCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Ace, 4 }, { Card.CardValue.Eight, 1 } }); // AAAA8
+		public Cards GenerateHand_FourOfAKindAces_EightHigh() {
+			return CreateCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.Ace, 4 }, { Card.CardValue.Eight, 1 } }); // AAAA8
 		}
-		public Player GenerateHand_FourOfAKindKings_NineHigh() {
-			return CreatePlayerAndCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.King, 4 }, { Card.CardValue.Nine, 1 } }); // KKKK9
+		public Cards GenerateHand_FourOfAKindKings_NineHigh() {
+			return CreateCardSets(new Dictionary<Card.CardValue, int>() { { Card.CardValue.King, 4 }, { Card.CardValue.Nine, 1 } }); // KKKK9
 		}
 		#endregion
 		#region Generate Flush
-		public Player GenerateHand_Flush_KingHigh() { return CreateStraightAscending(Card.CardValue.Five, 5, 1, true); } //579JK (suited)
+		public Cards GenerateHand_Flush_KingHigh() { return CreateStraightAscending(Card.CardValue.Five, 5, (int)Card.CardSuit.Diamonds, true); } //579JK (suited)
 		#endregion
 		#region Generate Straight Flush
-		public Player GenerateHand_StraightFlush_KingHigh() { return CreateStraightAscending(Card.CardValue.Nine, 5, 1); } //9TJQK (suited)
-		public Player GenerateHand_StraightFlush_AceLow() { return CreateStraightAscending(Card.CardValue.Ace, 5, 1); } //A2345 (suited)
+		public Cards GenerateHand_StraightFlush_KingHigh() { return CreateStraightAscending(Card.CardValue.Nine, 5, (int)Card.CardSuit.Diamonds); } //9TJQK (suited)
+		public Cards GenerateHand_StraightFlush_AceLow() { return CreateStraightAscending(Card.CardValue.Ace, 5, (int)Card.CardSuit.Diamonds); } //A2345 (suited)
 		#endregion
 		#region Generate Royal flush
-		public Player GenerateHand_RoyalFlushDiamonds() { return CreateStraightAscending(Card.CardValue.Ten, 5, 0); }
-		public Player GenerateHand_RoyalFlushClubs() { return CreateStraightAscending(Card.CardValue.Ten, 5, 1); }
-		public Player GenerateHand_RoyalFlushHearts() { return CreateStraightAscending(Card.CardValue.Ten, 5, 2); }
-		public Player GenerateHand_RoyalFlushSpades() { return CreateStraightAscending(Card.CardValue.Ten, 5, 4); }
+		public Cards GenerateHand_RoyalFlushDiamonds() { return CreateStraightAscending(Card.CardValue.Ten, 5, (int)Card.CardSuit.Diamonds); }
+		public Cards GenerateHand_RoyalFlushClubs() { return CreateStraightAscending(Card.CardValue.Ten, 5, (int)Card.CardSuit.Clubs); }
+		public Cards GenerateHand_RoyalFlushHearts() { return CreateStraightAscending(Card.CardValue.Ten, 5, (int)Card.CardSuit.Hearts); }
+		public Cards GenerateHand_RoyalFlushSpades() { return CreateStraightAscending(Card.CardValue.Ten, 5, (int)Card.CardSuit.Spades); }
 		#endregion
 		#endregion
 
@@ -160,209 +171,256 @@ namespace PokerUnitTest {
 		#region One Pair
 		[TestMethod]
 		public void OnePair() {
-			Player player = GenerateHand_OnePair_Aces_SixHigh();
-			Assert.IsTrue(EvaluatePokerHand.CheckOnePair(player.cards) && player.cards.Count == 5);
+			var cards = GenerateHand_OnePair_Aces_SixHigh();
+			Assert.IsTrue(EvaluatePokerHand.CheckOnePair(cards) && cards.Count == 5);
 		}
 		[TestMethod]
 		public void Score_OnePair() {
-			Player player = GenerateHand_OnePair_Aces_SixHigh();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), EvaluatePokerHand.PokerHand.OnePair);
+			var cards = GenerateHand_OnePair_Aces_SixHigh();
+			Assert.AreEqual(EvaluatePokerHand.Score(cards), EvaluatePokerHand.PokerHand.OnePair);
 		}
 		#endregion
 		#region Two Pair
 		[TestMethod]
 		public void TwoPair() {
-			var player = GenerateHand_TwoPairOfAcesEights_TwoHigh();
-			Assert.IsTrue(EvaluatePokerHand.CheckTwoPair(player.cards) && player.cards.Count == 5);
+			var cards = GenerateHand_TwoPairOfAcesEights_TwoHigh();
+			Assert.IsTrue(EvaluatePokerHand.CheckTwoPair(cards) && cards.Count == 5);
 		}
 		[TestMethod]
 		public void Score_TwoPair() {
-			var player = GenerateHand_TwoPairOfAcesEights_TwoHigh();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), EvaluatePokerHand.PokerHand.TwoPair);
+			var cards = GenerateHand_TwoPairOfAcesEights_TwoHigh();
+			Assert.AreEqual(EvaluatePokerHand.Score(cards), EvaluatePokerHand.PokerHand.TwoPair);
+		}
+		[TestMethod]
+		public void ScoreDetail_TwoPair_AcesEights_TwoHigh() {
+			var cards = GenerateHand_TwoPairOfAcesEights_TwoHigh();
+			var actual = EvaluatePokerHand.GetSetsAndHighCards(cards).ToList();
+			var expected = new List<int> { 14, 8, 2 };
+			CollectionAssert.AreEqual(expected, actual);
+		}
+		[TestMethod]
+		public void ScoreDetail_TwoPair_AcesEights_TwoHigh_Unsorted() {
+			var cards = new Cards();
+			cards.AddCard(new Card(Card.CardSuit.Clubs, Card.CardValue.Eight));
+			cards.AddCard(new Card(Card.CardSuit.Diamonds, Card.CardValue.Ace));
+			cards.AddCard(new Card(Card.CardSuit.Hearts, Card.CardValue.Eight));
+			cards.AddCard(new Card(Card.CardSuit.Hearts, Card.CardValue.Two));
+			cards.AddCard(new Card(Card.CardSuit.Spades, Card.CardValue.Ace));
+			var actual = EvaluatePokerHand.GetSetsAndHighCards(cards).ToList();
+			var expected = new List<int> { 14, 8, 2 };
+			CollectionAssert.AreEqual(expected, actual);
 		}
 		#endregion
 		#region Three of a Kind
 		[TestMethod]
 		public void ThreeOfAKind() {
-			var player = GenerateHand_ThreeOfAKindAces_FourHigh();
-			Assert.IsTrue(EvaluatePokerHand.CheckThreeOfAKind(player.cards) && player.cards.Count == 5);
+			var cards = GenerateHand_ThreeOfAKindAces_FourHigh();
+			Assert.IsTrue(EvaluatePokerHand.CheckThreeOfAKind(cards) && cards.Count == 5);
 		}
 		[TestMethod]
 		public void Score_ThreeOfAKind() {
-			var player = GenerateHand_ThreeOfAKindAces_FourHigh();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), EvaluatePokerHand.PokerHand.ThreeOfAKind);
+			var cards = GenerateHand_ThreeOfAKindAces_FourHigh();
+			Assert.AreEqual(EvaluatePokerHand.Score(cards), EvaluatePokerHand.PokerHand.ThreeOfAKind);
 		}
 		#endregion
 		#region Straight
 		[TestMethod]
 		public void StraightLowAce() {
-			Player player = GenerateHand_Straight_AceLow();
-			Assert.IsTrue(EvaluatePokerHand.CheckStraight(player.cards));
+			var cards = GenerateHand_Straight_AceLow();
+			Assert.IsTrue(EvaluatePokerHand.CheckStraight(cards));
 		}
 		[TestMethod]
 		public void Score_StraightLowAce() {
-			Player player = GenerateHand_Straight_AceLow();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), EvaluatePokerHand.PokerHand.Straight);
+			var cards = GenerateHand_Straight_AceLow();
+			Assert.AreEqual(EvaluatePokerHand.Score(cards), EvaluatePokerHand.PokerHand.Straight);
 		}
 
 		[TestMethod]
 		public void Straight_AceHigh() {
-			Player player = GenerateHand_Straight_AceHigh();
-			Assert.IsTrue(EvaluatePokerHand.CheckStraight(player.cards) && player.cards.Count == 5);
+			var cards = GenerateHand_Straight_AceHigh();
+			Assert.IsTrue(EvaluatePokerHand.CheckStraight(cards) && cards.Count == 5);
 		}
 		[TestMethod]
 		public void Score_Straight_AceHigh() {
-			Player player = GenerateHand_Straight_AceHigh();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), EvaluatePokerHand.PokerHand.Straight);
+			var cards = GenerateHand_Straight_AceHigh();
+			Assert.AreEqual(EvaluatePokerHand.Score(cards), EvaluatePokerHand.PokerHand.Straight);
 		}
 
 		[TestMethod]
 		public void Straight_KingHigh() {
-			Player player = GenerateHand_Straight_HighKing();
-			Assert.IsTrue(EvaluatePokerHand.CheckStraight(player.cards) && player.cards.Count == 5);
+			var cards = GenerateHand_Straight_HighKing();
+			Assert.IsTrue(EvaluatePokerHand.CheckStraight(cards) && cards.Count == 5);
 		}
 		[TestMethod]
 		public void Score_Straight_KingHigh() {
-			Player player = GenerateHand_Straight_HighKing();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), EvaluatePokerHand.PokerHand.Straight);
+			var cards = GenerateHand_Straight_HighKing();
+			Assert.AreEqual(EvaluatePokerHand.Score(cards), EvaluatePokerHand.PokerHand.Straight);
 		}
 
 		[TestMethod]
 		public void Fail_Straight_AceHigh() {
-			Player player = GenerateHand_Straight_Fail_AceHigh();
-			Assert.IsTrue(!EvaluatePokerHand.CheckStraight(player.cards) && player.cards.Count == 5);
+			var cards = GenerateHand_Straight_Fail_AceHigh();
+			Assert.IsTrue(!EvaluatePokerHand.CheckStraight(cards) && cards.Count == 5);
 		}
 		[TestMethod]
 		public void Score_Fail_Straight_AceHigh() {
-			Player player = GenerateHand_Straight_Fail_AceHigh();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), EvaluatePokerHand.PokerHand.HighCard);
+			var cards = GenerateHand_Straight_Fail_AceHigh();
+			Assert.AreEqual(EvaluatePokerHand.Score(cards), EvaluatePokerHand.PokerHand.HighCard);
+		}
+		[TestMethod]
+		public void Fail_Straight_AceLow() {
+			var cards = GenerateHand_Straight_Fail_AceLowSkipTwo();
+			Assert.IsFalse(EvaluatePokerHand.CheckStraight(cards) && cards.Count == 5);
 		}
 		#endregion
 		#region Flush
 		public void Flush_KingHigh() {
-			Player player = GenerateHand_Flush_KingHigh();
-			Assert.IsTrue(EvaluatePokerHand.Check_Flush(player.cards) && player.cards.Count == 5);
+			var cards = GenerateHand_Flush_KingHigh();
+			Assert.IsTrue(EvaluatePokerHand.CheckFlush(cards) && cards.Count == 5);
 		}
 		[TestMethod]
 		public void Score_Flush_KingHigh() {
-			Player player = GenerateHand_StraightFlush_KingHigh();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), EvaluatePokerHand.PokerHand.StraightFlush);
+			var cards = GenerateHand_StraightFlush_KingHigh();
+			Assert.AreEqual(EvaluatePokerHand.Score(cards), EvaluatePokerHand.PokerHand.StraightFlush);
 		}
 		#endregion
 		#region Straight Flush
 		[TestMethod]
 		public void StraightFlush() {
-			Player player = GenerateHand_StraightFlush_KingHigh();
-			Assert.IsTrue(EvaluatePokerHand.Check_StraightFlush(player.cards) && player.cards.Count == 5);
+			var cards = GenerateHand_StraightFlush_KingHigh();
+			Assert.IsTrue(EvaluatePokerHand.CheckStraightFlush(cards) && cards.Count == 5);
 		}
 		[TestMethod]
 		public void Score_StraightFlush() {
-			Player player = GenerateHand_StraightFlush_KingHigh();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), EvaluatePokerHand.PokerHand.StraightFlush);
+			var cards = GenerateHand_StraightFlush_KingHigh();
+			Assert.AreEqual(EvaluatePokerHand.Score(cards), EvaluatePokerHand.PokerHand.StraightFlush);
 		}
 		#endregion
 		#region Full House
 		[TestMethod]
 		public void FullHouseEightsFullOfAces() {
-			Player player = GenerateHand_FullHouse_EightsFullOfAces();
-			Assert.IsTrue(EvaluatePokerHand.Check_FullHouse(player.cards) && player.cards.Count == 5);
+			var cards = GenerateHand_FullHouse_EightsFullOfAces();
+			Assert.IsTrue(EvaluatePokerHand.CheckFullHouse(cards) && cards.Count == 5);
 		}
 		[TestMethod]
 		public void Score_FullHouseEightsFullOfAces() {
-			Player player = GenerateHand_FullHouse_EightsFullOfAces();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), EvaluatePokerHand.PokerHand.FullHouse);
+			var cards = GenerateHand_FullHouse_EightsFullOfAces();
+			Assert.AreEqual(EvaluatePokerHand.Score(cards), EvaluatePokerHand.PokerHand.FullHouse);
 		}
 
 		[TestMethod]
 		public void Fail_FullHouse() {
-			Player player = GenerateHand_FourOfAKindAces_EightHigh();
-			Assert.IsFalse(EvaluatePokerHand.Check_FullHouse(player.cards));
+			var cards = GenerateHand_FourOfAKindAces_EightHigh();
+			Assert.IsFalse(EvaluatePokerHand.CheckFullHouse(cards));
 		}
 		[TestMethod]
 		public void Score_Fail_FullHouse() {
-			Player player = GenerateHand_FourOfAKindAces_EightHigh();
-			Assert.AreNotEqual(EvaluatePokerHand.Score(player.cards), EvaluatePokerHand.PokerHand.FullHouse);
+			var cards = GenerateHand_FourOfAKindAces_EightHigh();
+			Assert.AreNotEqual(EvaluatePokerHand.Score(cards), EvaluatePokerHand.PokerHand.FullHouse);
 		}
 
 		[TestMethod]
 		public void Fail_FullHouse2() {
-			Player player = new Player("unit tester", 2000);
-			player.AddCard(new Card(Card.CardSuit.Clubs, Card.CardValue.Seven));
-			player.AddCard(new Card(Card.CardSuit.Diamonds, Card.CardValue.Five));
-			player.AddCard(new Card(Card.CardSuit.Hearts, Card.CardValue.Five));
-			player.AddCard(new Card(Card.CardSuit.Hearts, Card.CardValue.Two));
-			player.AddCard(new Card(Card.CardSuit.Spades, Card.CardValue.Ace));
-			Assert.IsFalse(EvaluatePokerHand.Check_FullHouse(player.cards));
+			var cards = new Cards();
+			cards.AddCard(new Card(Card.CardSuit.Clubs, Card.CardValue.Seven));
+			cards.AddCard(new Card(Card.CardSuit.Diamonds, Card.CardValue.Five));
+			cards.AddCard(new Card(Card.CardSuit.Hearts, Card.CardValue.Five));
+			cards.AddCard(new Card(Card.CardSuit.Hearts, Card.CardValue.Two));
+			cards.AddCard(new Card(Card.CardSuit.Spades, Card.CardValue.Ace));
+			Assert.IsFalse(EvaluatePokerHand.CheckFullHouse(cards));
 		}
 		#endregion
 		#region Four of a Kind
 		[TestMethod]
 		public void FourOfAKind() {
-			var player = GenerateHand_FourOfAKindAces_EightHigh();
-			Assert.IsTrue(EvaluatePokerHand.CheckFourOfAKind(player.cards) && player.cards.Count == 5);
+			var cards = GenerateHand_FourOfAKindAces_EightHigh();
+			Assert.IsTrue(EvaluatePokerHand.CheckFourOfAKind(cards) && cards.Count == 5);
 		}
 		[TestMethod]
 		public void Score_FourOfAKind() {
-			var player = GenerateHand_FourOfAKindAces_EightHigh();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), EvaluatePokerHand.PokerHand.FourOfAKind);
+			var cards = GenerateHand_FourOfAKindAces_EightHigh();
+			Assert.AreEqual(EvaluatePokerHand.Score(cards), EvaluatePokerHand.PokerHand.FourOfAKind);
 		}
 		#endregion
 		#region Royal Flush
 		[TestMethod]
 		public void RoyalFlushAceHigh() {
-			Player player = GenerateHand_RoyalFlushClubs();
-			Assert.IsTrue(EvaluatePokerHand.Check_Flush(player.cards) && EvaluatePokerHand.Check_Royal(player.cards) && player.cards.Count == 5);
+			var cards = GenerateHand_RoyalFlushClubs();
+			Assert.IsTrue(EvaluatePokerHand.CheckFlush(cards) && EvaluatePokerHand.CheckAceHighStraight(cards) && cards.Count == 5);
 		}
 		[TestMethod]
 		public void Score_RoyalFlushAceHigh() {
-			Player player = GenerateHand_RoyalFlushClubs();
-			Assert.AreEqual(EvaluatePokerHand.Score(player.cards), EvaluatePokerHand.PokerHand.RoyalFlush);
+			var cards = GenerateHand_RoyalFlushClubs();
+			Assert.AreEqual(EvaluatePokerHand.Score(cards), EvaluatePokerHand.PokerHand.RoyalFlush);
 		}
 		#endregion
 		#region Misc Tests
 		[TestMethod]
 		public void NumberOfSets() {
-			Player player = GenerateHand_FourOfAKindAces_EightHigh();
-			Assert.AreEqual(EvaluatePokerHand.NumberOfSets(player.cards, 2), 1);
+			var cards = GenerateHand_FourOfAKindAces_EightHigh();
+			Assert.AreEqual(EvaluatePokerHand.NumberOfSets(cards, 2), 1);
 		}
 
 		[TestMethod]
 		public void GetHighCards_StraightFlush_KingHigh() {
-			Player player = GenerateHand_StraightFlush_KingHigh();
-			var actual = EvaluatePokerHand.GetHighCards(player.cards).ToList();
-			var expected = new List<int> { 12, 11, 10, 9, 8 };
-			CollectionAssert.AreEqual(actual, expected);
+			var cards = GenerateHand_StraightFlush_KingHigh();
+			var actualCards = new List<Card>();
+			actualCards.Add(new Card(Card.CardSuit.Diamonds, Card.CardValue.King));
+			actualCards.Add(new Card(Card.CardSuit.Diamonds, Card.CardValue.Queen));
+			actualCards.Add(new Card(Card.CardSuit.Diamonds, Card.CardValue.Jack));
+			actualCards.Add(new Card(Card.CardSuit.Diamonds, Card.CardValue.Ten));
+			actualCards.Add(new Card(Card.CardSuit.Diamonds, Card.CardValue.Nine));
+
+			var actual = EvaluatePokerHand.GetHighCards(actualCards).ToList();
+			var expected = new List<Card>();
+			expected.Add(new Card(Card.CardSuit.Diamonds, Card.CardValue.King));
+			expected.Add(new Card(Card.CardSuit.Diamonds, Card.CardValue.Queen));
+			expected.Add(new Card(Card.CardSuit.Diamonds, Card.CardValue.Jack));
+			expected.Add(new Card(Card.CardSuit.Diamonds, Card.CardValue.Ten));
+			expected.Add(new Card(Card.CardSuit.Diamonds, Card.CardValue.Nine));
+			var actualHC = new List<int>();
+			var expectedHC = new List<int>();
+			var equality = new List<bool>();
+			
+			foreach (var item in actualCards)
+				actualHC.Add(item.GetHashCode());
+			foreach (var item in expected)
+				expectedHC.Add(item.GetHashCode());
+			for (int i = 0; i < actualCards.Count; i++)
+				equality.Add(actualCards[i].Equals(expected[i]));
+
+			CollectionAssert.AreEqual(expected, actualCards, CardsNumericallyAscendingHelper.SortCardValueAscending());
 		}
 
-		[TestMethod]
-		public void GetHighCards_FourOfAKindAces_EightHigh() {
-			Player player = GenerateHand_FourOfAKindAces_EightHigh();
-			var actual = EvaluatePokerHand.GetHighCards(player.cards).ToList();
-			var expected = new List<int> { 13, 13, 13, 13, 7 };
-			CollectionAssert.AreEqual(actual, expected);
-		}
+		//[TestMethod]
+		//public void GetHighCards_FourOfAKindAces_EightHigh() {
+		//	var cards = GenerateHand_FourOfAKindAces_EightHigh();
+		//	var actual = EvaluatePokerHand.GetHighCards(player.cards).ToList();
+		//	var expected = new List<int> { 13, 13, 13, 13, 7 };
+		//	CollectionAssert.AreEqual(actual, expected);
+		//}
 
-		[TestMethod]
-		public void GetHighCards_OnePair_Threes_AceHigh() {
-			Player player = GenerateHand_OnePair_Threes_AceHigh();
-			var actual = EvaluatePokerHand.GetHighCards(player.cards).ToList();
-			var expected = new List<int> { 13, 8, 2, 2, 1 };
-			CollectionAssert.AreEqual(actual, expected);
-		}
+		//[TestMethod]
+		//public void GetHighCards_OnePair_Threes_AceHigh() {
+		//	var cards = GenerateHand_OnePair_Threes_AceHigh();
+		//	var actual = EvaluatePokerHand.GetHighCards(player.cards).ToList();
+		//	var expected = new List<int> { 13, 8, 2, 2, 1 };
+		//	CollectionAssert.AreEqual(actual, expected);
+		//}
 
 		[TestMethod]
 		public void GetSetsAndHighCards_OnePair_Threes_AceHigh() {
-			Player player = GenerateHand_OnePair_Threes_AceHigh();
-			var actual = EvaluatePokerHand.GetSetsAndHighCards(player.cards).ToList();
-			var expected = new List<int> { 2, 13, 8, 1 };
+			var cards = GenerateHand_OnePair_Threes_AceHigh();
+			var actual = EvaluatePokerHand.GetSetsAndHighCards(cards).ToList();
+			var expected = new List<int> { 3, 14, 9, 2 };
 			CollectionAssert.AreEqual(actual, expected);
 		}
 
 		[TestMethod]
 		public void GetSuit_AllSpades() {
-			Player player = GenerateHand_RoyalFlushClubs();
-			var actual = EvaluatePokerHand.GetSuit(player.cards).ToList();
-			var expected = new List<Card.CardSuit> { Card.CardSuit.Clubs };
+			var cards = GenerateHand_RoyalFlushClubs();
+			var actual = EvaluatePokerHand.GetSuit(cards).ToList();
+			var expected = new List<int> { (int)Card.CardSuit.Clubs };
 			CollectionAssert.AreEqual(actual, expected);
 		}
 		#endregion

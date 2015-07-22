@@ -54,6 +54,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Poker.DbModels\Poker.DbModels.csproj">
+      <Project>{11ccdad3-143b-4afc-83d4-4cb3ac37cf6f}</Project>
+      <Name>Poker.DbModels</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Poker\Poker.csproj">
       <Project>{d3e5811c-ca34-4448-b45b-087982e1de62}</Project>
       <Name>Poker</Name>

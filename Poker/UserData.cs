@@ -7,14 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UserData {
+using Poker.DbModels;
+
+namespace User {
 
 	public static class UserData {
 
 		public static List<Player> GetUserData(string url) {
 			var players = new List<Player>();
 			DateTime now = DateTime.Today;
-			var jsonString = GetJsonfromUrl(url);
+			var jsonString = GetJsonFromUrl(url);
 			dynamic json = JValue.Parse(jsonString);
 
 			foreach (dynamic p in json.results) {
@@ -25,14 +27,14 @@ namespace UserData {
 			return players;
 		}
 
-		public static string GetJsonfromUrl(string url) {
+		public static string GetJsonFromUrl(string url) {
 			var result = "";
 			using (var webClient = new System.Net.WebClient()) {
 				try {
 					result = webClient.DownloadString(url);
 				}
-				catch (Exception ex) {
-					throw ex;
+				catch (Exception) {
+					throw;
 				}
 			}
 			return result;
