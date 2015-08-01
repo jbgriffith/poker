@@ -1,4 +1,12 @@
+version: 1.0.{build}
+build:
+  verbosity: minimal
 notifications:
-  - provider: Slack
-    auth_token:
-      secure: TKomnYgah09oLwBcfyRiBGQygeJu3i0z1FmnTEaUFWcxcGk7K8weKgBhbIQnfhdB
+- provider: Slack
+  incoming_webhook: jbg@email.arizona.edu
+  auth_token:
+    secure: ydLQ7irns1ack8ORc9dP9Q==
+  channel: bitbucket
+  on_build_success: true
+  on_build_failure: true
+  on_build_status_changed: true

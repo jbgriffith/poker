@@ -5,12 +5,14 @@ using Poker.NHib.DataAnnotations;
 
 namespace Poker.DbModels {
 	public class Cards : ModelBaseGuid, IEnumerable<Card> {
-		public virtual IList<Card> cards { get; set; } = new List<Card>();
+		public virtual IList<Card> cards { get; set; }
 
         [NotPersisted]
 		public virtual int Count { get { return cards.Count; } protected set { } }
 
-        public Cards() { }
+        public Cards() {
+            cards = new List<Card>();
+        }
 		#region Methods
 		public virtual void AddCard(Card card) { cards.Add(card); }
 		//public virtual void AddCards(IEnumerable<Card> cards) { this.cards.AddRange(cards); }

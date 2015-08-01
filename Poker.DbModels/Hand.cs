@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Poker.DbModels {
     public class Hand : Cards {
-        public virtual int Score { get; protected set; } = -1;
+        public virtual int Score { get; protected set; }
         public virtual Player Player { get; set; }
         public virtual Game Game { get; set; }
         public virtual bool HandWonGame { get; set; }
@@ -15,16 +15,19 @@ namespace Poker.DbModels {
         // If I try to persist, Poker.Nhib.CustomHasManyConvention.Apply throws an exception for trying to save a List<int>..... 
         // Maybe make a ScoreDetails Class which is a List<int> ??????
         [NotPersisted] 
-        public virtual IList<int> ScoreDetail { get; set; } = new List<int>();
+        public virtual IList<int> ScoreDetail { get; set; }
 
         public Hand() {
             Player = new Player();
             Game = new Game();
+            Score = -1;
+            ScoreDetail = new List<int>();
         }
         public Hand(IEnumerable<Card> incomingCards, Player player, Game game) {
             cards = incomingCards.ToList();
             Player = player;
             Game = game;
+            ScoreDetail = new List<int>();
         }        
 
         public virtual void CalculateHand() {
