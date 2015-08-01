@@ -5,7 +5,7 @@ notifications:
 - provider: Slack
   incoming_webhook: jbg@email.arizona.edu
   auth_token:
-    secure: ydLQ7irns1ack8ORc9dP9Q==
+    secure: TKomnYgah09oLwBcfyRiBGQygeJu3i0z1FmnTEaUFWcxcGk7K8weKgBhbIQnfhdB
   channel: bitbucket
   on_build_success: true
   on_build_failure: true
