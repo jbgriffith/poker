@@ -135,8 +135,8 @@ namespace Poker.NHib.Conventions {
 
 	public class CustomHasManyConvention : IHasManyConvention {
 		public void Apply(IOneToManyCollectionInstance instance) {
-			// by definition we are only here if instance is a collection, never on the "many" (reference) side of a OneToMany
-			string childName = instance.ChildType.Name;
+            // by definition we are only here if instance is a collection, never on the "many" (reference) side of a OneToMany
+            string childName = instance.ChildType.Name;
 			string entityName = instance.EntityType.Name;
 
 			// set collection storage type

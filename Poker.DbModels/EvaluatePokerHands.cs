@@ -70,7 +70,7 @@ namespace Poker.DbModels {
 		public static bool CheckFlush(IEnumerable<Card> cards) {
 			var Flush =
 				from card in cards
-				group card by card.Suit into f
+				group card by card.CardSuit into f
 				select f.Count() == cards.Count();
 			return Flush.First();
 		}
@@ -79,11 +79,11 @@ namespace Poker.DbModels {
 			return ComputeStraight(cards) || CheckAceHighStraight(cards);
 		}
 		public static bool CheckAceHighStraight(IEnumerable<Card> cards) {
-			return cards.Where(c => c.Number == Card.CardValue.Ace).Count() == 1 && ComputeStraight(cards.Select(AceHighValue));
+			return cards.Where(c => c.CardValue == Card.CardValues.Ace).Count() == 1 && ComputeStraight(cards.Select(AceHighValue));
 		}
 		private static bool ComputeStraight(IEnumerable<Card> cards, int cardCount = 5) {
-			cards = cards.OrderBy(c => c.Number);
-			return cards.Zip(cards.Skip(1), (a, b) => b.Number - a.Number).All(x => x == 1) && cards.Count() == cardCount;
+			cards = cards.OrderBy(c => c.CardValue);
+			return cards.Zip(cards.Skip(1), (a, b) => b.CardValue - a.CardValue).All(x => x == 1) && cards.Count() == cardCount;
 		}
 
 		public static bool CheckFourOfAKind(IEnumerable<Card> cards) { return GetSetsSized(cards, 4).Count() == 4; }
@@ -92,7 +92,7 @@ namespace Poker.DbModels {
 		public static bool CheckOnePair(IEnumerable<Card> cards) { return GetSetsSized(cards, 2).Count() == 2; }
 
 		public static IEnumerable<Card> GetHighCards(IEnumerable<Card> cards) {
-			return cards.Select(AceHighValue).OrderByDescending(i => i.Number);
+			return cards.Select(AceHighValue).OrderByDescending(i => i.CardValue);
 		}
 
 		/// <summary>
@@ -101,8 +101,12 @@ namespace Poker.DbModels {
 		/// <param name="c">A single card</param>
 		/// <returns>A transformed single Card</returns>
 		public static Card AceHighValue(Card c) {
-			return (c.Number == Card.CardValue.Ace) ? new Card(c.Suit, ((int)Card.CardValue.King + 1)) : c;
+			return (c.CardValue == Card.CardValues.Ace) ? new Card(c.CardSuit, ((int)Card.CardValues.King + 1)) : c;
 		}
+
+        public static int AceHighNumericValue(Card c) {
+            return (int)AceHighValue(c).CardValue;
+        }
 
 		/// <summary>
 		/// Returns all cards in a set of a specified size 
@@ -111,8 +115,8 @@ namespace Poker.DbModels {
 		/// <param name="numberCardsInSet">the specified size of the set of cards</param>
 		/// <returns></returns>
 		private static IEnumerable<Card> GetSetsSized(IEnumerable<Card> cards, int numberCardsInSet) {
-			var gNum = cards.GroupBy(c => c.Number).Where(g => g.Count() == numberCardsInSet).Select(c => c.Key);
-			return cards.Where(c => gNum.Contains(c.Number));
+			var gNum = cards.GroupBy(c => c.CardValue).Where(g => g.Count() == numberCardsInSet).Select(c => c.Key);
+			return cards.Where(c => gNum.Contains(c.CardValue));
 		}
 
 		/// <summary>
@@ -122,11 +126,9 @@ namespace Poker.DbModels {
 		/// <returns></returns>
 		private static IEnumerable<Card> GetSets(IEnumerable<Card> cards) {
 			var highCards = cards.Select(AceHighValue);
-			var gNum = highCards.GroupBy(c => c.Number).Where(g => g.Count() > 1).Select(g => g.Key);
-			return highCards.Where(c => gNum.Contains(c.Number)).OrderByDescending(c => c.Number);
+			var gNum = highCards.GroupBy(c => c.CardValue).Where(g => g.Count() > 1).Select(g => g.Key);
+			return highCards.Where(c => gNum.Contains(c.CardValue)).OrderByDescending(c => c.CardValue);
 		}
-
-		public static IEnumerable<int> GetScoreDetail(Player player) { return GetScoreDetail(player.Hand); }
 
 		public static IEnumerable<int> GetScoreDetail(Hand hand) {
 			switch ((PokerHand)hand.Score) {
@@ -155,29 +157,29 @@ namespace Poker.DbModels {
 		public static int NumberOfSets(IEnumerable<Card> cards, int numberCardsInSet = 2) {
 			var SetsOfCards =
 				from card in cards
-				group card by card.Number into c
+				group card by card.CardValue into c
 				where c.Count() >= numberCardsInSet
 				select c.Key;
 			return SetsOfCards.Count();
 		}
 
 		public static IEnumerable<int> GetThreeOfAKindValue(IEnumerable<Card> cards) {
-			return GetSetsSized(cards, 3).Take(1).Select(AceHighValue).Select(c => (int)c.Number);
+			return GetSetsSized(cards, 3).Take(1).Select(AceHighValue).Select(c => (int)c.CardValue);
 		}
 
 		public static IEnumerable<int> GetSetsAndHighCards(IEnumerable<Card> cards) {
 			var cardSets = GetSets(cards);
 			var highCards = GetHighCards(cards.Except(cardSets));
-			return cardSets.Union(highCards).Select(AceHighValue).Select(c => (int)c.Number).Distinct();
+			return cardSets.Union(highCards).Select(AceHighValue).Select(c => (int)c.CardValue).Distinct();
 		}
 
 		private static IEnumerable<int> GetHighCardValue(IEnumerable<Card> cards) {
-			return GetHighCards(cards).Select(c => (int)c.Number).Take(1);
+			return GetHighCards(cards).Select(c => (int)c.CardValue).Take(1);
 		}
 
 		public static IEnumerable<int> GetSuit(IEnumerable<Card> cards) {
-			return cards.Take(1).Select(c => (int)c.Suit);
-			//return cards.Select(AceHighCard).OrderByDescending(i => i.Number).Take(1).Select(c => (int)c.Suit);
+			return cards.Take(1).Select(c => (int)c.CardSuit);
+			//return cards.Select(AceHighCard).OrderByDescending(i => i.CardValue).Take(1).Select(c => (int)c.CardSuit);
 		}
 	}
 }

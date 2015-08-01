@@ -26,7 +26,7 @@ namespace Poker.NHib {
 	public class NHConfiguration : DefaultAutomappingConfiguration {
 		private const string defaultConnName = "PokerDb";
 		// use "Namespace.Type, Assembly" to describe defaults so that Poker.DBModel is not required unlesss we actually use the default
-		private string[] defaultMapFromAssemblyOf = new string[] { "Poker.DBModel" };
+		private string[] defaultMapFromAssemblyOf = new string[] { "Poker.DbModels.Card, Poker.DbModels" };
 
 		public string ConnectionName { get; private set; }
 		public string ConnectionString { get; private set; }
@@ -61,7 +61,7 @@ namespace Poker.NHib {
 					_FluentConfiguration = Fluently.Configure()
 						//.Diagnostics(d => { d.Enable(); d.OutputToConsole(); })
 						.Database(MsSqlConfiguration.MsSql2008.ConnectionString(this.ConnectionString).AdoNetBatchSize(batchSize > 0 ? batchSize : 0).UseReflectionOptimizer())
-						.Mappings(m => m.AutoMappings.Add(SetConventions(apm)));
+                        .Mappings(m => m.AutoMappings.Add(SetConventions(apm)));
 				}
 				return _FluentConfiguration;
 			}
@@ -69,7 +69,7 @@ namespace Poker.NHib {
 		private FluentConfiguration _FluentConfiguration;
 
 		private string[] mapNamespaces;
-		const int batchSize = 500; //100;
+		const int batchSize = 0; //100;
 
 
 		/// <summary>
@@ -152,37 +152,37 @@ namespace Poker.NHib {
 		/// <param name="apm">The AutoPersistenceModel to modify.</param>
 		/// <returns></returns>
 		private AutoPersistenceModel SetConventions(AutoPersistenceModel apm) {
-			return apm
-				.Alterations(a => a.Add<BaseAlteration>())
-				.OverrideAll(c => { c.IgnoreProperties(p => p.MemberInfo.GetCustomAttributes<NotPersistedAttribute>(false).Count() > 0); })
+            return apm
+                .Alterations(a => a.Add<BaseAlteration>())
+                .OverrideAll(c => { c.IgnoreProperties(p => p.MemberInfo.GetCustomAttributes<NotPersistedAttribute>(false).Count() > 0); })
 
-				// provided helper conventions - put before custom conventions so things like keynames are completed by the time we get to custom conventions
-				.Conventions.Add(
-				//StringMaxLengthConvention(),
-					PrimaryKey.Name.Is(a => "Id"),
-					ForeignKey.EndsWith("Id"),
-				//AutoImport.Never(), // requires namespace.class; only needed if dup class names in diff namespaces
-				//DefaultAccess.Field(), // default is "property"
-					DefaultCascade.SaveUpdate(),
-					DefaultLazy.Always()
-				//Cache.Is(a => a.ReadOnly())
-				//DynamicInsert.AlwaysTrue(),
-				//DynamicUpdate.AlwaysTrue(),
-				//OptimisticLock.Is(a => a.Dirty()), // for DynamicInsert/Update; version recommended
-				)
-				// custom conventions
-				.Conventions.Add<EnumConvention>()
-				.Conventions.Add<AssignedIdConvention>()
-				.Conventions.Add<StringLengthAttributeConvention>()
-				.Conventions.Add<RequiredAttributeConvention>()
-				.Conventions.Add<IndexedAttributeConvention>()
-				.Conventions.Add<UniqueAttributeConvention>()
-				.Conventions.Add<TextAttributeConvention>()
-				.Conventions.Add<PrecisionScaleAttributeConvention>()
-				//.Conventions.Add<ManyToManyAttributeConvention>()
-				.Conventions.Add<CustomManyToManyTableNameConvention>()
-				.Conventions.Add<CustomHasManyConvention>()
-				.Conventions.Add<CustomManyToManyConvention>();
+                // provided helper conventions - put before custom conventions so things like keynames are completed by the time we get to custom conventions
+                .Conventions.Add(
+                    //StringMaxLengthConvention(),
+                    PrimaryKey.Name.Is(a => "Id"),
+                    ForeignKey.EndsWith("Id"),
+                    //AutoImport.Never(), // requires namespace.class; only needed if dup class names in diff namespaces
+                    //DefaultAccess.Field(), // default is "property"
+                    DefaultCascade.SaveUpdate(),
+                    DefaultLazy.Always()
+                //Cache.Is(a => a.ReadOnly())
+                //DynamicInsert.AlwaysTrue(),
+                //DynamicUpdate.AlwaysTrue(),
+                //OptimisticLock.Is(a => a.Dirty()), // for DynamicInsert/Update; version recommended
+                )
+                // custom conventions
+                .Conventions.Add<EnumConvention>()
+                .Conventions.Add<AssignedIdConvention>()
+                .Conventions.Add<StringLengthAttributeConvention>()
+                .Conventions.Add<RequiredAttributeConvention>()
+                .Conventions.Add<IndexedAttributeConvention>()
+                .Conventions.Add<UniqueAttributeConvention>()
+                .Conventions.Add<TextAttributeConvention>()
+                .Conventions.Add<PrecisionScaleAttributeConvention>()
+                //.Conventions.Add<ManyToManyAttributeConvention>()
+                .Conventions.Add<CustomManyToManyTableNameConvention>()
+                .Conventions.Add<CustomHasManyConvention>()
+                .Conventions.Add<CustomManyToManyConvention>();
 		}
 
 		private void ExecuteSchemaActions(Configuration cfg) {

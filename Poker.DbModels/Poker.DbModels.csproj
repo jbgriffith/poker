@@ -49,8 +49,6 @@
     <Compile Include="ModelBase.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Seat.cs" />
-    <Compile Include="Table.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Poker.Nhib.DataAnnotations\Poker.Nhib.DataAnnotations.csproj">

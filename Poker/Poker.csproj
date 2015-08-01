@@ -120,6 +120,18 @@
       <Project>{11ccdad3-143b-4afc-83d4-4cb3ac37cf6f}</Project>
       <Name>Poker.DbModels</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Poker.Nhib.DataAnnotations\Poker.Nhib.DataAnnotations.csproj">
+      <Project>{bca610d8-36f6-4573-83d8-753d643038c1}</Project>
+      <Name>Poker.Nhib.DataAnnotations</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Poker.Nhib\Poker.Nhib.csproj">
+      <Project>{bb889822-53b9-429e-8fff-ce51589b9339}</Project>
+      <Name>Poker.Nhib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Poker.Utils\Poker.Utils.csproj">
+      <Project>{1f28bc29-2bce-48ad-a80d-5c6ace99989b}</Project>
+      <Name>Poker.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
