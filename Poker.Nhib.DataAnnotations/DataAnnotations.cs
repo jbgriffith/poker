@@ -19,6 +19,9 @@ using System.Threading.Tasks;
 
 namespace Poker.NHib.DataAnnotations {
 	[AttributeUsage(AttributeTargets.Property)]
+	public sealed class KeepSequenceAttribute : Attribute { }
+
+	[AttributeUsage(AttributeTargets.Property)]
 	public sealed class NotPersistedAttribute : Attribute { }
 
 	[AttributeUsage(AttributeTargets.Class)]

@@ -144,9 +144,12 @@ namespace Poker.NHib.Conventions {
 			if (memberPropertyType.IsGenericType && memberPropertyType.GetGenericTypeDefinition() == typeof(ISet<>)) {
 				instance.AsSet();
 			}
-			else { // default to AsList instead of Bag
+			else if (instance.Member.IsDefined(typeof(KeepSequenceAttribute), false)) {
 				instance.AsList();
 				instance.Index.Column("Seq_" + entityName);
+			}
+			else {
+				instance.AsBag();
 			}
 
 			// set override cascade (default is CascadeSaveUpdate)
@@ -261,10 +264,12 @@ namespace Poker.NHib.Conventions {
 				instance.AsSet();
 				//Console.WriteLine(entityName + ":" + childName + ": AsSet");
 			}
-			else { // default to AsList instead of Bag
+				else if (instance.Member.IsDefined(typeof(KeepSequenceAttribute), false)) {
 				instance.AsList();
-				instance.Index.Column("Seq");
-				//Console.WriteLine(entityName + ":" + childName + ": AsList");
+				instance.Index.Column("Seq_" + entityName);
+			}
+			else {
+				instance.AsBag();
 			}
 
 			// set cascade
