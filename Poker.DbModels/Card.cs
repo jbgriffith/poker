@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections;
 
+using Poker.NHib.DataAnnotations;
+
 namespace Poker.DbModels {
 	public class Card : ModelBaseGuid, IEquatable<Card>, IComparer {
+		// Would it be better to just seed the DB with the distinct Cards, then load them so I have a distinct set of cards instead of thousands?\
+
 		public virtual CardSuits CardSuit { get; protected set; }
 		public virtual CardValues CardValue { get; protected set; }
-        //public virtual Cards Cards { get; set; }
 
-        //[Required, DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        //public DateTime CreatedUtc { get; set; }
-        protected Card() { } // required for Nhibernate...
+		protected Card() { } // required for Nhibernate...
 		public Card(CardSuits suit, CardValues number) {
 			CardSuit = suit;
 			CardValue = number;
@@ -26,7 +27,7 @@ namespace Poker.DbModels {
 			Diamonds = 0,
 			Clubs = 1,
 			Hearts = 2,
-			Spades = 3			
+			Spades = 3
 		}
 		/// <summary>
 		/// Enumeration for Card Values
@@ -77,86 +78,5 @@ namespace Poker.DbModels {
 			if (this.CardSuit > other.CardSuit) return -1;
 			return 0;
 		}
-
-		//private class sortCardNumberAscendingHelper : IComparer {
-		//	int IComparer.Compare(object a, object b) {
-		//		Card c1 = (Card)a;
-		//		Card c2 = (Card)b;
-
-		//		if (c1.CardValue > c2.CardValue) return 1;
-		//		if (c1.CardValue < c2.CardValue) return -1;
-		//		if (c1.CardSuit > c2.CardSuit) return 1;
-		//		if (c1.CardSuit < c2.CardSuit) return -1;
-
-		//		//Console.WriteLine("This is an Error");
-		//		//Console.ReadKey();
-		//		return 0;
-
-		//	}
-		//}
-
-		//private class sortCardNumberDescendingHelper : IComparer {
-		//	int IComparer.Compare(object a, object b) {
-		//		Card c1 = (Card)a;
-		//		Card c2 = (Card)b;
-
-		//		if (c1.CardValue < c2.CardValue) return 1;
-		//		if (c1.CardValue > c2.CardValue) return -1;
-		//		if (c1.CardSuit < c2.CardSuit) return 1;
-		//		if (c1.CardSuit > c2.CardSuit) return -1;
-
-		//		//Console.WriteLine("This is an Error");
-		//		//Console.ReadKey();
-		//		return 0;
-		//	}
-		//}
-
-		//private class sortMakeDescendingHelper : IComparer {
-		//	int IComparer.Compare(object a, object b) {
-		//		Card c1 = (Card)a;
-		//		Card c2 = (Card)b;
-		//		if (c1.CardValue == c2.CardValue)
-		//			return c1.CardSuit.CompareTo(c2.CardSuit);
-
-		//		return c1.CardValue.CompareTo(c1.CardValue);
-		//	}
-		//}
-
-		//public int CompareTo(Card other) {
-
-		//	if (this.CardValue < other.CardValue) return 1;
-		//	if (this.CardValue > other.CardValue) return -1;
-		//	if (this.CardSuit < other.CardSuit) return 1;
-		//	if (this.CardSuit > other.CardSuit) return -1;
-		//	return 0;
-		//}
-		// End of nested classes.
-
-		//public int CompareTo(Card other) {
-		//	// Alphabetic sort if salary is equal. [A to Z]
-		//	if (this.CardValue == other.CardValue) {
-		//		return this.CardSuit.CompareTo(other.CardSuit);
-		//	}
-		//	// Default to salary sort. [High to low]
-		//	return other.CardValue.CompareTo(this.CardValue);
-		//}
-
 	}
-
-	//public class CardsNumericallyAscendingHelper : IComparer {
-	//	int IComparer.Compare(object a, object b) {
-	//		var c1 = (Card)a;
-	//		var c2 = (Card)b;
-	//		if (c1.CardValue < c2.CardValue) return 1;
-	//		if (c1.CardValue > c2.CardValue) return -1;
-	//		if (c1.CardSuit < c2.CardSuit) return 1;
-	//		if (c1.CardSuit > c2.CardSuit) return -1;
-	//		return 0;
-	//	}
-
-	//	public static IComparer SortCardValueAscending() {
-	//		return (IComparer)new CardsNumericallyAscendingHelper();
-	//	}
-
-	//}
 }
