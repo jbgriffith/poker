@@ -60,8 +60,8 @@ namespace Poker.NHib {
 					AutoPersistenceModel apm = AutoMap.Assemblies(this, this.Assemblies.Distinct());
 					_FluentConfiguration = Fluently.Configure()
 						//.Diagnostics(d => { d.Enable(); d.OutputToConsole(); })
-						.Database(MsSqlConfiguration.MsSql2008.ConnectionString(this.ConnectionString).AdoNetBatchSize(batchSize > 0 ? batchSize : 0).UseReflectionOptimizer())
-                        .Mappings(m => m.AutoMappings.Add(SetConventions(apm)));
+						.Database(MsSqlConfiguration.MsSql2012.ConnectionString(this.ConnectionString).AdoNetBatchSize(batchSize > 0 ? batchSize : 0).UseReflectionOptimizer().DefaultSchema("dbo"))
+                        .Mappings(m => m.AutoMappings.Add(SetConventions(apm)))
 				}
 				return _FluentConfiguration;
 			}
@@ -69,7 +69,7 @@ namespace Poker.NHib {
 		private FluentConfiguration _FluentConfiguration;
 
 		private string[] mapNamespaces;
-		const int batchSize = 0; //100;
+		const int batchSize = 500; //100;
 
 
 		/// <summary>
