@@ -12,8 +12,7 @@ namespace Poker {
 		static void Main(string[] args) {
 			//HibernatingRhinos.Profiler.Appender.NHibernate.NHibernateProfiler.Initialize();
 
-			// This should point to a database that will contain the "new model" data.
-			// Though NHibernate will write the schema to it, no data is currently written to this db because we are not interested in history.
+			// This should point to an existing database that will soon contain the model data.
 			NHConfiguration nhConfig = new NHConfiguration(
 				connectionName: "PokerDb",
 				mapFromAssembliesOfType: new Type[] { typeof(Poker.DbModels.Card) },
@@ -24,13 +23,13 @@ namespace Poker {
 			);
 
 			var games = new List<Game>();
-			var numGames = 1000;
+			var numGames = 5000;
 			var Overallsw = Stopwatch.StartNew();
 			var sw = Stopwatch.StartNew();
 
 			using (var sess = nhConfig.SessionFactory.OpenSession())
 			using (var tx = sess.BeginTransaction(System.Data.IsolationLevel.ReadCommitted)) {
-				sess.SetBatchSize(500);
+				sess.SetBatchSize(1000);
 
 				var AllPlayers = sess.CreateCriteria(typeof(Player)).SetFirstResult(0).SetMaxResults(1000).List<Player>();
 				if (AllPlayers.Count < 100) {
@@ -58,10 +57,10 @@ namespace Poker {
 				var allPlayers = sess.CreateCriteria(typeof(Player)).SetFirstResult(0).SetMaxResults(1000).List<Player>();
 
 				for (int g = 1; g < numGames + 1; g++) {
-					//Random r = new Random();
-					//int range = 7;
-					//int rInt = r.Next(2, range); //for ints
-					int rInt = 7;
+					Random r = new Random();
+					int range = 7;
+					int rInt = r.Next(2, range); //for ints
+					//int rInt = 7;
 
 					// Add players to current game
 					var firstNPlayers = allPlayers.Shuffle().Take(rInt).ToList();
@@ -78,10 +77,8 @@ namespace Poker {
 
 					var maxScore = game.Players.Max(x => x.CurrentHand.Score);
 					var playersWithMaxScore = game.Players.Where(x => x.CurrentHand.Score == maxScore).ToList();
-					//Console.WriteLine("Winning Hand(s) is: {0}", (EvaluatePokerHand.PokerHand)maxScore);
-					// playersWithMaxScore.SetWinners();
-					// instead of all of the crap below
 
+					// need to create a function instead of all of the crap below
 					var ScoreDetailsMatrix = new List<List<int>>();
 					foreach (var player in playersWithMaxScore) {
 						player.CurrentHand.SetScoreDetails();
