@@ -163,7 +163,7 @@ namespace Poker.DbModels {
 			return SetsOfCards.Count();
 		}
 
-		public static IEnumerable<int> GetThreeOfAKindValue(IEnumerable<Card> cards) {
+		private static IEnumerable<int> GetThreeOfAKindValue(IEnumerable<Card> cards) {
 			return GetSetsSized(cards, 3).Take(1).Select(AceHighValue).Select(c => (int)c.CardValue);
 		}
 

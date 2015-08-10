@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using Poker;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -8,6 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 using Poker.DbModels;
+using Poker;
+
+using Newtonsoft.Json.Linq;
 
 namespace User {
 
@@ -17,12 +18,12 @@ namespace User {
 			var players = new List<Player>();
 			DateTime now = DateTime.Today;
 			var jsonString = GetJsonFromUrl(url);
-			dynamic json = JValue.Parse(jsonString);
+			dynamic jsonObjects = JArray.Parse(jsonString);
 
-			foreach (dynamic p in json.results) {
-				var ageInYears = now.Year - ConvertFromUnixTS((double)p.user.dob).Year;
-				var fullName = String.Format("{0} {1}", p.user.name.first, p.user.name.last);
-				players.Add(new Player(fullName, ageInYears));
+			foreach (dynamic ea in jsonObjects) {
+				DateTime? dob = DateTime.Parse((string)ea.user.dob); // 1; //now.Year - ea.user.dob.Year;
+				var fullName = String.Format("{0} {1}", ea.user.name.first, ea.user.name.last);
+				players.Add(new Player(fullName, dob));
 			}
 			return players;
 		}

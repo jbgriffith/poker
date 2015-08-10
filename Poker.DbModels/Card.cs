@@ -5,15 +5,18 @@ using Poker.NHib.DataAnnotations;
 
 namespace Poker.DbModels {
 	public class Card : ModelBaseGuid, IEquatable<Card>, IComparer {
-		// Would it be better to just seed the DB with the distinct Cards, then load them so I have a distinct set of cards instead of thousands?\
+		// Would it be better to just seed the DB with the distinct Cards, then load them so I have a distinct set of cards instead of thousands/millions?
 
 		public virtual CardSuits CardSuit { get; protected set; }
 		public virtual CardValues CardValue { get; protected set; }
+		public virtual DateTimeOffset CreatedUtc { get; set; }
+
 
 		protected Card() { } // required for Nhibernate...
 		public Card(CardSuits suit, CardValues number) {
 			CardSuit = suit;
 			CardValue = number;
+			CreatedUtc = DateTimeOffset.Now;
 		}
 		public Card(int suit, CardValues number) : this((CardSuits)suit, (CardValues)number) { }
 		public Card(int suit, int number) : this((CardSuits)suit, (CardValues)number) { }

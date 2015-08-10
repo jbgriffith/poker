@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
@@ -26,7 +27,7 @@ namespace Poker.NHib {
 	public class NHConfiguration : DefaultAutomappingConfiguration {
 		private const string defaultConnName = "PokerDb";
 		// use "Namespace.Type, Assembly" to describe defaults so that Poker.DBModel is not required unlesss we actually use the default
-		private string[] defaultMapFromAssemblyOf = new string[] { "Poker.DbModels.Card, Poker.DbModels" };
+		private string[] defaultMapFromAssemblyOf = new string[] { "Poker.DbModels" };
 
 		public string ConnectionName { get; private set; }
 		public string ConnectionString { get; private set; }
@@ -56,12 +57,27 @@ namespace Poker.NHib {
 		/// </summary>
 		private FluentConfiguration FluentConfiguration { // lazy NH mapping
 			get {
+				var properties = new Dictionary<string, string>();
+				properties.Add(NHibernate.Cfg.Environment.FormatSql, Boolean.FalseString);
+				properties.Add(NHibernate.Cfg.Environment.GenerateStatistics, Boolean.FalseString);
+				//properties.Add(NHibernate.Cfg.Environment.Hbm2ddlKeyWords, Hbm2DDLKeyWords.None.ToString());
+				properties.Add(NHibernate.Cfg.Environment.PrepareSql, Boolean.FalseString); // was Boolean.TrueString
+				//properties.Add(NHibernate.Cfg.Environment.PropertyBytecodeProvider, "lcg");
+				properties.Add(NHibernate.Cfg.Environment.QueryStartupChecking, Boolean.FalseString);
+				properties.Add(NHibernate.Cfg.Environment.ShowSql, Boolean.FalseString);
+				properties.Add(NHibernate.Cfg.Environment.StatementFetchSize, "100");
+				properties.Add(NHibernate.Cfg.Environment.UseProxyValidator, Boolean.FalseString);
+				properties.Add(NHibernate.Cfg.Environment.UseSecondLevelCache, Boolean.FalseString);
+
 				if (_FluentConfiguration == null) {
 					AutoPersistenceModel apm = AutoMap.Assemblies(this, this.Assemblies.Distinct());
 					_FluentConfiguration = Fluently.Configure()
 						//.Diagnostics(d => { d.Enable(); d.OutputToConsole(); })
 						.Database(MsSqlConfiguration.MsSql2012.ConnectionString(this.ConnectionString).AdoNetBatchSize(batchSize > 0 ? batchSize : 0).UseReflectionOptimizer().DefaultSchema("dbo"))
                         .Mappings(m => m.AutoMappings.Add(SetConventions(apm)))
+                        .ExposeConfiguration(x => x.AddProperties(properties)
+						);
+
 				}
 				return _FluentConfiguration;
 			}

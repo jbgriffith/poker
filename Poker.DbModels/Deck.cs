@@ -7,6 +7,7 @@ using Poker.NHib.DataAnnotations;
 namespace Poker.DbModels {
 	public class Deck : ModelBaseGuid {
 		public virtual IList<Card> cards { get; set; }
+		public virtual DateTimeOffset CreatedUtc { get; set; }
 
 		public Deck() {
 			cards = new List<Card>();
@@ -14,6 +15,7 @@ namespace Poker.DbModels {
 				foreach (Card.CardValues currentNumber in Enum.GetValues(typeof(Card.CardValues)))
 					cards.Add(new Card(currentSuit, currentNumber));
 			cards.QuickShuffle();
+			CreatedUtc = DateTimeOffset.UtcNow;
 		}
 
 		public virtual IEnumerable<Card> DealCards(int numberOfCards = 1) {
@@ -36,6 +38,10 @@ namespace Poker.DbModels {
 			var removedCards = new HashSet<Card>(result);	//HashSet "should" speed up the RemoveAll http://stackoverflow.com/a/853551/3042939
 			cards.RemoveAll(x => removedCards.Contains(x));
 			return removedCards;
+		}
+
+		public void BurnDeck() {
+			cards.Clear();
 		}
 
 		/// <summary>
