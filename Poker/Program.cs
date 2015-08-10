@@ -23,32 +23,39 @@ namespace Poker {
 				//auxShouldMap: (t) => { return (t.Namespace == "GroupCourses_Model" || t.Name == "ModelBase"); }
 			);
 
+			var games = new List<Game>();
+			var numGames = 1000;
 			var Overallsw = Stopwatch.StartNew();
 			var sw = Stopwatch.StartNew();
 
-			//var NewPlayers = new List<Player>();
-			//Console.WriteLine("Downloading & Creating users ...");
-			//for (int users = 0; users < 1; users++)
-			//	NewPlayers.AddRange(User.UserData.GetUserData("https://www.mockaroo.com/f67ffca0/download?count=1000&key=e1664fd0"));
+			using (var sess = nhConfig.SessionFactory.OpenSession())
+			using (var tx = sess.BeginTransaction(System.Data.IsolationLevel.ReadCommitted)) {
+				sess.SetBatchSize(500);
 
-			//Console.WriteLine("Created {0} users", NewPlayers.Count);
-			//Console.WriteLine("Time Elapsed: {0}", sw.Elapsed);
-			////using (var sess = nhConfig.SessionFactory.OpenSession()) {
-			////	using (var tx = sess.BeginTransaction(System.Data.IsolationLevel.ReadCommitted)) {
-			////		sess.SaveOrUpdate(NewPlayers);
-			////	}
-			////}
-			//var AllPlayers = NewPlayers;
-			var playersBeenPlaid = new List<Player>();
-			var games = new List<Game>();
-			var numGames = 10000;
-			Overallsw.Restart();
-			sw.Restart();
+				var AllPlayers = sess.CreateCriteria(typeof(Player)).SetFirstResult(0).SetMaxResults(1000).List<Player>();
+				if (AllPlayers.Count < 100) {
+					Console.WriteLine("Downloading & Creating users ...");
+					for (int users = 0; users < 1; users++)
+						AllPlayers.AddRange(User.UserData.GetUserData("https://www.mockaroo.com/f67ffca0/download?count=1000&key=e1664fd0"));
+					
+					foreach (var pl in AllPlayers)
+						sess.SaveOrUpdate(pl);
+
+					tx.Commit();
+
+					Console.WriteLine("Created {0} users", AllPlayers.Count);
+					Console.WriteLine("Time Elapsed: {0}", sw.Elapsed);
+				}
+
+				Overallsw.Restart();
+				sw.Restart();
+			}
+
 			using (var sess = nhConfig.SessionFactory.OpenSession())
 			using (var tx = sess.BeginTransaction(System.Data.IsolationLevel.ReadCommitted)) {
 				sess.SetBatchSize(1000);
-				//sess.FlushMode = FlushMode.Never;
-				var AllPlayers = sess.CreateCriteria(typeof(Player)).SetFirstResult(0).SetMaxResults(50).List<Player>();
+
+				var allPlayers = sess.CreateCriteria(typeof(Player)).SetFirstResult(0).SetMaxResults(1000).List<Player>();
 
 				for (int g = 1; g < numGames + 1; g++) {
 					//Random r = new Random();
@@ -56,17 +63,16 @@ namespace Poker {
 					//int rInt = r.Next(2, range); //for ints
 					int rInt = 7;
 
-					// Add each player to the table
-					var firstNPlayers = AllPlayers.Shuffle().Take(rInt).ToList();
-
+					// Add players to current game
+					var firstNPlayers = allPlayers.Shuffle().Take(rInt).ToList();
 					var nPlayers = new HashSet<Player>(firstNPlayers);  // HashSet should speed up the RemoveAll http://stackoverflow.com/a/853551/3042939
-					AllPlayers.RemoveAll(x => nPlayers.Contains(x));
+					allPlayers.RemoveAll(x => nPlayers.Contains(x));
 
 					var game = new Game(nPlayers.ToList());
 
 					foreach (var player in game.Players) {
 						player.CurrentHand = new Hand(game.Deck.DealCards(5), player);
-						player.CurrentHand.CalculateHand();
+						player.CurrentHand.CalculateScore();
 					}
 					game.Deck.BurnDeck(); // no need to save the remaining cards in the deck.
 
@@ -85,14 +91,15 @@ namespace Poker {
 					if (playersWithMaxScore.Count > 1) {
 						var p1 = ScoreDetailsMatrix[0];
 						for (int numItem = 0; numItem < p1.Count; numItem++) {
-							var blah = new List<int>();
+							var nthItems = new List<int>();
 
 							for (int ea = 0; ea < ScoreDetailsMatrix.Count; ea++)
-								blah.Add(ScoreDetailsMatrix[ea][numItem]);
+								nthItems.Add(ScoreDetailsMatrix[ea][numItem]);
 
-							ScoreDetailsMatrix = ScoreDetailsMatrix.Where(x => x[numItem] == blah.Max()).ToList();
-							if (ScoreDetailsMatrix.Count == 1)
-								break;
+							ScoreDetailsMatrix = ScoreDetailsMatrix.Where(x => x[numItem] == nthItems.Max()).ToList();
+
+							// if only one Player's ScoreDetails are remaining, then stop.
+							if (ScoreDetailsMatrix.Count == 1) break;
 						}
 
 						foreach (var player in playersWithMaxScore) {
@@ -107,8 +114,8 @@ namespace Poker {
 
 					sess.SaveOrUpdate(game);
 					games.Add(game);
-					AllPlayers.AddRange(game.Players);
-					
+					allPlayers.AddRange(game.Players);
+
 					if (g % 100 == 0) Console.WriteLine("Game #{0}", g);
 				}
 
@@ -129,7 +136,7 @@ namespace Poker {
 				//#endif
 			}
 
-			Console.WriteLine("Entire Program Time Elapsed: {0}, {1} milliseconds/game total avg", Overallsw.Elapsed, sw.ElapsedMilliseconds / (decimal)numGames);
+			Console.WriteLine("Entire Program Time Elapsed: {0}, {1} milliseconds/game total avg", Overallsw.Elapsed, Overallsw.ElapsedMilliseconds / (decimal)numGames);
 			Console.WriteLine("[key press...]");
 			Console.ReadLine();
 		}

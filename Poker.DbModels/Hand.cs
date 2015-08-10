@@ -47,7 +47,7 @@ namespace Poker.DbModels {
 			CreatedUtc = DateTimeOffset.UtcNow;
         }        
 
-        public virtual void CalculateHand() {
+        public virtual void CalculateScore() {
             Score = (int)EvaluatePokerHand.Score(this);
         }
 
