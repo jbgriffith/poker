@@ -32,7 +32,7 @@ namespace Poker {
 				sess.SetBatchSize(1000);
 
 				var AllPlayers = sess.CreateCriteria(typeof(Player)).SetFirstResult(0).SetMaxResults(1000).List<Player>();
-				if (true || AllPlayers.Count < 100) {
+				if (AllPlayers.Count < 100) {
 					Console.WriteLine("Downloading & Creating users ...");
 					for (int users = 0; users < 1; users++)
 						AllPlayers.AddRange(User.UserData.GetUserData("https://www.mockaroo.com/f67ffca0/download?count=1000&key=e1664fd0"));
