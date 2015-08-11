@@ -17,8 +17,8 @@ namespace Poker {
 				connectionName: "PokerDb",
 				mapFromAssembliesOfType: new Type[] { typeof(Poker.DbModels.Card) },
 				dbDropCreate: false,
-				dbSchemaUpdate: true,
-				auxShouldMap: (t) => { return (t.Namespace == "Poker.DbModels"); }
+				dbSchemaUpdate: true
+				//auxShouldMap: (t) => { return (t.Namespace == "Poker.DbModels"); }
 				//auxShouldMap: (t) => { return (t.Namespace == "GroupCourses_Model" || t.Name == "ModelBase"); }
 			);
 

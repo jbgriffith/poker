@@ -58,9 +58,9 @@ namespace Poker.DbModels {
 		}
 
 		public static bool CheckFullHouse(IEnumerable<Card> cards) {
-			var ThreeOfAKind = GetSetsSized(cards, 3);
-			var remainingCards = cards.Except(ThreeOfAKind);
-			return ThreeOfAKind.Count() == 3 && GetSetsSized(remainingCards, 2).Count() == 2;
+			var threeOfAKind = GetSetsSized(cards, 3);
+			var remainingCards = cards.Except(threeOfAKind);
+			return threeOfAKind.Count() == 3 && GetSetsSized(remainingCards, 2).Count() == 2;
 		}
 
 		public static bool CheckStraightFlush(IEnumerable<Card> cards) {
@@ -101,7 +101,7 @@ namespace Poker.DbModels {
 		/// <param name="c">A single card</param>
 		/// <returns>A transformed single Card</returns>
 		public static Card AceHighValue(Card c) {
-			return (c.CardValue == Card.CardValues.Ace) ? new Card(c.CardSuit, ((int)Card.CardValues.King + 1)) : c;
+			return (c.CardValue == Card.CardValues.Ace) ? new Card(c.CardSuit, (int)Card.CardValues.King + 1) : c;
 		}
 
         public static int AceHighNumericValue(Card c) {
@@ -179,7 +179,6 @@ namespace Poker.DbModels {
 
 		public static IEnumerable<int> GetSuit(IEnumerable<Card> cards) {
 			return cards.Take(1).Select(c => (int)c.CardSuit);
-			//return cards.Select(AceHighCard).OrderByDescending(i => i.CardValue).Take(1).Select(c => (int)c.CardSuit);
 		}
 	}
 }

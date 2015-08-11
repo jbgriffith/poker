@@ -16,8 +16,9 @@ namespace Poker.DbModels {
 		public Card(CardSuits suit, CardValues number) {
 			CardSuit = suit;
 			CardValue = number;
-			CreatedUtc = DateTimeOffset.Now;
+			CreatedUtc = DateTimeOffset.UtcNow;
 		}
+
 		public Card(int suit, CardValues number) : this((CardSuits)suit, (CardValues)number) { }
 		public Card(int suit, int number) : this((CardSuits)suit, (CardValues)number) { }
 		public Card(CardSuits suit, int number) : this(suit, (CardValues)number) { }

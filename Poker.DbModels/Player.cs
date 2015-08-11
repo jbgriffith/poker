@@ -33,7 +33,7 @@ namespace Poker.DbModels {
 		}
 
 		public override string ToString() {
-			return string.Format("{0, -20}:{1} years old{2}{3}", Name, Age, Environment.NewLine, Hands.ToString());
+			return string.Format("{0, -20}:{1} years old{2}{3}", Name, Age, Environment.NewLine, CurrentHand.ToString());
 		}
 
         public virtual void ArchiveHand() {

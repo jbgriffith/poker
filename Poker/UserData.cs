@@ -21,7 +21,7 @@ namespace User {
 			dynamic jsonObjects = JArray.Parse(jsonString);
 
 			foreach (dynamic ea in jsonObjects) {
-				DateTime? dob = DateTime.Parse((string)ea.user.dob); // 1; //now.Year - ea.user.dob.Year;
+				DateTime? dob = DateTime.Parse((string)ea.user.dob);
 				var fullName = String.Format("{0} {1}", ea.user.name.first, ea.user.name.last);
 				players.Add(new Player(fullName, dob));
 			}
@@ -34,18 +34,13 @@ namespace User {
 				try {
 					result = webClient.DownloadString(url);
 				}
-				catch (Exception) {
-					throw;
+				catch (Exception ex) {
+					Console.WriteLine(ex.Message);
+					//throw;
 				}
 			}
 			return result;
 		}
 
-		public static DateTime ConvertFromUnixTS(double timestamp) {
-			DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-			return origin.AddSeconds(timestamp);
-		}
-
 	}
-
 }
