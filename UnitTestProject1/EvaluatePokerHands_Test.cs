@@ -36,7 +36,7 @@ namespace PokerUnitTest {
 			var numValues = Enum.GetNames(typeof(Card.CardValues)).Length;
 			var numSuits = Enum.GetNames(typeof(Card.CardSuits)).Length;
 
-			if (numOfCards > numSuits * numValues || cardsuit != null && numOfCards > numValues )
+			if (numOfCards > numSuits * numValues || cardsuit != null && numOfCards > numValues)
 				throw new ArgumentOutOfRangeException("numOfCards");
 
 			var cards = new Hand();
@@ -63,7 +63,7 @@ namespace PokerUnitTest {
 		/// <returns>Same player with newly added cards.</returns>
 		public Hand AddCards(Hand cards, Dictionary<Card.CardValues, int> cardDict) {
 			cards = cards ?? new Hand();
-			
+
 			foreach (var card in cardDict)
 				cards = AddCards(cards, card.Key, card.Value);
 			return cards;
@@ -80,7 +80,7 @@ namespace PokerUnitTest {
 		public Hand AddCards(Hand cards, Card.CardValues cardValue, int numOfCards = 1) {
 			if (numOfCards > Enum.GetNames(typeof(Card.CardSuits)).Length)
 				throw new ArgumentOutOfRangeException("numOfCards");
-			
+
 			cards = cards ?? new Hand();
 
 			for (int i = 0; i < numOfCards; i++)
@@ -381,7 +381,7 @@ namespace PokerUnitTest {
 		//////	var actualHC = new List<int>();
 		//////	var expectedHC = new List<int>();
 		//////	var equality = new List<bool>();
-			
+
 		//////	foreach (var item in actualCards)
 		//////		actualHC.Add(item.GetHashCode());
 		//////	foreach (var item in expected)

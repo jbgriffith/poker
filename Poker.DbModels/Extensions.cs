@@ -17,41 +17,39 @@ namespace Poker.DbModels {
 	}
 	public static class MyExtensions {
 
-        public static void RemoveAll<T>(this IList<T> source, Predicate<T> predicate) {
-            // TODO: Argument non-nullity validation
+		public static void RemoveAll<T>(this IList<T> source, Predicate<T> predicate) {
+			// TODO: Argument non-nullity validation
 
-            //// Optimization
-            //List<T> list = source as List<T>;
-            //if (list != null) {
-            //    list.RemoveAll(predicate);
-            //    return;
-            //}
-            // Slow way
-            for (int i = source.Count - 1; i >= 0; i--)
-            {
-                if (predicate(source[i]))
-                {
-                    source.RemoveAt(i);
-                }
-            }
-        }
+			//// Optimization
+			//List<T> list = source as List<T>;
+			//if (list != null) {
+			//    list.RemoveAll(predicate);
+			//    return;
+			//}
+			// Slow way
+			for (int i = source.Count - 1; i >= 0; i--) {
+				if (predicate(source[i])) {
+					source.RemoveAt(i);
+				}
+			}
+		}
 
-        public static void AddRange<T>(this IList<T> source, IEnumerable<T> ienum) {
-            // TODO: Argument non-nullity validation
+		public static void AddRange<T>(this IList<T> source, IEnumerable<T> ienum) {
+			// TODO: Argument non-nullity validation
 
-            // Optimization
-            List<T> list = source as List<T>;
-            if (list != null)
-                list.AddRange(ienum);
+			// Optimization
+			List<T> list = source as List<T>;
+			if (list != null)
+				list.AddRange(ienum);
 
-            //// Slow way
-            //for (int i = source.Count - 1; i >= 0; i++) {
-            //        source.Add(source[i]);
-            //}
+			//// Slow way
+			//for (int i = source.Count - 1; i >= 0; i++) {
+			//        source.Add(source[i]);
+			//}
 
-        }
+		}
 
-        public static void QuickShuffle<T>(this IList<T> list) {
+		public static void QuickShuffle<T>(this IList<T> list) {
 			int n = list.Count;
 			while (n-- > 1) {
 				int k = ThreadSafeRandom.ThisThreadsRandom.Next(n + 1);
@@ -65,47 +63,47 @@ namespace Poker.DbModels {
 
 	public static class EnumerableExtensions {
 
-        //public static IEnumerable<Card> MaxByMany<TSource, TKey>(this Hand source, Func<Card, int> selector) {
-        //    return source.MaxByMany(selector, Comparer<int>.Default);
-        //}
+		//public static IEnumerable<Card> MaxByMany<TSource, TKey>(this Hand source, Func<Card, int> selector) {
+		//    return source.MaxByMany(selector, Comparer<int>.Default);
+		//}
 
-        //public static IEnumerable<Card> MaxByMany<TSource, TKey>(this Hand source, Func<Card, int> selector, IComparer<int> comparer) {
-        //    if (source == null) throw new ArgumentNullException("source");
-        //    if (selector == null) throw new ArgumentNullException("selector");
-        //    if (comparer == null) throw new ArgumentNullException("comparer");
-        //    using (var sourceIterator = source.GetEnumerator()) {
-        //        if (!sourceIterator.MoveNext())
-        //            throw new InvalidOperationException("Sequence contains no elements");
+		//public static IEnumerable<Card> MaxByMany<TSource, TKey>(this Hand source, Func<Card, int> selector, IComparer<int> comparer) {
+		//    if (source == null) throw new ArgumentNullException("source");
+		//    if (selector == null) throw new ArgumentNullException("selector");
+		//    if (comparer == null) throw new ArgumentNullException("comparer");
+		//    using (var sourceIterator = source.GetEnumerator()) {
+		//        if (!sourceIterator.MoveNext())
+		//            throw new InvalidOperationException("Sequence contains no elements");
 
-        //        var current = sourceIterator.Current;
-        //        var maxCards = new List<Card>();
-        //        maxCards.Add(current);
-        //        var maxKey = selector(current);
-        //        var maxDict = new Dictionary<int, List<Card>>();
-        //        maxDict.Add(maxKey, maxCards);
+		//        var current = sourceIterator.Current;
+		//        var maxCards = new List<Card>();
+		//        maxCards.Add(current);
+		//        var maxKey = selector(current);
+		//        var maxDict = new Dictionary<int, List<Card>>();
+		//        maxDict.Add(maxKey, maxCards);
 
-        //        while (sourceIterator.MoveNext()) {
-        //            var candidate = sourceIterator.Current;
-        //            var candidateProjected = selector(candidate);
-        //            if (comparer.Compare(candidateProjected, maxKey) > 0) {
+		//        while (sourceIterator.MoveNext()) {
+		//            var candidate = sourceIterator.Current;
+		//            var candidateProjected = selector(candidate);
+		//            if (comparer.Compare(candidateProjected, maxKey) > 0) {
 
-        //                List<Card> existingCardsList;
-        //                if (!maxDict.TryGetValue(candidateProjected, out existingCardsList))  {
-        //                    existingCardsList = new List<Card>();
-        //                    existingCardsList.Add(candidate);
-        //                    maxDict[candidateProjected] = existingCardsList;
-        //                }
+		//                List<Card> existingCardsList;
+		//                if (!maxDict.TryGetValue(candidateProjected, out existingCardsList))  {
+		//                    existingCardsList = new List<Card>();
+		//                    existingCardsList.Add(candidate);
+		//                    maxDict[candidateProjected] = existingCardsList;
+		//                }
 
-        //                maxCards = new List<Card>();
-        //                maxCards.Add(candidate);
-        //                maxKey = candidateProjected;
-        //            }
-        //        }
-        //        return maxCards;
-        //    }
-        //}
+		//                maxCards = new List<Card>();
+		//                maxCards.Add(candidate);
+		//                maxKey = candidateProjected;
+		//            }
+		//        }
+		//        return maxCards;
+		//    }
+		//}
 
-        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source) {
+		public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source) {
 			return source.Shuffle(new Random());
 		}
 
@@ -119,8 +117,8 @@ namespace Poker.DbModels {
 			var buffer = source.ToList();
 			for (int i = 0; i < buffer.Count; i++) {
 				//int j = rng.Next(i, buffer.Count);
-                int j = ThreadSafeRandom.ThisThreadsRandom.Next(i, buffer.Count);
-                yield return buffer[j];
+				int j = ThreadSafeRandom.ThisThreadsRandom.Next(i, buffer.Count);
+				yield return buffer[j];
 
 				buffer[j] = buffer[i];
 			}

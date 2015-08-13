@@ -11,7 +11,6 @@ using Poker;
 using Newtonsoft.Json.Linq;
 
 namespace User {
-
 	public static class UserData {
 
 		public static List<Player> GetUserData(string url) {

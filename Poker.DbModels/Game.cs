@@ -26,7 +26,7 @@ namespace Poker.DbModels {
 			}
 		}
 
-		public void ArchivePlayersHands () {
+		public void ArchivePlayersHands() {
 			foreach (var player in Players)
 				player.ArchiveHand();
 		}

@@ -104,12 +104,12 @@ namespace Poker.DbModels {
 			return (c.CardValue == Card.CardValues.Ace) ? new Card(c.CardSuit, (int)Card.CardValues.King + 1) : c;
 		}
 
-        public static int AceHighNumericValue(Card c) {
-            return (int)AceHighValue(c).CardValue;
-        }
+		public static int AceHighNumericValue(Card c) {
+			return (int)AceHighValue(c).CardValue;
+		}
 
 		/// <summary>
-		/// Returns all cards in a set of a specified size 
+		/// Returns all cards in a set of a specified size
 		/// </summary>
 		/// <param name="cards">multiple card objects in an IEnumerable</param>
 		/// <param name="numberCardsInSet">the specified size of the set of cards</param>
@@ -120,7 +120,7 @@ namespace Poker.DbModels {
 		}
 
 		/// <summary>
-		/// Returns all sets from cards. 
+		/// Returns all sets from cards.
 		/// </summary>
 		/// <param name="cards"></param>
 		/// <returns></returns>
