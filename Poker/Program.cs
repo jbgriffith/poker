@@ -51,7 +51,7 @@ namespace Poker {
 			}
 
 			for (int oG = 1; oG < 3 + 1; oG++) {
-				
+
 				sw.Restart();
 
 				using (var sess = nhConfig.SessionFactory.OpenSession())
@@ -68,11 +68,11 @@ namespace Poker {
 						//int rInt = 7;
 
 						// Add players to current game
-						var firstNPlayers = allPlayers.Shuffle().Take(rInt).ToList();
+						var firstNPlayers = allPlayers.Shuffle().Take(rInt);
 						var nPlayers = new HashSet<Player>(firstNPlayers);  // HashSet should speed up the RemoveAll http://stackoverflow.com/a/853551/3042939
 						allPlayers.RemoveAll(x => nPlayers.Contains(x));
 
-						var game = new Game(nPlayers.ToList());
+						var game = new Game(nPlayers);
 
 						foreach (var player in game.Players) {
 							player.CurrentHand = new Hand(game.Deck.DealCards(5), player);
