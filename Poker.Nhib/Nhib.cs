@@ -116,9 +116,9 @@ namespace Poker.NHib {
 
 			ConfigUtils.OverrideConnectionStrings(); // adds to or replaces connection strings in ConfigurationManager
 			var css = System.Configuration.ConfigurationManager.ConnectionStrings.Cast<System.Configuration.ConnectionStringSettings>().FirstOrDefault(a => a.Name == ConnectionName);
-			if (css != null) 
+			if (css != null)
 				ConnectionString = css.ConnectionString;
-			else 
+			else
 				throw new PokerException(String.Format("ConnectionString named '{0}' not found.", ConnectionName));
 		}
 

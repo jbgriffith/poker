@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-using Poker.NHib;
 using Poker.DbModels;
-using NHibernate;
 
 namespace Poker {
 	class Program {
@@ -13,52 +11,45 @@ namespace Poker {
 			//HibernatingRhinos.Profiler.Appender.NHibernate.NHibernateProfiler.Initialize();
 
 			// This should point to an existing database that will soon contain the model data.
-			NHConfiguration nhConfig = new NHConfiguration(
-				connectionName: "PokerDb",
-				mapFromAssembliesOfType: new Type[] { typeof(Poker.DbModels.Card) },
-				dbDropCreate: false,
-				dbSchemaUpdate: true
-				//auxShouldMap: (t) => { return (t.Namespace == "Poker.DbModels"); }
-				//auxShouldMap: (t) => { return (t.Namespace == "GroupCourses_Model" || t.Name == "ModelBase"); }
-			);
+			//NHConfiguration nhConfig = new NHConfiguration(
+			//	connectionName: "PokerDb",
+			//	mapFromAssembliesOfType: new Type[] { typeof(Poker.DbModels.Card) },
+			//	dbDropCreate: false,
+			//	dbSchemaUpdate: true
+			//	//auxShouldMap: (t) => { return (t.Namespace == "Poker.DbModels"); }
+			//	//auxShouldMap: (t) => { return (t.Namespace == "GroupCourses_Model" || t.Name == "ModelBase"); }
+			//);
 
 			var numGames = 1000;
 			var actualNumGames = 0;
 			var Overallsw = Stopwatch.StartNew();
 			var sw = Stopwatch.StartNew();
+			//using (var db = new PokerContext()) {
+			//	db.Database.Initialize(false);
 
-			using (var sess = nhConfig.SessionFactory.OpenSession())
-			using (var tx = sess.BeginTransaction(System.Data.IsolationLevel.ReadCommitted)) {
-				sess.SetBatchSize(1000);
+			//	var players = from p in db.Players
+			//				  select p;
 
-				var AllPlayers = sess.CreateCriteria(typeof(Player)).SetFirstResult(0).SetMaxResults(1000).List<Player>();
-				if (AllPlayers.Count < 100) {
-					Console.WriteLine("Downloading & Creating users ...");
-					for (int users = 0; users < 1; users++)
-						AllPlayers.AddRange(User.UserData.GetUserData("https://www.mockaroo.com/f67ffca0/download?count=1000&key=e1664fd0"));
+			//	foreach (var p in players) {
+			//		Console.WriteLine(p.ToString());
+			//	}
+			//}
 
-					foreach (var pl in AllPlayers)
-						sess.SaveOrUpdate(pl);
 
-					tx.Commit();
 
-					Console.WriteLine("Created {0} users", AllPlayers.Count);
-					Console.WriteLine("Time Elapsed: {0}", sw.Elapsed);
-				}
+			Overallsw.Restart();
+			sw.Restart();
+			//}
 
-				Overallsw.Restart();
-				sw.Restart();
-			}
-
-			for (int oG = 1; oG < 3 + 1; oG++) {
+			for (int oG = 1; oG < 5 + 1; oG++) {
 
 				sw.Restart();
+				using (var db = new PokerContext()) {
+					//using (var sess = nhConfig.SessionFactory.OpenSession())
+					//using (var tx = sess.BeginTransaction(System.Data.IsolationLevel.ReadCommitted)) {
+					//	sess.SetBatchSize(1000);
 
-				using (var sess = nhConfig.SessionFactory.OpenSession())
-				using (var tx = sess.BeginTransaction(System.Data.IsolationLevel.ReadCommitted)) {
-					sess.SetBatchSize(1000);
-
-					var allPlayers = sess.CreateCriteria(typeof(Player)).SetFirstResult(0).SetMaxResults(1000).List<Player>();
+					var allPlayers = db.Players.Take(100).ToList();  //sess.CreateCriteria(typeof(Player)).SetFirstResult(0).SetMaxResults(1000).List<Player>();
 
 					for (int g = 1; g < numGames + 1; g++) {
 						actualNumGames++;
@@ -114,7 +105,7 @@ namespace Poker {
 
 						game.ArchivePlayersHands();
 
-						sess.SaveOrUpdate(game);
+						//sess.SaveOrUpdate(game);
 						allPlayers.AddRange(game.Players);
 
 						if (g % 100 == 0) Console.WriteLine("Game #{0}", g);
@@ -124,7 +115,9 @@ namespace Poker {
 					sw.Restart();
 					Console.WriteLine("Saving Changes");
 
-					tx.Commit();
+					//tx.Commit();
+					//}
+					db.SaveChanges();
 				}
 				Console.WriteLine("All games have been saved");
 				Console.WriteLine("Time Elapsed: {0}, {1} milliseconds/game to save", sw.Elapsed, sw.ElapsedMilliseconds / (decimal)numGames);

@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections;
 
-using Poker.NHib.DataAnnotations;
+
 
 namespace Poker.DbModels {
-	public class Card : ModelBaseGuid, IEquatable<Card>, IComparer {
+		public class Card : IEquatable<Card>, IComparer {
 		// Would it be better to just seed the DB with the distinct Cards, then load them so I have a distinct set of cards instead of thousands/millions?
-
-		public virtual CardSuits CardSuit { get; protected set; }
-		public virtual CardValues CardValue { get; protected set; }
-		public virtual DateTimeOffset CreatedUtc { get; set; }
+		public Guid Id { get; set; }
+		public CardSuits CardSuit { get; protected set; }
+		public CardValues CardValue { get; protected set; }
+		public DateTimeOffset CreatedUtc { get; set; }
 
 
 		protected Card() { } // required for Nhibernate...
 		public Card(CardSuits suit, CardValues number) {
+			Id = GuidComb.Generate();
 			CardSuit = suit;
 			CardValue = number;
 			CreatedUtc = DateTimeOffset.UtcNow;
@@ -57,7 +58,7 @@ namespace Poker.DbModels {
 			return string.Format("{0} of {1}", CardValue, CardSuit);
 		}
 
-		public virtual bool Equals(Card other) {
+		public bool Equals(Card other) {
 			if (ReferenceEquals(null, other)) return false;
 			if (ReferenceEquals(this, other)) return true;
 			return other.CardValue == CardValue && other.CardSuit == CardSuit;
@@ -75,7 +76,7 @@ namespace Poker.DbModels {
 			return c1.CardValue.CompareTo(c1.CardValue);
 		}
 
-		public virtual int CompareTo(Card other) {
+		public int CompareTo(Card other) {
 			if (this.CardValue < other.CardValue) return 1;
 			if (this.CardValue > other.CardValue) return -1;
 			if (this.CardSuit < other.CardSuit) return 1;

@@ -1,7 +1,7 @@
 ﻿//using System;
 //using System.Collections.Generic;
 //using System.Linq;
-//using Poker.NHib.DataAnnotations;
+//
 
 //namespace Poker.DbModels {
 //	public class Cards : ModelBaseGuid, IEnumerable<Card> {

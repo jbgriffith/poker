@@ -50,35 +50,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentNHibernate, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentNHibernate.2.0.1.0\lib\net40\FluentNHibernate.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentValidationNA, Version=1.2.16.24816, Culture=neutral, PublicKeyToken=0950390b87309e14, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentValidationNA.1.2.16\lib\net40\FluentValidationNA.dll</HintPath>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="HibernatingRhinos.Profiler.Appender">
       <HintPath>..\..\..\..\Downloads\NHibernate.Profiler-v3.0-Build-3071\HibernatingRhinos.Profiler.Appender.dll</HintPath>
     </Reference>
-    <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
-      <HintPath>..\packages\NHibernate.4.0.3.4000\lib\net40\NHibernate.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Linq.Dynamic, Version=1.1.14.15853, Culture=neutral, PublicKeyToken=b72be0322d1b32a8, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Linq.Dynamic.Library.1.1.14\lib\net40\System.Linq.Dynamic.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
@@ -87,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PokerDB.cs" />
+    <Compile Include="PokerInitializer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserData.cs" />
@@ -118,18 +108,6 @@
     <ProjectReference Include="..\Poker.DbModels\Poker.DbModels.csproj">
       <Project>{11ccdad3-143b-4afc-83d4-4cb3ac37cf6f}</Project>
       <Name>Poker.DbModels</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Poker.Nhib.DataAnnotations\Poker.Nhib.DataAnnotations.csproj">
-      <Project>{bca610d8-36f6-4573-83d8-753d643038c1}</Project>
-      <Name>Poker.Nhib.DataAnnotations</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Poker.Nhib\Poker.Nhib.csproj">
-      <Project>{bb889822-53b9-429e-8fff-ce51589b9339}</Project>
-      <Name>Poker.Nhib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Poker.Utils\Poker.Utils.csproj">
-      <Project>{1f28bc29-2bce-48ad-a80d-5c6ace99989b}</Project>
-      <Name>Poker.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
