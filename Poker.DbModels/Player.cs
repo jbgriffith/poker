@@ -13,8 +13,8 @@ namespace Poker.DbModels {
 		public string Name { get; set; }
 		public DateTime? DateOfBirth { get; set; }
 		public DateTimeOffset CreatedUtc { get; set; }
-		public virtual ICollection<Hand> Hands { get; set; }
-		public virtual ICollection<Game> Games { get; set; }
+		public ICollection<Hand> Hands { get; set; }
+		public ICollection<Game> Games { get; set; }
 
 		[NotMapped]
 		public int Age { get { return (DateTime.Today - DateOfBirth.Value).Days / 365; } }
