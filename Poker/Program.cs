@@ -30,11 +30,10 @@ namespace Poker {
 
 					for (int g = 1; g < numGames + 1; g++) {
 						actualNumGames++;
-						Random r = new Random();
-						int range = 7;
-						int rInt = r.Next(2, range); //for ints
-						//int rInt = 7;
-
+						//Random r = new Random();
+						//int range = 7;
+						//int rInt = r.Next(2, range); //for ints
+						int rInt = 7;
 
 						// Add players to current game
 						var firstNPlayers = allPlayers.Shuffle().Take(rInt);
