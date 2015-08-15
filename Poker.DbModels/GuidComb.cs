@@ -18,6 +18,7 @@ namespace Poker.DbModels {
 			Array.Reverse(array);
 			Array.Copy(bytes, bytes.Length - 2, destinationArray, destinationArray.Length - 6, 2);
 			Array.Copy(array, array.Length - 4, destinationArray, destinationArray.Length - 4, 4);
+
 			return new Guid(destinationArray);
 		}
 	}
