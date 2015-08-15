@@ -9,29 +9,30 @@ namespace Poker.DbModels {
 	public class Hand : IEnumerable<Card> {
 		//[DatabaseGenerated(DatabaseGeneratedOption.None)]
 		public Guid Id { get; set; }
-		public virtual Player Player { get; set; }			//Associated to a single Player
 		public int Score { get; protected set; }
 		public bool HandWonGame { get; set; }
 		public DateTimeOffset CreatedUtc { get; set; }
-		public virtual ICollection<Card> cards { get; set; }
+		public virtual Player Player { get; set; }			//Associated to a single Player
+		public virtual ICollection<Card> Cards { get; set; }
 
-		[NotMapped]
-		public int Count { get { return cards.Count; } protected set { } }
 		// If I try to persist, Poker.Nhib.CustomHasManyConvention.Apply throws an exception for trying to save a List<int>.....
 		// Maybe make a ScoreDetails Class which is a List<int> ??????
-		[NotMapped]
 		public ICollection<int> ScoreDetail { get; set; }
-		public void AddCard(Card card) { cards.Add(card); }
+
+		[NotMapped]
+		public int Count { get { return Cards.Count; } protected set { } }
+
+		public void AddCard(Card card) { Cards.Add(card); }
 
 
 		#region IEnumerable
-		public IEnumerator<Card> GetEnumerator() { return cards.GetEnumerator(); }
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { return cards.GetEnumerator(); }
+		public IEnumerator<Card> GetEnumerator() { return Cards.GetEnumerator(); }
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { return Cards.GetEnumerator(); }
 		#endregion
 
 		public Hand() {
 			Id = GuidComb.Generate();
-			cards = new List<Card>();
+			Cards = new List<Card>();
 			//Player = new Player();
 			Player = null;
 			Score = -1;
@@ -41,7 +42,7 @@ namespace Poker.DbModels {
 
 		public Hand(IEnumerable<Card> incomingCards, Player player) {
 			Id = GuidComb.Generate();
-			cards = incomingCards.ToList();
+			Cards = incomingCards.ToList();
 			Player = player;
 			Score = -1;
 			ScoreDetail = new List<int>();
@@ -64,14 +65,14 @@ namespace Poker.DbModels {
 
 		public void AddCards(IEnumerable<Card> dealtCards) {
 			foreach (var card in dealtCards)
-				cards.Add(card);
+				Cards.Add(card);
 		}
 
 		public override string ToString() {
 			string result = string.Format("\tEmpty Hand.{0}", Environment.NewLine); ;
-			if (cards.Count > 0) {
+			if (Cards.Count > 0) {
 				result = "";
-				foreach (var card in cards)
+				foreach (var card in Cards)
 					result += string.Format("\t{0}{1}", card, Environment.NewLine);
 			}
 			return result;

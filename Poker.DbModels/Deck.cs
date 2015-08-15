@@ -7,7 +7,7 @@ using System.Linq;
 namespace Poker.DbModels {
 	public class Deck {
 		public Guid Id { get; set; }
-		public ICollection<Card> cards { get; set; }
+		public IList<Card> cards { get; set; }
 		public DateTimeOffset CreatedUtc { get; set; }
 
 		public Deck() {
@@ -38,7 +38,7 @@ namespace Poker.DbModels {
 		protected IEnumerable<Card> RemoveCards(int numberOfCards, bool shuffle = false) {
 			var result = (shuffle) ? cards.Shuffle().Take(numberOfCards) : cards.Take(numberOfCards);
 			var removedCards = new HashSet<Card>(result);	//HashSet "should" speed up the RemoveAll http://stackoverflow.com/a/853551/3042939
-			//cards.RemoveAll(x => removedCards.Contains(x));
+			cards.RemoveAll(x => removedCards.Contains(x));
 			return removedCards;
 		}
 

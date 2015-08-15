@@ -4,7 +4,7 @@ using System.Collections;
 
 
 namespace Poker.DbModels {
-		public class Card : IEquatable<Card>, IComparer {
+	public class Card : IEquatable<Card>, IComparer {
 		// Would it be better to just seed the DB with the distinct Cards, then load them so I have a distinct set of cards instead of thousands/millions?
 		public Guid Id { get; set; }
 		public CardSuits CardSuit { get; protected set; }

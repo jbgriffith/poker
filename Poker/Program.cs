@@ -8,17 +8,6 @@ using Poker.DbModels;
 namespace Poker {
 	class Program {
 		static void Main(string[] args) {
-			//HibernatingRhinos.Profiler.Appender.NHibernate.NHibernateProfiler.Initialize();
-
-			// This should point to an existing database that will soon contain the model data.
-			//NHConfiguration nhConfig = new NHConfiguration(
-			//	connectionName: "PokerDb",
-			//	mapFromAssembliesOfType: new Type[] { typeof(Poker.DbModels.Card) },
-			//	dbDropCreate: false,
-			//	dbSchemaUpdate: true
-			//	//auxShouldMap: (t) => { return (t.Namespace == "Poker.DbModels"); }
-			//	//auxShouldMap: (t) => { return (t.Namespace == "GroupCourses_Model" || t.Name == "ModelBase"); }
-			//);
 
 			var numGames = 1000;
 			var actualNumGames = 0;
@@ -26,15 +15,6 @@ namespace Poker {
 			var sw = Stopwatch.StartNew();
 			//using (var db = new PokerContext()) {
 			//	db.Database.Initialize(false);
-
-			//	var players = from p in db.Players
-			//				  select p;
-
-			//	foreach (var p in players) {
-			//		Console.WriteLine(p.ToString());
-			//	}
-			//}
-
 
 
 			Overallsw.Restart();
@@ -45,11 +25,8 @@ namespace Poker {
 
 				sw.Restart();
 				using (var db = new PokerContext()) {
-					//using (var sess = nhConfig.SessionFactory.OpenSession())
-					//using (var tx = sess.BeginTransaction(System.Data.IsolationLevel.ReadCommitted)) {
-					//	sess.SetBatchSize(1000);
 
-					var allPlayers = db.Players.Take(100).ToList();  //sess.CreateCriteria(typeof(Player)).SetFirstResult(0).SetMaxResults(1000).List<Player>();
+					var allPlayers = db.Players.Take(100).ToList();
 
 					for (int g = 1; g < numGames + 1; g++) {
 						actualNumGames++;
@@ -105,7 +82,6 @@ namespace Poker {
 
 						game.ArchivePlayersHands();
 
-						//sess.SaveOrUpdate(game);
 						allPlayers.AddRange(game.Players);
 
 						if (g % 100 == 0) Console.WriteLine("Game #{0}", g);
@@ -115,8 +91,6 @@ namespace Poker {
 					sw.Restart();
 					Console.WriteLine("Saving Changes");
 
-					//tx.Commit();
-					//}
 					db.SaveChanges();
 				}
 				Console.WriteLine("All games have been saved");
