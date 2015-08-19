@@ -142,7 +142,8 @@ namespace Poker {
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder) {
 			//modelBuilder.Entity<Player>().HasMany(t => t.Games).WithMany(t => t.Players);
-			modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+			modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+
 		}
 
 	}

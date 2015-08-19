@@ -16,7 +16,7 @@ namespace Poker.DbModels {
 			foreach (Card.CardSuits currentSuit in Enum.GetValues(typeof(Card.CardSuits)))
 				foreach (Card.CardValues currentNumber in Enum.GetValues(typeof(Card.CardValues)))
 					cards.Add(new Card(currentSuit, currentNumber));
-			//cards.QuickShuffle();
+			cards.QuickShuffle();
 			CreatedUtc = DateTimeOffset.UtcNow;
 		}
 
