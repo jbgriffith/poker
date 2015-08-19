@@ -136,21 +136,21 @@ namespace Poker.DbModels {
 				case PokerHand.TwoPair:
 				case PokerHand.ThreeOfAKind:
 				case PokerHand.FourOfAKind:
-					return GetSetsAndHighCards(hand); // 1 value for each set, then highcards
+					return GetSetsAndHighCards(hand);	 // 1 value for each set, then highcards
 
 				case PokerHand.HighCard:
 				case PokerHand.Straight:
 				case PokerHand.Flush:
-				case PokerHand.StraightFlush:	// 1 value, if same then split pot
-					return GetHighCardValue(hand);
+				case PokerHand.StraightFlush:
+					return GetHighCardValue(hand);		// 1 value, if same then split pot
 
-				case PokerHand.RoyalFlush:	// 1 suit, if same then split pot
-					return GetSuit(hand);
+				case PokerHand.RoyalFlush:
+					return GetSuit(hand);				// 1 suit, if same then split pot
 
-				case PokerHand.FullHouse:	// 1 value, if same then split pot
-					return GetThreeOfAKindValue(hand);
+				case PokerHand.FullHouse:
+					return GetThreeOfAKindValue(hand);	// 1 value, if same then split pot
 
-				default: return new List<int>(); // should never hit this.
+				default: return new List<int>();		// should never hit this.
 			}
 		}
 
