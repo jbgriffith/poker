@@ -36,17 +36,17 @@ namespace PokerUnitTest {
 			var numValues = Enum.GetNames(typeof(Card.CardValues)).Length;
 			var numSuits = Enum.GetNames(typeof(Card.CardSuits)).Length;
 
-			if (numOfCards > numSuits * numValues || cardsuit != null && numOfCards > numValues)
+			if (numOfCards > numSuits * numValues || cardsuit != null && numOfCards > numValues || cardsuit != null && skip && numOfCards > (numValues / 2))
 				throw new ArgumentOutOfRangeException("numOfCards");
 
 			var cards = new Hand();
-			if (cardsuit == null)
+			if (cardsuit == null)	// different suits
 				for (int suit = 0; suit < numOfCards; suit++, cardValueStart++) {
 					var cardValue = (int)cardValueStart % numValues;
 					cards.AddCard(new Card((suit % numSuits), cardValue == 0 ? (int)cardValueStart : cardValue));
 					if (skip) cardValueStart++;
 				}
-			else
+			else	// same suit
 				for (int i = 0; i < numOfCards; i++, cardValueStart++) {
 					var cardValue = (int)cardValueStart % numValues;
 					cards.AddCard(new Card((int)(cardsuit % numSuits), cardValue == 0 ? (int)cardValueStart : cardValue));
@@ -165,6 +165,65 @@ namespace PokerUnitTest {
 		public Hand GenerateHand_RoyalFlushHearts() { return CreateStraightAscending(Card.CardValues.Ten, 5, (int)Card.CardSuits.Hearts); }
 		public Hand GenerateHand_RoyalFlushSpades() { return CreateStraightAscending(Card.CardValues.Ten, 5, (int)Card.CardSuits.Spades); }
 		#endregion
+		#endregion
+
+		#region Testing the Testing Helper Methods
+		[TestMethod, TestCategory("TestingTestingMethods")]
+		[ExpectedException(typeof(ArgumentOutOfRangeException),"numOfCards")]
+		public void ThrowExcpetion_AddCardsMoreCardsThanSuits() {
+			AddCards(null, Card.CardValues.Two, 5);
+		}
+
+		[TestMethod]
+		[ExpectedException(typeof(ArgumentOutOfRangeException), "numOfCards")]
+		public void ThrowException_CreateStraightAscendingRequestTooManyCardsSameSuit() {
+			CreateStraightAscending(Card.CardValues.Ace, 14, 0);
+		}
+
+		[TestMethod]
+		[ExpectedException(typeof(ArgumentOutOfRangeException), "numOfCards")]
+		public void ThrowException_CreateStraightAscendingRequestTooManyCardsSameSuitWithSkip() {
+			CreateStraightAscending(Card.CardValues.Ace, 7, 0, true);
+		}
+
+		[TestMethod]
+		public void TestingCreateStraightAscendingSkipDifferentSuits() {
+			var actual = CreateStraightAscending(Card.CardValues.Two, 5, skip: true).ToList();	//2468T
+
+			Assert.AreEqual(Card.CardValues.Two, actual[0].CardValue);
+			Assert.AreEqual(Card.CardValues.Four, actual[1].CardValue);
+			Assert.AreEqual(Card.CardValues.Six, actual[2].CardValue);
+			Assert.AreEqual(Card.CardValues.Eight, actual[3].CardValue);
+			Assert.AreEqual(Card.CardValues.Ten, actual[4].CardValue);
+
+			Assert.AreEqual(Card.CardSuits.Diamonds, actual[0].CardSuit);
+			Assert.AreEqual(Card.CardSuits.Clubs, actual[1].CardSuit);
+			Assert.AreEqual(Card.CardSuits.Hearts, actual[2].CardSuit);
+			Assert.AreEqual(Card.CardSuits.Spades, actual[3].CardSuit);
+			Assert.AreEqual(Card.CardSuits.Diamonds, actual[4].CardSuit);
+
+			Assert.AreEqual(5, actual.Count);
+		}
+
+		[TestMethod]
+		public void TestingCreateStraightAscendingSkipSameSuits() {
+			var actual = CreateStraightAscending((Card.CardValues)11, 5, cardsuit:4, skip: true).ToList();	//2468T
+
+			Assert.AreEqual(11, (int)actual[0].CardValue);
+			Assert.AreEqual(13, (int)actual[1].CardValue);
+			Assert.AreEqual(2, (int)actual[2].CardValue);
+			Assert.AreEqual(4, (int)actual[3].CardValue);
+			Assert.AreEqual(6, (int)actual[4].CardValue);
+
+			Assert.AreEqual(Card.CardSuits.Diamonds, actual[0].CardSuit);
+			Assert.AreEqual(Card.CardSuits.Diamonds, actual[1].CardSuit);
+			Assert.AreEqual(Card.CardSuits.Diamonds, actual[2].CardSuit);
+			Assert.AreEqual(Card.CardSuits.Diamonds, actual[3].CardSuit);
+			Assert.AreEqual(Card.CardSuits.Diamonds, actual[4].CardSuit);
+
+			Assert.AreEqual(5, actual.Count);
+		}
+
 		#endregion
 
 		#region Actual Testing
