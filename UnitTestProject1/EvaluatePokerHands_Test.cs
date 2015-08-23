@@ -24,7 +24,7 @@ namespace PokerUnitTest {
 		/// <summary>
 		/// Creates Hand with each card being part of a sequence, as specified by the parameters.
 		/// If the cardValueStart is high it will start over and the lowest card value.
-		/// if skip is true it can create pseudo sequences where they skip one value, 
+		/// if skip is true it can create pseudo sequences where they skip one value,
 		/// which is helpful when creating a hand with sets and you don't want to accidently create an actual sequqence.
 		/// </summary>
 		/// <param name="cardValueStart">Sequence of cards starts with this card Numeric value.</param>
@@ -91,19 +91,19 @@ namespace PokerUnitTest {
 		#region Generate Poker Hands
 		#region Generate One Pair
 		public Hand GenerateHand_OnePair_Aces_SixHigh() {
-			return CreateCardSets(new Dictionary<Card.CardValues, int>() { { Card.CardValues.Ace, 2 }, 
+			return CreateCardSets(new Dictionary<Card.CardValues, int>() { { Card.CardValues.Ace, 2 },
 				{ Card.CardValues.Two, 1 }, { Card.CardValues.Four, 1 }, { Card.CardValues.Six, 1 } }); // AA246
 		}
 		public Hand GenerateHand_OnePair_Twos_EightHigh() {
-			return CreateCardSets(new Dictionary<Card.CardValues, int>() { { Card.CardValues.Two, 2 }, 
+			return CreateCardSets(new Dictionary<Card.CardValues, int>() { { Card.CardValues.Two, 2 },
 				{ Card.CardValues.Four, 1 }, { Card.CardValues.Six, 1 }, { Card.CardValues.Eight, 1 } }); // 22468
 		}
 		public Hand GenerateHand_OnePair_Kings_TenHigh() {
-			return CreateCardSets(new Dictionary<Card.CardValues, int>() { { Card.CardValues.King, 2 }, 
+			return CreateCardSets(new Dictionary<Card.CardValues, int>() { { Card.CardValues.King, 2 },
 				{ Card.CardValues.Four, 1 }, { Card.CardValues.Six, 1 }, { Card.CardValues.Ten, 1 } }); // KK46T
 		}
 		public Hand GenerateHand_OnePair_Threes_AceHigh() {
-			return CreateCardSets(new Dictionary<Card.CardValues, int>() { { Card.CardValues.Three, 2 }, 
+			return CreateCardSets(new Dictionary<Card.CardValues, int>() { { Card.CardValues.Three, 2 },
 				{ Card.CardValues.Two, 1 }, { Card.CardValues.Nine, 1 }, { Card.CardValues.Ace, 1 } }); // 3329A
 		}
 		#endregion
@@ -129,10 +129,10 @@ namespace PokerUnitTest {
 		#region Generate Straight
 		public Hand GenerateHand_Straight_AceLow() { return CreateStraightAscending(Card.CardValues.Ace, 5); } // A2345
 		public Hand GenerateHand_Straight_AceHigh() { return CreateStraightAscending(Card.CardValues.Ten, 5); } // TJQKA
-		public Hand GenerateHand_Straight_HighKing() { return CreateStraightAscending(Card.CardValues.Nine, 5); } // 9TJQK 
-		public Hand GenerateHand_Straight_Fail_AceHigh() { return CreateStraightAscending(Card.CardValues.Queen, 5); } // QKA23 
+		public Hand GenerateHand_Straight_HighKing() { return CreateStraightAscending(Card.CardValues.Nine, 5); } // 9TJQK
+		public Hand GenerateHand_Straight_Fail_AceHigh() { return CreateStraightAscending(Card.CardValues.Queen, 5); } // QKA23
 		public Hand GenerateHand_Straight_Fail_AceLowSkipTwo() {
-			return CreateCardSets(new Dictionary<Card.CardValues, int>() { { Card.CardValues.Ace, 1 }, 
+			return CreateCardSets(new Dictionary<Card.CardValues, int>() { { Card.CardValues.Ace, 1 },
 				{ Card.CardValues.Three, 1 }, { Card.CardValues.Four, 1 }, { Card.CardValues.Five, 1 }, { Card.CardValues.Six, 1 } }); // A3456
 		}
 		#endregion
